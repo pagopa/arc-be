@@ -4,7 +4,7 @@
 FROM amazoncorretto:17-alpine3.19@sha256:2122cb140fa94053abce343fb854d24f4c62ba3c1ac701882dce12980396b477 AS buildtime
 
 WORKDIR /build
-COPY . .
+COPY pagopa-arc-be .
 
 RUN chmod +x ./gradlew
 RUN ./gradlew bootJar
