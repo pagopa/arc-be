@@ -1,4 +1,4 @@
-package it.gov.pagopa.common.config;
+package it.gov.pagopa.arc.config;
 
 
 import io.swagger.v3.oas.models.Components;
@@ -28,7 +28,7 @@ public class SwaggerConfig {
 
     @Bean
     public OpenAPI customOpenAPI() {
-        return new OpenAPI().components(new Components()).info(new Info()
+            return new OpenAPI().components(new Components()).info(new Info()
                 .title(title)
                 .description(description)
                 .version(version));

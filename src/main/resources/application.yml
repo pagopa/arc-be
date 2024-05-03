@@ -4,7 +4,6 @@ spring:
     version: ${version}
   jmx.enabled: true
 
-
 management:
   endpoint:
     health:
