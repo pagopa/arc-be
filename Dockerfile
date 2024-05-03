@@ -23,8 +23,6 @@ ADD https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.5.
 
 RUN chown -R nobody:nobody /app
 
-EXPOSE 8080
-
 USER 65534 # user nobody
 
 ENTRYPOINT ["java","-jar","/app/app.jar"]
