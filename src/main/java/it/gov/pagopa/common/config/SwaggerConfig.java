@@ -1,5 +1,4 @@
-package it.gov.pagopa.arc.config;
-
+package it.gov.pagopa.common.config;
 
 import io.swagger.v3.oas.models.Components;
 import io.swagger.v3.oas.models.OpenAPI;
@@ -9,7 +8,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
 /**
- * The Class SwaggerConfig.
+ * The Class it.gov.pagopa.common.config.SwaggerConfig.
  */
 @Configuration
 public class SwaggerConfig {
