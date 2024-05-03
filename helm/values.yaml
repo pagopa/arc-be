@@ -29,7 +29,7 @@ microservice-chart:
 
   ingress:
     create: true
-    path: /pagopaarc/(.*)
+    path: /pagopaarcbe/(.*)
 
   serviceAccount:
     create: false
@@ -44,6 +44,9 @@ microservice-chart:
 
   securityContext:
     allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
 
   externalConfigMapFiles:
     create: true

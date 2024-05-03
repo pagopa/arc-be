@@ -1,6 +1,6 @@
 microservice-chart:
   image:
-    repository: p4paditncorecommonacr.azurecr.io/pagopaarc
+    repository: p4paditncorecommonacr.azurecr.io/pagopaarcbe
     tag: latest
     pullPolicy: Always
 
