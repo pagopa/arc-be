@@ -1,0 +1,27 @@
+pr:
+  - dev
+  - uat
+  - main
+
+pool:
+  vmImage: ubuntu-22.04
+
+steps:
+  - checkout: self
+    displayName: Checkout
+    fetchDepth: 1
+
+  - task: SonarCloudPrepare@1
+    displayName: 'Prepare SonarCloud analysis configuration'
+    inputs:
+      SonarCloud: '$(SONARCLOUD_SERVICE_CONN)'
+      organization: '$(SONARCLOUD_ORG)'
+      scannerMode: Other
+      extraProperties: |
+        sonar.projectKey=$(SONARCLOUD_PROJECT_KEY)
+        sonar.projectName=$(SONARCLOUD_PROJECT_NAME)
+        sonar.exclusions='**/enums/**, **/model/**, **/dto/**, **/*Constant*, **/*Config.java, **/*Scheduler.java, **/*Application.java, **/src/test/**, **/Dummy*.java'
+
+  - task: SonarCloudPublish@1
+    inputs:
+      pollingTimeoutSec: '300'

@@ -1,0 +1,18 @@
+trigger:
+  branches:
+    include:
+      - develop
+      - uat
+      - main
+  paths:
+    include:
+      - src/*
+      - build.gradle
+      - helm/*
+      - Dockerfile
+      - settings.gradle
+
+pr: none
+
+resources:
+  - repo: self
