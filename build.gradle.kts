@@ -25,12 +25,15 @@ repositories {
 	mavenCentral()
 }
 
+val springdocOpenApiVersion = "2.5.0"
+val janinoVersion = "3.1.12"
+
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
-	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:2.5.0")
-	implementation("org.codehaus.janino:janino:3.1.12")
+	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
+	implementation("org.codehaus.janino:janino:$janinoVersion")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
