@@ -33,7 +33,12 @@ dependencies {
 	implementation("org.codehaus.janino:janino:3.1.12")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+
+	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
+	testImplementation("org.junit.jupiter:junit-jupiter-api")
+	testImplementation("org.junit.jupiter:junit-jupiter-engine")
+	testImplementation("org.mockito:mockito-core")
 
 }
 
