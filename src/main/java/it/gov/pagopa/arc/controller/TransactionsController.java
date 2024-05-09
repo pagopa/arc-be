@@ -9,9 +9,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@RequestMapping("/arc/")
+@RequestMapping("/arc")
 public interface TransactionsController {
-    @GetMapping("transactions")
+    @GetMapping("/transactions")
     List<TransactionDTO> getTransactionsList(
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
             @RequestHeader(value = "x-continuation-token", required = false) String continuationToken,
