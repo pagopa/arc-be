@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
 
-@RequestMapping("/")
+@RequestMapping("/arc/")
 public interface TransactionsController {
     @GetMapping("transactions")
     List<TransactionDTO> getTransactionsList(
