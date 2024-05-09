@@ -52,6 +52,9 @@ tasks.withType<Test> {
 
 tasks.jacocoTestReport {
 	dependsOn(tasks.test)
+	reports {
+		xml.required = true
+	}
 }
 
 val projectInfo = mapOf(
