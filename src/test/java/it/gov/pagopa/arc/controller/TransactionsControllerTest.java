@@ -19,7 +19,7 @@ import java.util.List;
 
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
 
 @WebMvcTest(value = {
         TransactionsController.class
@@ -35,16 +35,18 @@ class TransactionsControllerTest {
     @Test
     void givenFiscalCodeWhenCallGetTransactionsListThenReturnTransactionList() throws Exception {
         //Given
-        ZonedDateTime transactionDate = ZonedDateTime.parse("2024-05-09T14:44:22.854313100Z");
+        ZonedDateTime transactionDate = ZonedDateTime.parse("2024-05-09T14:44:22.854Z");
         List<TransactionDTO> transactionDTOList = List.of(
                 new TransactionDTO("TRX_ID","PAYEE_TAX_CODE","20.80",transactionDate,false,true,true));
 
         Mockito.when(transactionsServiceMock.retrieveTransactionsList("DUMMY_FISCAL_CODE")).thenReturn(transactionDTOList);
-
+        System.out.println(transactionDTOList);
         //When
         MvcResult result = mockMvc.perform(get("/arc/transactions")
                 .header("x-fiscal-code", "DUMMY_FISCAL_CODE")
-        ).andExpect(status().is2xxSuccessful()).andReturn();
+        ).andExpect(status().is2xxSuccessful())
+                .andExpect(jsonPath("$[0].transactionDate").value("2024-05-09T14:44:22.854Z"))
+                .andReturn();
 
         List<TransactionDTO> resultResponse = TestUtils.objectMapper.readValue(
                 result.getResponse().getContentAsString(),

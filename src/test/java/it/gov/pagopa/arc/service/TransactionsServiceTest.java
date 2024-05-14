@@ -15,10 +15,10 @@ import static utils.TestUtils.objectMapper;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionsServiceTest {
+    private static final String FISCAL_CODE = "SPCPQL80L16F800B";
 
     @Autowired
     private TransactionsService transactionsService;
-    private static final String FISCAL_CODE = "SPCPQL80L16F800B";
 
     @BeforeEach
     void setUp() {
