@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import java.time.ZonedDateTime;
 
@@ -20,6 +21,7 @@ public class TransactionDTO {
     private String transactionId;
     private String payeeTaxCode;
     private String amount;
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME)
     private ZonedDateTime transactionDate;
     private Boolean isCart;
     private Boolean payedByMe;

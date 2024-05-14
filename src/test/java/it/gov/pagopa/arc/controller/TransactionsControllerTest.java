@@ -33,7 +33,7 @@ class TransactionsControllerTest {
     private TransactionsService transactionsServiceMock;
 
     @Test
-    void getTransactionsList() throws Exception {
+    void givenFiscalCodeWhenCallGetTransactionsListThenReturnTransactionList() throws Exception {
         //Given
         ZonedDateTime transactionDate = ZonedDateTime.parse("2024-05-09T14:44:22.854313100Z");
         List<TransactionDTO> transactionDTOList = List.of(

@@ -7,6 +7,6 @@ public class TestUtils {
     /**
      * application's objectMapper
      */
-    public static ObjectMapper objectMapper = new JsonConfig().objectMapper();
+    public static final ObjectMapper objectMapper = new JsonConfig().objectMapper();
 
 }

@@ -26,7 +26,7 @@ class TransactionsServiceTest {
     }
 
     @Test
-    void retrieveTransactionsList() {
+    void givenFiscalCodeWhenCallRetrieveTransactionsListThenReturnTransactionList() {
         //given
         //when
         List<TransactionDTO> transactionDTOList = transactionsService.retrieveTransactionsList(FISCAL_CODE);
