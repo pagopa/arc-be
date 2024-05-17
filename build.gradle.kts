@@ -5,7 +5,6 @@ plugins {
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
 	id("com.github.ben-manes.versions") version "0.51.0"
-	id("com.gorylenko.gradle-git-properties") version "2.4.1"
 }
 
 group = "it.gov.pagopa"
@@ -69,23 +68,4 @@ tasks {
 			expand(projectInfo)
 		}
 	}
-}
-
-gitProperties {
-	keys = listOf(
-			"git.branch",
-			"git.build.version",
-			"git.closest.tag.commit.count",
-			"git.closest.tag.name",
-			"git.commit.id",
-			"git.commit.id.abbrev",
-			"git.commit.id.describe",
-			"git.commit.message.full",
-			"git.commit.message.short",
-			"git.commit.time",
-			"git.dirty",
-			"git.remote.origin.url",
-			"git.tags",
-			"git.total.commit.count"
-	)
 }
