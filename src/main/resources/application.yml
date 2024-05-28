@@ -16,3 +16,7 @@ management:
       exposure.include: "*"
     web:
       exposure.include: info, health
+
+rest-client:
+  bizevents:
+    baseUrl: \${BIZ_EVENTS_BASE_URL:}
