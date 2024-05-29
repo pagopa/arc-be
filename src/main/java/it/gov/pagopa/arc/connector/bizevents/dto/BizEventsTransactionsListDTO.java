@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc.connector.bizevents.dto;
 
 import com.fasterxml.jackson.annotation.JsonInclude;
-import it.gov.pagopa.arc.dto.TransactionDTO;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -14,6 +13,6 @@ import java.util.List;
 @Builder
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
-public class BizEventsTransactionsDTO {
-    private List<TransactionDTO> transactions;
+public class BizEventsTransactionsListDTO {
+    private List<BizEventsTransactionDTO> transactions;
 }

@@ -18,5 +18,5 @@ management:
       exposure.include: info, health
 
 rest-client:
-  bizevents:
+  biz-events:
     baseUrl: \${BIZ_EVENTS_BASE_URL:}
