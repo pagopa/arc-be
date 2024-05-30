@@ -63,7 +63,7 @@ microservice-chart:
 
   externalConfigMapValues:
     rest-client:
-      BIZ_EVENTS_BASE_URL: biz_events_base_url
+      BIZ_EVENTS_BASE_URL: bizevents-base-url
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
