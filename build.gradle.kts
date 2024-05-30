@@ -26,6 +26,7 @@ repositories {
 
 val springdocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
+val wiremockVersion = "3.5.4"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -43,7 +44,7 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
-
+	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
 }
 
 tasks.withType<Test> {
