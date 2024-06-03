@@ -19,11 +19,6 @@ paths:
           required: true
           schema:
             type: string
-        - name: x-continuation-token
-          in: header
-          required: false
-          schema:
-            type: string
         - name: page
           in: query
           description: "Number of page required"
@@ -49,12 +44,6 @@ paths:
       responses:
         '200':
           description: "Obtained transaction list"
-          headers:
-            x-continuation-token:
-              description: "continuation token for paginated query"
-              style: simple
-              schema:
-                type: string
           content:
             application/json:
               schema:
