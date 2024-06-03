@@ -94,4 +94,7 @@ openApiGenerate {
 			"generatedConstructorWithRequiredArgs" to "false",
 			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor"
 	))
+	typeMappings.set(mapOf(
+			"DateTime" to "java.time.ZonedDateTime"
+	))
 }
