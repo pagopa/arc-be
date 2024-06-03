@@ -17,4 +17,4 @@ management:
     web:
       exposure.include: info, health
 
-apiKey.bizEvents: ${BIZ_EVENTS_SERVICE_API_KEY:}
+apiKey.bizEvents: \${BIZ_EVENTS_SERVICE_API_KEY:}

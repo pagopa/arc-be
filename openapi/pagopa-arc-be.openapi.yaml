@@ -1,0 +1,123 @@
+openapi: 3.0.1
+info:
+  title: pagopa-arc-be
+  description: Api and Models
+  version: 0.0.1
+servers:
+  - url: "http://localhost:8080/arc"
+    description: Generated server url
+paths:
+  /transactions:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve the paged transaction list from arc"
+      operationId: getTransactionList
+      parameters:
+        - name: x-fiscal-code
+          in: header
+          required: true
+          schema:
+            type: string
+        - name: x-continuation-token
+          in: header
+          required: false
+          schema:
+            type: string
+        - name: page
+          in: query
+          description: "Number of page required"
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: "Number of items for page"
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: filter
+          in: query
+          description: "The field passed to filter the list of transactions"
+          required: false
+          schema:
+            type: string
+          example: isPayer
+      responses:
+        '200':
+          description: "Obtained transaction list"
+          headers:
+            x-continuation-token:
+              description: "continuation token for paginated query"
+              style: simple
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+components:
+  schemas:
+    TransactionsListDTO:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDTO'
+        currentPage:
+          type: integer
+          format: int32
+        itemsForPage:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    TransactionDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        payeeName:
+          type: string
+        payeeTaxCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        transactionDate:
+          type: string
+          format: date-time
+          example: "2024-05-31T13:07:25Z"
+        isCart:
+          type: boolean
+        payedByMe:
+          type: boolean
+        registeredToMe:
+          type: boolean
+    ErrorDTO:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - generic_error
+            - invalid_request
+        error_description:
+          type: string
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
