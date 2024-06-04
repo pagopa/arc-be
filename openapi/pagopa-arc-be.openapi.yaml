@@ -14,11 +14,6 @@ paths:
       summary: "Retrieve the paged transaction list from arc"
       operationId: getTransactionList
       parameters:
-        - name: x-fiscal-code
-          in: header
-          required: true
-          schema:
-            type: string
         - name: page
           in: query
           description: "Number of page required"
