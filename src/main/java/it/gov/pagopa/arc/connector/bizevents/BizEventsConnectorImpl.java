@@ -40,7 +40,7 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
                         e.status(),
                         e.getMessage());
             }else {
-                throw new BizEventsInvocationException(e.getMessage());
+                throw new BizEventsInvocationException("An error occurred handling request from biz-Events");
             }
         }
         return bizEventsTransactionsListDTO;
