@@ -40,7 +40,7 @@ paths:
           required: false
           schema:
             type: string
-          example: isPayer
+          example: payedByMe
       responses:
         '200':
           description: "Obtained transaction list"
