@@ -17,4 +17,7 @@ management:
     web:
       exposure.include: info, health
 
-apiKey.biz-events: \${BIZ_EVENTS_SERVICE_API_KEY:}
+rest-client:
+  biz-events:
+    baseUrl: \${BIZ_EVENTS_BASE_URL:}
+    api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}

@@ -61,6 +61,9 @@ microservice-chart:
     APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
     ENABLE_AUDIT_APPENDER: "TRUE"
 
+  externalConfigMapValues:
+    rest-client:
+      BIZ_EVENTS_BASE_URL: bizevents-base-url
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string

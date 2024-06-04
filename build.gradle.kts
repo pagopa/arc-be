@@ -5,7 +5,7 @@ plugins {
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
 	id("com.github.ben-manes.versions") version "0.51.0"
-	id ("org.openapi.generator") version "7.5.0"
+	id("org.openapi.generator") version "7.5.0"
 }
 
 group = "it.gov.pagopa"
@@ -28,6 +28,7 @@ repositories {
 val springdocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
+val wiremockVersion = "3.5.4"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -36,6 +37,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
@@ -45,7 +47,7 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
-
+	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
 }
 
 tasks.withType<Test> {
@@ -57,6 +59,12 @@ tasks.jacocoTestReport {
 	dependsOn(tasks.test)
 	reports {
 		xml.required = true
+	}
+}
+
+dependencyManagement {
+	imports {
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
 	}
 }
 
@@ -72,6 +80,17 @@ tasks {
 		}
 	}
 }
+
+configurations {
+	compileClasspath {
+		resolutionStrategy.activateDependencyLocking()
+	}
+}
+
+tasks.compileJava {
+	dependsOn("openApiGenerate")
+}
+
 configure<SourceSetContainer> {
 	named("main") {
 		java.srcDir("$projectDir/build/generated/src/main/java")
