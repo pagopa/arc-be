@@ -81,6 +81,16 @@ tasks {
 	}
 }
 
+configurations {
+	compileClasspath {
+		resolutionStrategy.activateDependencyLocking()
+	}
+}
+
+tasks.compileJava {
+	dependsOn("openApiGenerate")
+}
+
 configure<SourceSetContainer> {
 	named("main") {
 		java.srcDir("$projectDir/build/generated/src/main/java")
