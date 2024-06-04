@@ -5,7 +5,7 @@ plugins {
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
 	id("com.github.ben-manes.versions") version "0.51.0"
-	id ("org.openapi.generator") version "7.5.0"
+	id("org.openapi.generator") version "7.5.0"
 }
 
 group = "it.gov.pagopa"
@@ -80,6 +80,7 @@ tasks {
 		}
 	}
 }
+
 configure<SourceSetContainer> {
 	named("main") {
 		java.srcDir("$projectDir/build/generated/src/main/java")

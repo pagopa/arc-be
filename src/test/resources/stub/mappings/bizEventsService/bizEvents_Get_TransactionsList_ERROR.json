@@ -7,7 +7,7 @@
         "matches": "x_api_key([0-9]?)+"
       },
       "x-fiscal-code": {
-        "matches": "DUMMY_FISCAL_CODE_DEFAULT"
+        "matches": "DUMMY_FISCAL_CODE_ERROR"
       },
       "x-continuation-token": {
         "matches": "TOKEN"
