@@ -58,48 +58,12 @@ class BizEventsConnectorImplTest {
     }
 
     @Test
-    void givenHeaderAndParameterWhenNotFoundThenReturnEmptyTransactionList() {
+    void givenHeaderAndParameterWhenDefaultThenReturnEmptyTransactionList() {
         //given
         //when
+        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_DEFAULT", "TOKEN", 2);
         //then
-        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_404", "TOKEN", 2);
         Assertions.assertEquals(0,bizEventsTransactionsListDTO.getTransactions().size());
-    }
-
-    @Test
-    void givenHeaderAndParameterWhenUnauthorizedThenThrowRuntimeException() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(RuntimeException.class,
-                ()-> bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_401", "TOKEN", 2));
-    }
-
-    @Test
-    void givenHeaderAndParameterWhenTooManyRequestThenThrowRuntimeException() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(RuntimeException.class,
-                ()-> bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_429", "TOKEN", 2));
-    }
-
-    @Test
-    void givenHeaderAndParameterWhenInternalServerErrorThenThrowRuntimeException() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(RuntimeException.class,
-                ()-> bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_500", "TOKEN", 2));
-    }
-
-    @Test
-    void givenHeaderAndParameterWhenDefaultThenThrowRuntimeException() {
-        //given
-        //when
-        //then
-        Assertions.assertThrows(RuntimeException.class,
-                ()-> bizEventsConnector.transactionsList("DUMMY_FISCAL_CODE_DEFAULT", "TOKEN", 2));
     }
 
     public static class WireMockInitializer

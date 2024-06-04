@@ -25,21 +25,14 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
         BizEventsTransactionsListDTO bizEventsTransactionsListDTO;
         try {
             bizEventsTransactionsListDTO = bizEventsRestClient.transactionsList(apikey, fiscalCode, continuationToken, size);
-        }catch (FeignException e){
-            switch (e.status()){
-                case 401 -> throw new RuntimeException();
-                case 404 -> bizEventsTransactionsListDTO =
-                        BizEventsTransactionsListDTO
-                        .builder()
-                        .transactions(new ArrayList<>())
-                        .build();
-                case 429 -> throw new RuntimeException();
-                case 500 -> throw new RuntimeException();
-                default -> throw new RuntimeException();
-            }
+        }catch (FeignException e) {
+            bizEventsTransactionsListDTO =
+                    BizEventsTransactionsListDTO
+                            .builder()
+                            .transactions(new ArrayList<>())
+                            .build();
         }
         return bizEventsTransactionsListDTO;
     }
-
 
 }
