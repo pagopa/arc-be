@@ -5,6 +5,7 @@ plugins {
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
 	id("com.github.ben-manes.versions") version "0.51.0"
+	id ("org.openapi.generator") version "7.5.0"
 }
 
 group = "it.gov.pagopa"
@@ -26,6 +27,7 @@ repositories {
 
 val springdocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
+val openApiToolsVersion = "0.2.6"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -34,6 +36,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
+	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
 
@@ -68,4 +71,30 @@ tasks {
 			expand(projectInfo)
 		}
 	}
+}
+configure<SourceSetContainer> {
+	named("main") {
+		java.srcDir("$projectDir/build/generated/src/main/java")
+	}
+}
+
+openApiGenerate {
+	generatorName.set("spring")
+	inputSpec.set("$rootDir/openapi/pagopa-arc-be.openapi.yaml")
+	outputDir.set("$projectDir/build/generated")
+	apiPackage.set("it.gov.pagopa.arc.controller.generated")
+	modelPackage.set("it.gov.pagopa.arc.model.generated")
+	configOptions.set(mapOf(
+			"dateLibrary" to "java8",
+			"requestMappingMode" to "api_interface",
+			"useSpringBoot3" to "true",
+			"interfaceOnly" to "true",
+			"useTags" to "true",
+			"generateConstructorWithAllArgs" to "false",
+			"generatedConstructorWithRequiredArgs" to "false",
+			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor"
+	))
+	typeMappings.set(mapOf(
+			"DateTime" to "java.time.ZonedDateTime"
+	))
 }
