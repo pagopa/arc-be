@@ -36,7 +36,7 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(
         properties = {
-                "biz-events.headers.api-key=x_api_key0",
+                "rest-client.biz-events.api-key=x_api_key0",
 })
 class BizEventsConnectorImplTest {
 
@@ -111,7 +111,7 @@ class BizEventsConnectorImplTest {
             TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
                     applicationContext,
                     String.format(
-                            "biz-events.baseUrl=http://%s:%d/bizEventsMock",
+                            "rest-client.biz-events.baseUrl=http://%s:%d/bizEventsMock",
                             wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
         }
     }
