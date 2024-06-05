@@ -58,7 +58,7 @@ class BizEventsConnectorImplTest {
     void givenHeaderAndParameterWhenCallBizEventsConnectorThenReturnTransactionList() {
         //given
         //when
-        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE", "TOKEN", 1);
+        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE", 1);
 
         //then
         assertEquals(1, bizEventsTransactionsListDTO.getTransactions().size());
@@ -77,7 +77,7 @@ class BizEventsConnectorImplTest {
     void givenHeaderAndParameterWhenNotFoundThenReturnEmptyTransactionList() {
         //given
         //when
-        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_NOT_FOUND", "TOKEN", 2);
+        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_NOT_FOUND", 2);
         //then
         Assertions.assertEquals(0,bizEventsTransactionsListDTO.getTransactions().size());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
@@ -89,7 +89,7 @@ class BizEventsConnectorImplTest {
         //When
         //Then
         Assertions.assertThrows(BizEventsInvocationException.class,
-                ()-> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", "TOKEN", 2));
+                ()-> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", 2));
 
     }
 

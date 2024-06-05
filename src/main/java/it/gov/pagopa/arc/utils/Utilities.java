@@ -28,7 +28,7 @@ public class Utilities {
     }
 
     /** To convert euro from String to double */
-    private static Double euroStringToLong(String euroString){
+    public static Double euroStringToLong(String euroString){
         try {
             NumberFormat nf = NumberFormat.getInstance(Locale.ITALIAN);
             Number parse = nf.parse(euroString);
