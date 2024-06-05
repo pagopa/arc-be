@@ -16,10 +16,9 @@ public interface BizEventsRestClient {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     BizEventsTransactionsListDTO transactionsList(
-            @RequestHeader("x-api-key") String apikey,
-            @RequestHeader("x-fiscal-code") String fiscalCode,
-            @RequestHeader("x-continuation-token") String continuationToken,
-            @RequestParam("size") int size
+            @RequestHeader(value = "x-api-key") String apikey,
+            @RequestHeader(value = "x-fiscal-code") String fiscalCode,
+            @RequestParam(value = "size", required = false, defaultValue = "10") int size
     );
 }
 
