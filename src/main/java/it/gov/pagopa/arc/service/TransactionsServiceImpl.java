@@ -1,47 +1,52 @@
 package it.gov.pagopa.arc.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.arc.dto.TransactionDTO;
-import it.gov.pagopa.arc.dto.UserDTO;
+import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
+import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTO;
+import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
+import it.gov.pagopa.arc.model.generated.TransactionDTO;
+import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
 @Slf4j
 public class TransactionsServiceImpl implements TransactionsService {
-    private final ObjectMapper objectMapper;
+    private final String fakeFiscalCode;
+    private final BizEventsConnector bizEventsConnector;
+    private final BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
+    private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
 
-    public TransactionsServiceImpl(ObjectMapper objectMapper) {
-        this.objectMapper = objectMapper;
+
+    public TransactionsServiceImpl(
+            @Value("${rest-client.biz-events.fake-fiscal-code}") String fakeFiscalCode,
+            BizEventsConnector bizEventsConnector,
+            BizEventsTransactionDTO2TransactionDTO transactionDTOMapper,
+            BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper) {
+        this.fakeFiscalCode = fakeFiscalCode;
+        this.bizEventsConnector = bizEventsConnector;
+        this.transactionDTOMapper = transactionDTOMapper;
+        this.transactionsListDTOMapper = transactionsListDTOMapper;
     }
 
     @Override
-    public List<TransactionDTO> retrieveTransactionsList(String fiscalCode) {
-        List<TransactionDTO> transactionDTOList = new ArrayList<>();
-
-        if (StringUtils.isNotBlank(fiscalCode)) {
-            try {
-                InputStream mockedTransactionsListJson = TransactionDTO.class.getResourceAsStream("/mock/transactions_response.json");
-                List<UserDTO> userDTOList = objectMapper.readValue(mockedTransactionsListJson, new TypeReference<>() {
-                });
-                transactionDTOList = userDTOList.stream()
-                        .filter(u -> u.getTaxCode().equals(fiscalCode))
-                        .map(UserDTO::getTransactions)
-                        .flatMap(List::stream)
-                        .toList();
-
-            } catch (IOException e) {
-                log.error(e.getMessage());
-            }
-
+    public TransactionsListDTO retrieveTransactionsList(Integer page, Integer size, String filter) {
+        List<TransactionDTO> transactions;
+        BizEventsTransactionsListDTO bizEventsTransactionsList = bizEventsConnector.getTransactionsList(fakeFiscalCode, size);
+        if(!bizEventsTransactionsList.getTransactions().isEmpty()) {
+             transactions = bizEventsTransactionsList
+                    .getTransactions()
+                    .stream()
+                    .map(transactionDTOMapper::apply)
+                    .toList();
+        } else {
+            transactions = new ArrayList<>();
         }
-        return transactionDTOList;
+        return transactionsListDTOMapper.apply(transactions, size);
     }
 }
+

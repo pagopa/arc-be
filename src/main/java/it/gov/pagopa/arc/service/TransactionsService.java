@@ -1,10 +1,8 @@
 package it.gov.pagopa.arc.service;
 
 
-import it.gov.pagopa.arc.dto.TransactionDTO;
-
-import java.util.List;
+import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 
 public interface TransactionsService {
-    List<TransactionDTO> retrieveTransactionsList(String fiscalCode);
+    TransactionsListDTO retrieveTransactionsList(Integer page, Integer size, String filter);
 }

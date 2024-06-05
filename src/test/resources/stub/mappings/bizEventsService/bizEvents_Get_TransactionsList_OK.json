@@ -8,9 +8,6 @@
       },
       "x-fiscal-code": {
         "matches": "DUMMY_FISCAL_CODE"
-      },
-      "x-continuation-token": {
-        "matches": "TOKEN"
       }
     },
     "queryParameters": {
