@@ -1,14 +1,9 @@
 package it.gov.pagopa.arc.service;
 
-import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
-import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
-import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
-import it.gov.pagopa.arc.fakers.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
+import it.gov.pagopa.arc.service.bizevents.BizEventsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -21,7 +16,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.ArrayList;
 import java.util.List;
 
-import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionsServiceTest {
@@ -29,46 +25,27 @@ class TransactionsServiceTest {
     private static final int SIZE = 2;
     private static final String FILTER = "DUMMY_FILTER";
 
-    private static final String DUMMY_FISCAL_CODE = "DUMMY_FISCAL_CODE";
-
     @Autowired
     private TransactionsService transactionsService;
 
     @Mock
-    private BizEventsConnector bizEventsConnectorMock;
-    @Mock
-    private BizEventsTransactionDTO2TransactionDTO transactionDTOMapperMock;
-    @Mock
-    private BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapperMock;
+    private BizEventsService bizEventsServiceMock;
 
     @BeforeEach
     void setUp() {
-        transactionsService = new TransactionsServiceImpl(DUMMY_FISCAL_CODE,bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock);
+        transactionsService = new TransactionsServiceImpl(bizEventsServiceMock);
     }
 
     @Test
     void givenPageSizeFilterWhenCallRetrieveTransactionsListThenReturnTransactionList() {
         //given
-        BizEventsTransactionDTO bizEventsTransactionDTO = BizEventsTransactionDTOFaker.mockInstance(1, false);
-        BizEventsTransactionDTO bizEventsTransactionDTO2 = BizEventsTransactionDTOFaker.mockInstance(2, true);
-
         TransactionDTO transactionDTO = TransactionDTOFaker.mockInstance(1, false);
         TransactionDTO transactionDTO2 = TransactionDTOFaker.mockInstance(2, true);
-
-        List<BizEventsTransactionDTO> bizEventsTransactionDTOList = List.of(
-            bizEventsTransactionDTO,
-            bizEventsTransactionDTO2
-        );
 
         List<TransactionDTO> transactions = List.of(
                 transactionDTO,
                 transactionDTO2
         );
-
-        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = BizEventsTransactionsListDTO
-                .builder()
-                .transactions(bizEventsTransactionDTOList)
-                .build();
 
         TransactionsListDTO expectedResult = TransactionsListDTO
                 .builder()
@@ -79,11 +56,7 @@ class TransactionsServiceTest {
                 .itemsForPage(SIZE)
                 .build();
 
-        Mockito.when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
-        Mockito.when(transactionDTOMapperMock.apply(bizEventsTransactionDTO)).thenReturn(transactionDTO);
-        Mockito.when(transactionDTOMapperMock.apply(bizEventsTransactionDTO2)).thenReturn(transactionDTO2);
-        Mockito.when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
-
+        Mockito.when(bizEventsServiceMock.retrieveTransactionsListFromBizEvents(PAGE,SIZE,FILTER)).thenReturn(expectedResult);
         //when
         TransactionsListDTO result = transactionsService.retrieveTransactionsList(PAGE, SIZE, FILTER);
 
@@ -95,21 +68,13 @@ class TransactionsServiceTest {
         Assertions.assertEquals(2, result.getItemsForPage());
         Assertions.assertEquals(1, result.getTotalPages());
         Assertions.assertEquals(10, result.getTotalItems());
-        Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
-        Mockito.verify(transactionDTOMapperMock,Mockito.times(2)).apply(any());
-        Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
-
+        Mockito.verify(bizEventsServiceMock).retrieveTransactionsListFromBizEvents(anyInt(),anyInt(),anyString());
     }
 
     @Test
-    void givenPageSizeFilterWhenCallRetrieveTransactionsListThenReturnEmptyTransactionList() {
+    void givenPageSizeFilterWhenCallRetrieveTransactionsListFromBizEventsThenReturnEmptyTransactionList() {
         //given
         List<TransactionDTO> transactions = new ArrayList<>();
-
-        BizEventsTransactionsListDTO bizEventsTransactionsListDTO = BizEventsTransactionsListDTO
-                .builder()
-                .transactions(new ArrayList<>())
-                .build();
 
         TransactionsListDTO expectedResult = TransactionsListDTO
                 .builder()
@@ -120,8 +85,7 @@ class TransactionsServiceTest {
                 .itemsForPage(SIZE)
                 .build();
 
-        Mockito.when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
-        Mockito.when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
+        Mockito.when(bizEventsServiceMock.retrieveTransactionsListFromBizEvents(PAGE,SIZE,FILTER)).thenReturn(expectedResult);
         //when
         TransactionsListDTO result = transactionsService.retrieveTransactionsList(PAGE, SIZE, FILTER);
         //then
@@ -131,9 +95,6 @@ class TransactionsServiceTest {
         Assertions.assertEquals(2, result.getItemsForPage());
         Assertions.assertEquals(1, result.getTotalPages());
         Assertions.assertEquals(10, result.getTotalItems());
-        Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
-        Mockito.verifyNoInteractions(transactionDTOMapperMock);
-        Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
-
+        Mockito.verify(bizEventsServiceMock).retrieveTransactionsListFromBizEvents(anyInt(),anyInt(),anyString());
     }
 }

@@ -27,6 +27,7 @@ class BizEventsTransactionDTO2TransactionDTOTest {
 
         //then
         commonAssert(bizEventsTransaction, dtoMapped);
+        assertEquals(Utilities.euroToCents(bizEventsTransaction.getAmount()), dtoMapped.getAmount());
     }
 
     @Test
@@ -38,6 +39,7 @@ class BizEventsTransactionDTO2TransactionDTOTest {
 
         //then
         commonAssert(bizEventsTransaction, dtoMapped);
+        assertNull(dtoMapped.getAmount());
     }
 
     private static void commonAssert(BizEventsTransactionDTO bizEventsTransaction, TransactionDTO dtoMapped) {
@@ -45,7 +47,6 @@ class BizEventsTransactionDTO2TransactionDTOTest {
             assertEquals(bizEventsTransaction.getTransactionId(), dtoMapped.getTransactionId());
             assertEquals(bizEventsTransaction.getPayeeName(), dtoMapped.getPayeeName());
             assertEquals(bizEventsTransaction.getPayeeTaxCode(), dtoMapped.getPayeeTaxCode());
-            assertEquals(Utilities.euroToCents(bizEventsTransaction.getAmount()), dtoMapped.getAmount());
             assertEquals(Utilities.dateStringToZonedDateTime(bizEventsTransaction.getTransactionDate()), dtoMapped.getTransactionDate());
             assertEquals(bizEventsTransaction.getIsCart(), dtoMapped.getIsCart());
             assertEquals(bizEventsTransaction.getIsPayer(), dtoMapped.getPayedByMe());

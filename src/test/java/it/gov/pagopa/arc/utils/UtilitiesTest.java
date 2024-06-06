@@ -1,13 +1,18 @@
 package it.gov.pagopa.arc.utils;
 
+import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
+@ExtendWith(MockitoExtension.class)
 class UtilitiesTest {
 
     @Test
@@ -21,43 +26,16 @@ class UtilitiesTest {
     }
 
     @Test
-    void givenWrongEuroStringWhenCallEuroToCentsThenReturnNull() {
+    void givenWrongEuroStringWhenCallEuroToCentsThenReturnException() {
         //given
         String euroString = "";
         //when
-        Long amountCents = Utilities.euroToCents(euroString);
         //then
-        Assertions.assertNull( amountCents);
-    }
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class,
+                () -> Utilities.euroToCents(euroString));
+        Assertions.assertEquals("Invalid amount format",exception.getMessage());
 
-    @Test
-    void givenNullWhenCallEuroToCentsThenReturnNull() {
-        //when
-        Long amountCents = Utilities.euroToCents(null);
-        //then
-        Assertions.assertNull( amountCents);
     }
-    @Test
-    void givenValidEuroStringWhenCallEuroStringToLongThenReturnDouble() {
-        //given
-        String validEuroString = "2.681,52";
-        // when
-        Double result = Utilities.euroStringToLong(validEuroString);
-        // then
-        assertNotNull(result);
-        assertEquals(2681.52, result);
-    }
-
-    @Test
-    void givenEmptyEuroStringWhenCallEuroStringToLongThenReturnNull() {
-        //given
-        String validEuroString = "";
-        // when
-        Double result = Utilities.euroStringToLong(validEuroString);
-        // then
-        assertNull(result);
-    }
-
 
     @Test
     void givenCorrectDateStringWhenCallDateStringToZonedDateTimeThenReturnZonedDateTime() {
@@ -72,19 +50,14 @@ class UtilitiesTest {
     }
 
     @Test
-    void givenWrongDateStringWhenCallDateStringToZonedDateTimeThenReturnNull(){
+    void givenWrongDateStringWhenCallDateStringToZonedDateTimeThenReturnException(){
         //given
         String wrongDateString = "";
         //when
-        ZonedDateTime zonedDateTime = Utilities.dateStringToZonedDateTime(wrongDateString);
         //then
-        assertNull(zonedDateTime);
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class,
+                () -> Utilities.dateStringToZonedDateTime(wrongDateString));
+        Assertions.assertEquals("Invalid date format",exception.getMessage());
     }
-    @Test
-    void givenNullDateStringWhenCallDateStringToZonedDateTimeThenReturnNull() {
-        // when
-        ZonedDateTime zonedDateTime = Utilities.dateStringToZonedDateTime(null);
-        // then
-        assertNull(zonedDateTime);
-    }
+
 }
