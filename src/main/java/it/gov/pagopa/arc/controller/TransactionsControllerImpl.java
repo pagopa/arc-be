@@ -1,14 +1,15 @@
 package it.gov.pagopa.arc.controller;
 
 
-import it.gov.pagopa.arc.dto.TransactionDTO;
+import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
+import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.TransactionsService;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import java.util.List;
-
 @RestController
-public class TransactionsControllerImpl implements TransactionsController {
+public class TransactionsControllerImpl implements ArcTransactionsApi {
     private final TransactionsService transactionsService;
 
     public TransactionsControllerImpl(TransactionsService transactionsService) {
@@ -16,7 +17,8 @@ public class TransactionsControllerImpl implements TransactionsController {
     }
 
     @Override
-    public List<TransactionDTO> getTransactionsList(String fiscalCode, String continuationToken, int size) {
-        return transactionsService.retrieveTransactionsList(fiscalCode);
+    public ResponseEntity<TransactionsListDTO> getTransactionsList(Integer page, Integer size, String filter) {
+        TransactionsListDTO transactionsListDTO = transactionsService.retrieveTransactionsList(page,size,filter);
+        return new ResponseEntity<>(transactionsListDTO, HttpStatus.OK);
     }
 }

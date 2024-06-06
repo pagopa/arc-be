@@ -23,10 +23,10 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
     }
 
     @Override
-    public BizEventsTransactionsListDTO getTransactionsList(String fiscalCode, String continuationToken, int size) {
+    public BizEventsTransactionsListDTO getTransactionsList(String fiscalCode, int size) {
         BizEventsTransactionsListDTO bizEventsTransactionsListDTO;
         try {
-            bizEventsTransactionsListDTO = bizEventsRestClient.transactionsList(apikey, fiscalCode, continuationToken, size);
+            bizEventsTransactionsListDTO = bizEventsRestClient.transactionsList(apikey, fiscalCode, size);
         }catch (FeignException e) {
             if (e.status() == HttpStatus.NOT_FOUND.value()){
                 bizEventsTransactionsListDTO =

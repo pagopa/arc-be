@@ -12,7 +12,7 @@ paths:
       tags:
         - arc transactions
       summary: "Retrieve the paged transaction list from arc"
-      operationId: getTransactionList
+      operationId: getTransactionsList
       parameters:
         - name: page
           in: query

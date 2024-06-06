@@ -1,8 +1,8 @@
 package it.gov.pagopa.arc.controller;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.arc.dto.TransactionDTO;
+import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
+import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.TransactionsService;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -14,17 +14,19 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import utils.TestUtils;
 
-import java.time.ZonedDateTime;
-import java.util.List;
-
+import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {
-        TransactionsController.class
+        ArcTransactionsApi.class
 })
 class TransactionsControllerTest {
+    private static final int PAGE = 1;
+    private static final int SIZE = 2;
+    private static final String FILTER = "DUMMY_FILTER";
+
     @Autowired
     private ObjectMapper objectMapper;
     @Autowired
@@ -35,26 +37,25 @@ class TransactionsControllerTest {
     @Test
     void givenFiscalCodeWhenCallGetTransactionsListThenReturnTransactionList() throws Exception {
         //Given
-        ZonedDateTime transactionDate = ZonedDateTime.parse("2024-05-09T14:44:22.854Z");
-        List<TransactionDTO> transactionDTOList = List.of(
-                new TransactionDTO("TRX_ID","PAYEE_TAX_CODE","20.80",transactionDate,false,true,true));
+        TransactionsListDTO transactionsListDTO = TransactionsListDTO.builder().build();
+        Mockito.when(transactionsServiceMock.retrieveTransactionsList(PAGE,SIZE,FILTER)).thenReturn(transactionsListDTO);
 
-        Mockito.when(transactionsServiceMock.retrieveTransactionsList("DUMMY_FISCAL_CODE")).thenReturn(transactionDTOList);
-        System.out.println(transactionDTOList);
         //When
-        MvcResult result = mockMvc.perform(get("/arc/transactions")
-                .header("x-fiscal-code", "DUMMY_FISCAL_CODE")
+        MvcResult result = mockMvc.perform(
+                get("/arc/transactions")
+                        .param("page", String.valueOf(PAGE))
+                        .param("size", String.valueOf(SIZE))
+                        .param("filter", FILTER)
         ).andExpect(status().is2xxSuccessful())
-                .andExpect(jsonPath("$[0].transactionDate").value("2024-05-09T14:44:22.854Z"))
                 .andReturn();
 
-        List<TransactionDTO> resultResponse = TestUtils.objectMapper.readValue(
+        TransactionsListDTO resultResponse = TestUtils.objectMapper.readValue(
                 result.getResponse().getContentAsString(),
-                new TypeReference<>() {});
+                TransactionsListDTO.class);
 
         //Then
         Assertions.assertNotNull(resultResponse);
-        Assertions.assertEquals(transactionDTOList,resultResponse);
-        Mockito.verify(transactionsServiceMock).retrieveTransactionsList(anyString());
+        Assertions.assertEquals(transactionsListDTO,resultResponse);
+        Mockito.verify(transactionsServiceMock).retrieveTransactionsList(anyInt(),anyInt(),anyString());
     }
 }
