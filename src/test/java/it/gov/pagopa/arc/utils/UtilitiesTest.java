@@ -4,6 +4,8 @@ import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.junit.jupiter.params.ParameterizedTest;
+import org.junit.jupiter.params.provider.CsvSource;
 import org.mockito.junit.jupiter.MockitoExtension;
 
 import java.time.ZonedDateTime;
@@ -15,14 +17,20 @@ import static org.junit.jupiter.api.Assertions.assertThrows;
 @ExtendWith(MockitoExtension.class)
 class UtilitiesTest {
 
-    @Test
-    void givenCorrectEuroStringWhenCallEuroToCentsThenReturnAmountCents() {
+    @ParameterizedTest
+    @CsvSource(delimiter = ';', value = {
+            "1.123.456,80; 112345680",
+            "2.681,52; 268152",
+            "200,35; 20035",
+            "54,1; 5410",
+            "2; 200"
+    })
+    void givenCorrectEuroStringWhenCallEuroToCentsThenReturnAmountCents(String euroString, Long expected) {
         //given
-        String euroString = "2.681,52";
         //when
         Long amountCents = Utilities.euroToCents(euroString);
         //then
-        Assertions.assertEquals(268152L, amountCents);
+        Assertions.assertEquals(expected, amountCents);
     }
 
     @Test
