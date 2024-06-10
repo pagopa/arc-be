@@ -97,6 +97,10 @@ configure<SourceSetContainer> {
 	}
 }
 
+springBoot {
+	mainClass.value("it.gov.pagopa.arc.PagopaArcBeApplication")
+}
+
 openApiGenerate {
 	generatorName.set("spring")
 	inputSpec.set("$rootDir/openapi/pagopa-arc-be.openapi.yaml")
