@@ -1,9 +1,10 @@
 package utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import it.gov.pagopa.common.config.JsonConfig;
+import it.gov.pagopa.arc.config.JsonConfig;
 
 public class TestUtils {
+    private TestUtils(){}
     /**
      * application's objectMapper
      */
