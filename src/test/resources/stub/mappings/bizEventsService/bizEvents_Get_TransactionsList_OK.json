@@ -3,7 +3,7 @@
     "method": "GET",
     "urlPathPattern": "/bizEventsMock/transactions",
     "headers": {
-      "x-api-key": {
+      "Ocp-Apim-Subscription-Key": {
         "matches": "x_api_key([0-9]?)+"
       },
       "x-fiscal-code": {
