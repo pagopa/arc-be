@@ -1,6 +1,6 @@
 microservice-chart:
   image:
-    repository: p4papitncorecommonacr.azurecr.io/pagopaarcbe
+    repository: arcpitncorecommonacr.azurecr.io/pagopaarcbe
     tag: latest
     pullPolicy: Always
 
@@ -33,5 +33,5 @@ microservice-chart:
 
 
   keyvault:
-    name: "p4pa-p-arc-kv"
+    name: "arc-p-itn-cittadini-kv"
     tenantId: "7788edaf-0346-4068-9d79-c868aed15b3d"
