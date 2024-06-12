@@ -16,7 +16,7 @@ public interface BizEventsRestClient {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     BizEventsTransactionsListDTO transactionsList(
-            @RequestHeader(value = "x-api-key") String apikey,
+            @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
     );
