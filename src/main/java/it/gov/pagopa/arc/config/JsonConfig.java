@@ -1,4 +1,4 @@
-package it.gov.pagopa.common.config;
+package it.gov.pagopa.arc.config;
 
 import com.fasterxml.jackson.annotation.JsonAutoDetect;
 import com.fasterxml.jackson.annotation.JsonInclude;

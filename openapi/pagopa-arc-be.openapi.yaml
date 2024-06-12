@@ -35,6 +35,7 @@ paths:
           required: false
           schema:
             type: string
+            enum: ["payedByMe", "registeredToMe"]
           example: payedByMe
       responses:
         '200':
@@ -49,6 +50,10 @@ paths:
           description: "Too many Requests"
         '500':
           description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
     TransactionsListDTO:
