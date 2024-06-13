@@ -1,11 +1,11 @@
 microservice-chart:
   image:
-    repository: p4pauitncorecommonacr.azurecr.io/pagopaarcbe
+    repository: arcuitncorecommonacr.azurecr.io/pagopaarcbe
     tag: latest
     pullPolicy: Always
 
     ingress:
-      host: "hub.internal.uat.p4pa.pagopa.it"
+      host: "citizien.internal.uat.cittadini-p4pa.pagopa.it"
 
   resources:
     requests:
@@ -33,5 +33,5 @@ microservice-chart:
 
 
   keyvault:
-    name: "p4pa-u-arc-kv"
+    name: "arc-u-itn-cittadini-kv"
     tenantId: "7788edaf-0346-4068-9d79-c868aed15b3d"
