@@ -5,7 +5,7 @@ microservice-chart:
     pullPolicy: Always
 
     ingress:
-      host: "citizien.internal.cittadini-p4pa.pagopa.it"
+      host: "citizen.internal.cittadini-p4pa.pagopa.it"
 
   resources:
     requests:
