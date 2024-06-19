@@ -1,0 +1,66 @@
+Nel seguente blocco di codice sono stati sostituiti i valori che cambiano da ambiente
+ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <!NOME_SECRET!>
+ per poi essere censiti nelle sezioni sottostanti.
+
+{
+  "id": "5ab90c3e-70d6-4e9d-b284-71ae367a9a0b",
+  "name": "ARC <ENV>",
+  "values": [
+    {
+      "key": "namespace",
+      "value": "pagopa-d-weu-core-evh-ns03",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "eventHub",
+      "value": "nodo-dei-pagamenti-biz-evt",
+      "type": "default",
+      "enabled": true
+    },
+    {
+      "key": "sharedAccessSignature",
+      "value": "<!SharedAccessSignature!>",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "Apim-Subscription-Key-bizevents-<ENV>",
+      "value": "<!SubscriptionKey!>",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "CF_MOCK_BE_ARC",
+      "value": "<!_CF_!>",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "baseurlArc",
+      "value": "https://api.dev.cittadini-p4pa.pagopa.it/arc/v1",
+      "type": "default",
+      "enabled": true
+    }
+  ],
+  "_postman_variable_scope": "environment",
+}
+
+Parametri
+=========
+Nome  | Descrizione
+------|-----------
+ENV   | Ambiente
+
+
+Secrets
+=======
+Nome                    | Descrizione
+------------------------|----------------------------------------------------------------------------------------------
+SharedAccessSignature   | Token SAS generato che consente l'accesso alla risorsa specificata per un periodo definito
+                        | di 50 settimane
+------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKey         | Subscription key per utilizzare le chiamate verso il servizio di Biz-Events
+------------------------|----------------------------------------------------------------------------------------------
+_CF_                    | Codice fiscale FAKE utilizzato a BE come header da passare al Servizio di Biz-Events
+                        | per recuperare la lista e il dettaglio transazioni legate a quell'utente
