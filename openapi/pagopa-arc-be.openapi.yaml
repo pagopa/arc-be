@@ -54,6 +54,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve transaction details from arc"
+      operationId: getTransactionDetails
+      parameters:
+        - name: transactionId
+          in: path
+          description: "A unique id that identifies a transaction"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained transaction details"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
     TransactionsListDTO:
@@ -97,6 +127,96 @@ components:
           type: boolean
         registeredToMe:
           type: boolean
+    TransactionDetailsDTO:
+      type: object
+      properties:
+        infoTransaction:
+          $ref: "#/components/schemas/InfoTransactionDTO"
+        carts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemDTO"
+    InfoTransactionDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        authCode:
+          type: string
+        rrn:
+          type: string
+        transactionDate:
+          type: string
+          format: date-time
+          example: "2024-05-31T13:07:25Z"
+        pspName:
+          type: string
+        walletInfo:
+          $ref: "#/components/schemas/WalletInfoDTO"
+        paymentMethod:
+          type: string
+          enum:
+            - BBT
+            - BP
+            - AD
+            - CP
+            - PO
+            - OBEP
+            - JIF
+            - MYBK
+            - PPAL
+            - UNKNOWN
+        payer:
+          $ref: "#/components/schemas/UserDetailDTO"
+        amount:
+          type: integer
+          format: int64
+        fee:
+          type: integer
+          format: int64
+        origin:
+          type: string
+          enum:
+            - INTERNAL
+            - PM
+            - NDP001PROD
+            - NDP002PROD
+            - NDP003PROD
+            - UNKNOWN
+    CartItemDTO:
+      type: object
+      properties:
+        subject:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        payee:
+          $ref: "#/components/schemas/UserDetailDTO"
+        debtor:
+          $ref: "#/components/schemas/UserDetailDTO"
+        refNumberValue:
+          type: string
+        refNumberType:
+          type: string
+    UserDetailDTO:
+      type: object
+      properties:
+        name:
+          type: string
+        taxCode:
+          type: string
+    WalletInfoDTO:
+      type: object
+      properties:
+        accountHolder:
+          type: string
+        brand:
+          type: string
+        blurredNumber:
+          type: string
+        maskedEmail:
+          type: string
     ErrorDTO:
       type: object
       required:
