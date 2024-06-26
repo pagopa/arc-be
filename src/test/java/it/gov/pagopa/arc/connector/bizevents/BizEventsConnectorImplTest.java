@@ -4,7 +4,10 @@ import ch.qos.logback.classic.LoggerContext;
 import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.arc.config.FeignConfig;
+import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
+import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -20,7 +23,7 @@ import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 import org.springframework.test.context.support.TestPropertySourceUtils;
-import utils.MemoryAppender;
+import it.gov.pagopa.arc.utils.MemoryAppender;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -59,7 +62,6 @@ class BizEventsConnectorImplTest {
         //given
         //when
         BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE", 1);
-
         //then
         assertEquals(1, bizEventsTransactionsListDTO.getTransactions().size());
         assertEquals("1", bizEventsTransactionsListDTO.getTransactions().get(0).getTransactionId());
@@ -84,6 +86,7 @@ class BizEventsConnectorImplTest {
                 .contains(("A class feign.FeignException$NotFound occurred handling request getTransactionsList from biz-Events: HttpStatus 404"))
         );
     }
+
     @Test
     void givenHeaderAndParameterWhenErrorThenThrowBizEventsInvocationException() {
         //When
@@ -91,6 +94,64 @@ class BizEventsConnectorImplTest {
         Assertions.assertThrows(BizEventsInvocationException.class,
                 ()-> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", 2));
 
+    }
+
+    @Test
+    void givenTransactionIdWhenCallBizEventsConnectorThenReturnTransactionDetails() {
+        //given
+        //when
+        BizEventsTransactionDetailsDTO transactionDetails = bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_DETAILS", "TRANSACTION_ID_OK_1");
+
+        //then
+        Assertions.assertNotNull(transactionDetails.getBizEventsInfoTransactionDTO());
+        Assertions.assertEquals(1, transactionDetails.getBizEventsCartsDTO().size());
+        Assertions.assertEquals( "TRANSACTION_ID", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionId());
+        Assertions.assertEquals( "250863", transactionDetails.getBizEventsInfoTransactionDTO().getAuthCode());
+        Assertions.assertEquals( "223560110624", transactionDetails.getBizEventsInfoTransactionDTO().getRrn());
+        Assertions.assertEquals( "2024-06-13T15:22:04Z", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionDate());
+        Assertions.assertEquals( "Worldline Merchant Services Italia S.p.A.", transactionDetails.getBizEventsInfoTransactionDTO().getPspName());
+
+        Assertions.assertEquals( "ERNESTO HOLDER", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getAccountHolder());
+        Assertions.assertEquals( "MASTERCARD", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBrand());
+        Assertions.assertEquals( "0403", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBlurredNumber());
+
+        Assertions.assertEquals( PaymentMethod.PO, transactionDetails.getBizEventsInfoTransactionDTO().getPaymentMethod());
+        Assertions.assertEquals( "ERNESTO PAYER", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getName());
+        Assertions.assertEquals( "TAX_CODE", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getTaxCode());
+
+        Assertions.assertEquals("634,37", transactionDetails.getBizEventsInfoTransactionDTO().getAmount());
+        Assertions.assertEquals("0,53", transactionDetails.getBizEventsInfoTransactionDTO().getFee());
+        Assertions.assertEquals(Origin.UNKNOWN, transactionDetails.getBizEventsInfoTransactionDTO().getOrigin());
+
+        Assertions.assertEquals("pagamento", transactionDetails.getBizEventsCartsDTO().get(0).getSubject());
+        Assertions.assertEquals("634,37", transactionDetails.getBizEventsCartsDTO().get(0).getAmount());
+
+        Assertions.assertEquals("ACI Automobile Club Italia", transactionDetails.getBizEventsCartsDTO().get(0).getPayee().getName());
+        Assertions.assertEquals("00493410583", transactionDetails.getBizEventsCartsDTO().get(0).getPayee().getTaxCode());
+
+        Assertions.assertEquals("ERNESTO PAYER", transactionDetails.getBizEventsCartsDTO().get(0).getDebtor().getName());
+        Assertions.assertEquals("TAX_CODE", transactionDetails.getBizEventsCartsDTO().get(0).getDebtor().getTaxCode());
+
+        Assertions.assertEquals("960000000094659945", transactionDetails.getBizEventsCartsDTO().get(0).getRefNumberValue());
+        Assertions.assertEquals("IUV", transactionDetails.getBizEventsCartsDTO().get(0).getRefNumberType());
+    }
+
+    @Test
+    void givenTransactionIdWhenNotFoundThenReturnException() {
+        //given
+        //when
+        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
+                () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_NOT_FOUND", "TRANSACTION_ID_NOT_FOUND_1"));
+        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsInvocationException.getMessage());
+    }
+
+    @Test
+    void givenTransactionIdWhenErrorThenThrowBizEventsInvocationException() {
+        //When
+        //Then
+        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
+                () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_ERROR", "TRANSACTION_ID_ERROR_1"));
+        Assertions.assertEquals( "An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 
     public static class WireMockInitializer
