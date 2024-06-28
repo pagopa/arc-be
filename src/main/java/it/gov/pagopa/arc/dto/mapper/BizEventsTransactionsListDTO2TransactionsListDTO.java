@@ -2,11 +2,11 @@ package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class BizEventsTransactionsListDTO2TransactionsListDTO {
     public TransactionsListDTO apply(List<TransactionDTO> transactionsList, Integer size){
         return TransactionsListDTO.builder()

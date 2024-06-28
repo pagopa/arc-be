@@ -1,4 +1,4 @@
-package it.gov.pagopa.arc.fakers;
+package it.gov.pagopa.arc.fakers.bizEvents;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 

@@ -3,8 +3,9 @@ package it.gov.pagopa.arc.dto.mapper;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.utils.Utilities;
-import org.springframework.stereotype.Service;
-@Service
+import org.springframework.stereotype.Component;
+
+@Component
 public class BizEventsTransactionDTO2TransactionDTO {
     public TransactionDTO apply(BizEventsTransactionDTO transaction){
         return TransactionDTO.builder()
