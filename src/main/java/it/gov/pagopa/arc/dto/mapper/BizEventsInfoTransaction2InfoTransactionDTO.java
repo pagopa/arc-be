@@ -7,10 +7,10 @@ import it.gov.pagopa.arc.utils.Utilities;
 import org.springframework.stereotype.Service;
 
 @Service
-public class BizEventsTransactionInfo2TransactionInfoDTO {
+public class BizEventsInfoTransaction2InfoTransactionDTO {
     private final BizEventsWalletInfo2WalletInfoDTO walletInfoMapper;
     private final BizEventsUserDetail2UserDetailDTO userDetailsMapper;
-    public BizEventsTransactionInfo2TransactionInfoDTO(BizEventsWalletInfo2WalletInfoDTO walletInfoMapper, BizEventsUserDetail2UserDetailDTO userDetailsMapper) {
+    public BizEventsInfoTransaction2InfoTransactionDTO(BizEventsWalletInfo2WalletInfoDTO walletInfoMapper, BizEventsUserDetail2UserDetailDTO userDetailsMapper) {
         this.walletInfoMapper = walletInfoMapper;
         this.userDetailsMapper = userDetailsMapper;
     }

@@ -9,9 +9,9 @@ import java.util.List;
 
 @Service
 public class BizEventsTransactionDetails2TransactionDetailsDTO {
-    private final BizEventsTransactionInfo2TransactionInfoDTO transactionInfoMapper;
+    private final BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapper;
 
-    public BizEventsTransactionDetails2TransactionDetailsDTO(BizEventsTransactionInfo2TransactionInfoDTO transactionInfoMapper) {
+    public BizEventsTransactionDetails2TransactionDetailsDTO(BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapper) {
         this.transactionInfoMapper = transactionInfoMapper;
     }
 
