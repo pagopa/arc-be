@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
-import it.gov.pagopa.arc.fakers.BizEventsTransactionDTOFaker;
+import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.utils.Utilities;
 import org.junit.jupiter.api.BeforeEach;
