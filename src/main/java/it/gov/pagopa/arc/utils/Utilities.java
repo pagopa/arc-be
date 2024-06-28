@@ -16,7 +16,7 @@ public class Utilities {
     /** To convert euro into cents */
     public static Long euroToCents(String euroString){
         Double euroDouble = euroStringToDouble(euroString);
-        return (long) (euroDouble * 100);
+        return Math.round(euroDouble * 100);
     }
 
     /** To convert euro from String to double */

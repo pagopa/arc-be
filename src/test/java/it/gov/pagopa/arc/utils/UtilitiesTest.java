@@ -23,7 +23,8 @@ class UtilitiesTest {
             "2.681,52; 268152",
             "200,35; 20035",
             "54,1; 5410",
-            "2; 200"
+            "2; 200",
+            "0,24; 24"
     })
     void givenCorrectEuroStringWhenCallEuroToCentsThenReturnAmountCents(String euroString, Long expected) {
         //given
