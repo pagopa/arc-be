@@ -20,7 +20,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import utils.MemoryAppender;
+import it.gov.pagopa.arc.utils.MemoryAppender;
 
 import static org.mockito.Mockito.doThrow;
 

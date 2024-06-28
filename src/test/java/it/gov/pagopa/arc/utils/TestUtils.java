@@ -1,4 +1,4 @@
-package utils;
+package it.gov.pagopa.arc.utils;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JsonConfig;

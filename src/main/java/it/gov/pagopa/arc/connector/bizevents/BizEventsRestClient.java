@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
+import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
@@ -19,6 +20,17 @@ public interface BizEventsRestClient {
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
             @RequestParam(value = "size", required = false, defaultValue = "10") int size
+    );
+
+    @GetMapping(
+            value = "/transactions/{transaction-id}",
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    BizEventsTransactionDetailsDTO transactionDetails(
+            @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
+            @RequestHeader(value = "x-fiscal-code") String fiscalCode,
+            @PathVariable(value = "transaction-id") String transactionId
     );
 }
 
