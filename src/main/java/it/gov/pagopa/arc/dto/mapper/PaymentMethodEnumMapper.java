@@ -2,12 +2,12 @@ package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.model.generated.InfoTransactionDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.EnumMap;
 import java.util.Map;
 
-@Service
+@Component
 public class PaymentMethodEnumMapper {
     private PaymentMethodEnumMapper(){}
     protected static final Map<PaymentMethod, InfoTransactionDTO.PaymentMethodEnum> paymentMethodEnumMap;

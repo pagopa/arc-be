@@ -3,9 +3,9 @@ package it.gov.pagopa.arc.dto.mapper;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsCartItemDTO;
 import it.gov.pagopa.arc.model.generated.CartItemDTO;
 import it.gov.pagopa.arc.utils.Utilities;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class BizEventsCartItem2CartItemDTO {
     private final BizEventsUserDetail2UserDetailDTO userDetailsMapper;
 

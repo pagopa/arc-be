@@ -2,9 +2,9 @@ package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsWalletInfoDTO;
 import it.gov.pagopa.arc.model.generated.WalletInfoDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class BizEventsWalletInfo2WalletInfoDTO {
 
     public WalletInfoDTO mapWalletInfo(BizEventsWalletInfoDTO bizEventsWalletInfoDTO){

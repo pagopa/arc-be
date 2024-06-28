@@ -4,9 +4,9 @@ import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsInfoTransactionDTO;
 import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.model.generated.InfoTransactionDTO;
 import it.gov.pagopa.arc.utils.Utilities;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 public class BizEventsInfoTransaction2InfoTransactionDTO {
     private final BizEventsWalletInfo2WalletInfoDTO walletInfoMapper;
     private final BizEventsUserDetail2UserDetailDTO userDetailsMapper;

@@ -3,11 +3,11 @@ package it.gov.pagopa.arc.dto.mapper;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.CartItemDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
-@Service
+@Component
 public class BizEventsTransactionDetails2TransactionDetailsDTO {
     private final BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapper;
 
