@@ -1,9 +1,13 @@
 package it.gov.pagopa.arc.service;
 
+import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
+import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
+import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
+import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -11,6 +15,7 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.ArrayList;
@@ -24,6 +29,9 @@ class TransactionsServiceTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;
     private static final String FILTER = "DUMMY_FILTER";
+    private static final String TRANSACTION_ID = "TRANSACTION_ID";
+
+    private MemoryAppender memoryAppender;
 
     @Autowired
     private TransactionsService transactionsService;
@@ -34,6 +42,12 @@ class TransactionsServiceTest {
     @BeforeEach
     void setUp() {
         transactionsService = new TransactionsServiceImpl(bizEventsServiceMock);
+        ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("it.gov.pagopa.arc.service.TransactionsServiceImpl");
+        memoryAppender = new MemoryAppender();
+        memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
+        logger.setLevel(ch.qos.logback.classic.Level.INFO);
+        logger.addAppender(memoryAppender);
+        memoryAppender.start();
     }
 
     @Test
@@ -68,6 +82,7 @@ class TransactionsServiceTest {
         Assertions.assertEquals(2, result.getItemsForPage());
         Assertions.assertEquals(1, result.getTotalPages());
         Assertions.assertEquals(10, result.getTotalItems());
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_TRANSACTIONS_LIST] The current user has requested to retrieve his list of transactions, with the current parameters: page 1, size 2 and filter DUMMY_FILTER"));
         Mockito.verify(bizEventsServiceMock).retrieveTransactionsListFromBizEvents(anyInt(),anyInt(),anyString());
     }
 
@@ -96,5 +111,20 @@ class TransactionsServiceTest {
         Assertions.assertEquals(1, result.getTotalPages());
         Assertions.assertEquals(10, result.getTotalItems());
         Mockito.verify(bizEventsServiceMock).retrieveTransactionsListFromBizEvents(anyInt(),anyInt(),anyString());
+    }
+
+    @Test
+    void givenTransactionIdWhenCallRetrieveTransactionDetailsThenReturnTransactionDetails() {
+        TransactionDetailsDTO transactionDetails = TransactionDetailsDTOFaker.mockInstance();
+        //given
+        Mockito.when(bizEventsServiceMock.retrieveTransactionDetailsFromBizEvents(TRANSACTION_ID)).thenReturn(transactionDetails);
+        //when
+        TransactionDetailsDTO result = transactionsService.retrieveTransactionDetails(TRANSACTION_ID);
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(2, result.getCarts().size());
+        Assertions.assertEquals(transactionDetails, result);
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_TRANSACTION_DETAILS] The current user has requested to retrieve transaction details for transaction with ID TRANSACTION_ID"));
+        Mockito.verify(bizEventsServiceMock).retrieveTransactionDetailsFromBizEvents(anyString());
     }
 }
