@@ -55,7 +55,6 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             bizEventsTransactionDetailsDTO = bizEventsRestClient.transactionDetails(apikey, fiscalCode, transactionId);
         }catch (FeignException e){
             if(e.status() == HttpStatus.NOT_FOUND.value()){
-                //Update this exception with custom bad request
                 throw new BizEventsNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
             }
             throw new BizEventsInvocationException("An error occurred handling request from biz-Events");
