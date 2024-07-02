@@ -22,10 +22,12 @@ class BizEventsTransactionDetails2TransactionDetailsDTOTest {
 
     @Mock
     private BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapperMock;
+    @Mock
+    private BizEventsCartItem2CartItemDTO cartItemDTOMapperMock;
 
     @BeforeEach
     void setUp() {
-        transactionDetailsMapper = new BizEventsTransactionDetails2TransactionDetailsDTO(transactionInfoMapperMock);
+        transactionDetailsMapper = new BizEventsTransactionDetails2TransactionDetailsDTO(transactionInfoMapperMock, cartItemDTOMapperMock);
     }
 
     @Test
@@ -38,13 +40,16 @@ class BizEventsTransactionDetails2TransactionDetailsDTOTest {
         TransactionDetailsDTO transactionDetailsDTO = TransactionDetailsDTOFaker.mockInstance();
 
         Mockito.when(transactionInfoMapperMock.mapInfoTransaction(bizEventsTransactionDetailsDTO.getBizEventsInfoTransactionDTO())).thenReturn(transactionDetailsDTO.getInfoTransaction());
+        Mockito.when(cartItemDTOMapperMock.mapCart(bizEventsTransactionDetailsDTO.getBizEventsCartsDTO().get(0))).thenReturn(transactionDetailsDTO.getCarts().get(0));
+        Mockito.when(cartItemDTOMapperMock.mapCart(bizEventsTransactionDetailsDTO.getBizEventsCartsDTO().get(1))).thenReturn(transactionDetailsDTO.getCarts().get(1));
         //when
-        TransactionDetailsDTO result = transactionDetailsMapper.apply(bizEventsTransactionDetailsDTO, transactionDetailsDTO.getCarts());
+        TransactionDetailsDTO result = transactionDetailsMapper.apply(bizEventsTransactionDetailsDTO);
         //then
         assertNotNull(result);
         assertEquals(transactionDetailsDTO.getInfoTransaction(), result.getInfoTransaction());
         assertEquals(2, result.getCarts().size());
         assertEquals( transactionDetailsDTO.getCarts(), result.getCarts());
         Mockito.verify(transactionInfoMapperMock).mapInfoTransaction(any());
+        Mockito.verify(cartItemDTOMapperMock,Mockito.times(2)).mapCart(any());
     }
 }

@@ -4,7 +4,6 @@ import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsCartItem2CartItemDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
@@ -46,13 +45,11 @@ class BizEventsServiceImplTest {
     @Mock
     private BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapperMock;
     @Mock
-    private BizEventsCartItem2CartItemDTO cartItemDTOMapperMock;
-    @Mock
     private BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapperMock;
 
     @BeforeEach
     void setUp() {
-        bizEventsService = new BizEventsServiceImpl(DUMMY_FISCAL_CODE,bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock, cartItemDTOMapperMock, transactionDetailsDTOMapperMock);
+        bizEventsService = new BizEventsServiceImpl(DUMMY_FISCAL_CODE,bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock, transactionDetailsDTOMapperMock);
     }
 
     @Test
@@ -153,9 +150,7 @@ class BizEventsServiceImplTest {
         TransactionDetailsDTO expectedResult = TransactionDetailsDTOFaker.mockInstance();
 
         Mockito.when(bizEventsConnectorMock.getTransactionDetails(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(bizEventsTransactionDetails);
-        Mockito.when(cartItemDTOMapperMock.mapCart(bizEventsTransactionDetails.getBizEventsCartsDTO().get(0))).thenReturn(expectedResult.getCarts().get(0));
-        Mockito.when(cartItemDTOMapperMock.mapCart(bizEventsTransactionDetails.getBizEventsCartsDTO().get(1))).thenReturn(expectedResult.getCarts().get(1));
-        Mockito.when(transactionDetailsDTOMapperMock.apply(bizEventsTransactionDetails, expectedResult.getCarts())).thenReturn(expectedResult);
+        Mockito.when(transactionDetailsDTOMapperMock.apply(bizEventsTransactionDetails)).thenReturn(expectedResult);
         //when
         TransactionDetailsDTO result = bizEventsService.retrieveTransactionDetailsFromBizEvents(TRANSACTION_ID);
 
@@ -167,7 +162,6 @@ class BizEventsServiceImplTest {
         Assertions.assertEquals(expectedResult, result);
 
         Mockito.verify(bizEventsConnectorMock).getTransactionDetails(anyString(),anyString());
-        Mockito.verify(cartItemDTOMapperMock,Mockito.times(2)).mapCart(any());
-        Mockito.verify(transactionDetailsDTOMapperMock).apply(any(),any());
+        Mockito.verify(transactionDetailsDTOMapperMock).apply(any());
     }
 }

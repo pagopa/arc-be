@@ -3,11 +3,9 @@ package it.gov.pagopa.arc.service.bizevents;
 import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsCartItem2CartItemDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
-import it.gov.pagopa.arc.model.generated.CartItemDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
@@ -27,7 +25,6 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsConnector bizEventsConnector;
     private final BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
     private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
-    private final BizEventsCartItem2CartItemDTO cartItemDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper;
 
     @Override
@@ -49,12 +46,6 @@ public class BizEventsServiceImpl implements BizEventsService{
     @Override
     public TransactionDetailsDTO retrieveTransactionDetailsFromBizEvents(String transactionId) {
         BizEventsTransactionDetailsDTO bizEventsTransactionDetails = bizEventsConnector.getTransactionDetails(fakeFiscalCode, transactionId);
-        List<CartItemDTO> carts = bizEventsTransactionDetails
-                    .getBizEventsCartsDTO()
-                    .stream()
-                    .map(cartItemDTOMapper::mapCart)
-                    .toList();
-
-        return transactionDetailsDTOMapper.apply(bizEventsTransactionDetails, carts);
+        return transactionDetailsDTOMapper.apply(bizEventsTransactionDetails);
     }
 }
