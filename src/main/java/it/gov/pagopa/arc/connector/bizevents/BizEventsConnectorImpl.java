@@ -4,6 +4,7 @@ import feign.FeignException;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -55,7 +56,7 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
         }catch (FeignException e){
             if(e.status() == HttpStatus.NOT_FOUND.value()){
                 //Update this exception with custom bad request
-                throw new BizEventsInvocationException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
+                throw new BizEventsNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
             }
             throw new BizEventsInvocationException("An error occurred handling request from biz-Events");
         }

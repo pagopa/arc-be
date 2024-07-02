@@ -9,6 +9,7 @@ import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
 import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -140,9 +141,9 @@ class BizEventsConnectorImplTest {
     void givenTransactionIdWhenNotFoundThenReturnException() {
         //given
         //when
-        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
+        BizEventsNotFoundException bizEventsNotFoundException = assertThrows(BizEventsNotFoundException.class,
                 () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_NOT_FOUND", "TRANSACTION_ID_NOT_FOUND_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsInvocationException.getMessage());
+        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsNotFoundException.getMessage());
     }
 
     @Test

@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.exception;
 
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +20,11 @@ public class ArcExceptionHandler {
     @ExceptionHandler(BizEventsInvocationException.class)
     public ResponseEntity<ErrorDTO> handleBizEventsInvocationException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+
+    @ExceptionHandler(BizEventsNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleBizEventsNotFoundException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.TRANSACTION_NOT_FOUND_ERROR);
     }
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
