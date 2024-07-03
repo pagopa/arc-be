@@ -9,7 +9,6 @@ import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsLis
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
@@ -17,15 +16,25 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-@RequiredArgsConstructor
 public class BizEventsServiceImpl implements BizEventsService{
 
-    @Value("${rest-client.biz-events.fake-fiscal-code}")
     private final String fakeFiscalCode;
     private final BizEventsConnector bizEventsConnector;
     private final BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
     private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper;
+
+    public BizEventsServiceImpl(@Value("${rest-client.biz-events.fake-fiscal-code}") String fakeFiscalCode,
+                                BizEventsConnector bizEventsConnector,
+                                BizEventsTransactionDTO2TransactionDTO transactionDTOMapper,
+                                BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper,
+                                BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper) {
+        this.fakeFiscalCode = fakeFiscalCode;
+        this.bizEventsConnector = bizEventsConnector;
+        this.transactionDTOMapper = transactionDTOMapper;
+        this.transactionsListDTOMapper = transactionsListDTOMapper;
+        this.transactionDetailsDTOMapper = transactionDetailsDTOMapper;
+    }
 
     @Override
     public TransactionsListDTO retrieveTransactionsListFromBizEvents(Integer page, Integer size, String filter) {
