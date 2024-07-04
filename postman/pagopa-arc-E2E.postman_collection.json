@@ -458,6 +458,46 @@
               "response": []
             },
             {
+              "name": "transaction details",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code != 200 ){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "}else{\r",
+                      "    pm.test(\"[Get transaction details - Case 2], expected httpStatus: 200\", () => {\r",
+                      "        pm.response.to.have.status(200);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction details - Case 2] - When you get the transaction details, ARC return a transaction details\", () => {\r",
+                      "        let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
+                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
+                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
+                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
+                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
+                      "\r",
+                      "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
+                      "    })\r",
+                      "}\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
+              },
+              "response": []
+            },
+            {
               "name": "Disable transaction",
               "event": [
                 {
@@ -714,6 +754,45 @@
                     }
                   ]
                 }
+              },
+              "response": []
+            },
+            {
+              "name": "transaction details",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code != 200 ){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "}else{\r",
+                      "    pm.test(\"[Get transaction details - Case 3], expected httpStatus: 200\", () => {\r",
+                      "        pm.response.to.have.status(200);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction details - Case 3] - When you get the transaction details, ARC return a transaction details\", () => {\r",
+                      "        let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
+                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
+                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"walletInfo\");\r",
+                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"paymentMethod\");\r",
+                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"payer\");\r",
+                      "\r",
+                      "    })\r",
+                      "}\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
               },
               "response": []
             },
