@@ -1,8 +1,8 @@
 {
   "info": {
-    "_postman_id": "8dc38035-1578-49a2-84aa-e4e6740dd45a",
-    "name": "ARC transactions e2e",
-    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_postman_id": "3ba80321-b9db-47ce-95fc-bafc783af96c",
+    "name": "ARC transactions e2e Copy",
+    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
     "_exporter_id": "26204012"
   },
   "item": [
@@ -59,43 +59,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -116,7 +80,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"{{amountEur}}\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": \"{{totalAmount}}\",\r\n            \"amount\": \"{{amountCents}}\",\r\n            \"fee\": \"{{fee}}\",\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": \"{{amountEur}}\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -160,7 +124,7 @@
                       "let jsonResponse = pm.response.json();\r",
                       "\r",
                       "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout,3000);\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
                       "}else{\r",
                       "    pm.test(\"[Get transactions list - Case 1], expected httpStatus: 200\", () => {\r",
                       "        pm.response.to.have.status(200);\r",
@@ -202,7 +166,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseurlArc}}/transactions?size=100",
+                  "raw": "{{baseurlArc}}/transactions",
                   "host": [
                     "{{baseurlArc}}"
                   ],
@@ -212,16 +176,17 @@
                   "query": [
                     {
                       "key": "page",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     },
                     {
                       "key": "size",
-                      "value": "100"
+                      "value": null,
+                      "disabled": true
                     },
                     {
                       "key": "filter",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     }
                   ]
@@ -265,16 +230,7 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
-                  ]
-                }
+                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
               },
               "response": []
             },
@@ -297,23 +253,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -322,25 +266,7 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             }
@@ -396,43 +322,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -453,7 +343,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"{{amountEur}}\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": \"{{totalAmount}}\",\r\n            \"amount\": \"{{amountCents}}\",\r\n            \"fee\": \"{{fee}}\",\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": \"{{amountEur}}\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -497,7 +387,7 @@
                       "let jsonResponse = pm.response.json();\r",
                       "\r",
                       "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout,3000);\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
                       "}else{\r",
                       "    pm.test(\"[Get transactions list - Case 2], expected httpStatus: 200\", () => {\r",
                       "        pm.response.to.have.status(200);\r",
@@ -539,7 +429,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseurlArc}}/transactions?size=100",
+                  "raw": "{{baseurlArc}}/transactions",
                   "host": [
                     "{{baseurlArc}}"
                   ],
@@ -549,67 +439,19 @@
                   "query": [
                     {
                       "key": "page",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     },
                     {
                       "key": "size",
-                      "value": "100"
+                      "value": null,
+                      "disabled": true
                     },
                     {
                       "key": "filter",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction details - Case 2], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details - Case 2] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                      "        let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
                   ]
                 }
               },
@@ -634,23 +476,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -659,25 +489,7 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             },
@@ -700,23 +512,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -725,25 +525,7 @@
                     "value": "{{fakeUser1}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             }
@@ -799,43 +581,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -856,7 +602,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITTADINO PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"{{amountEur}}\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": \"{{totalAmount}}\",\r\n            \"amount\": \"{{amountCents}}\",\r\n            \"fee\": \"{{fee}}\",\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": \"{{amountEur}}\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITTADINO PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -900,7 +646,7 @@
                       "let jsonResponse = pm.response.json();\r",
                       "\r",
                       "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout,3000);\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
                       "}else{\r",
                       "    pm.test(\"[Get transactions list - Case 3], expected httpStatus: 200\", () => {\r",
                       "        pm.response.to.have.status(200);\r",
@@ -943,7 +689,7 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseurlArc}}/transactions?size=100",
+                  "raw": "{{baseurlArc}}/transactions",
                   "host": [
                     "{{baseurlArc}}"
                   ],
@@ -953,66 +699,19 @@
                   "query": [
                     {
                       "key": "page",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     },
                     {
                       "key": "size",
-                      "value": "100"
+                      "value": null,
+                      "disabled": true
                     },
                     {
                       "key": "filter",
-                      "value": "",
+                      "value": null,
                       "disabled": true
                     }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction details - Case 1], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details - Case 1] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                      "        let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"walletInfo\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"paymentMethod\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"payer\");\r",
-                      "\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
                   ]
                 }
               },
@@ -1037,23 +736,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -1062,25 +749,7 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             },
@@ -1103,23 +772,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -1128,25 +785,7 @@
                     "value": "{{fakeUser1}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             }
@@ -1157,55 +796,6 @@
     {
       "name": "Unhappy Case",
       "item": [
-        {
-          "name": "TRANSACTION_NOT_FOUND_ERROR",
-          "item": [
-            {
-              "name": "[TRANSACTION_NOT_FOUND_EXCEPTION] transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "\r",
-                      "if(pm.response.code != 404){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "} else{\r",
-                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception , expected httpStatus: 404\", () => {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
-                      "    let response = pm.response.json();\r",
-                      "    pm.expect(response.error).to.eq(\"transaction_not_found_error\");\r",
-                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction with transaction id [3562] for the current user\");\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/3562",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "3562"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
         {
           "name": "GENERIC_ERROR",
           "item": [
@@ -1344,15 +934,7 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions"
-                  ]
-                }
+                "url": "{{baseurlArc}}/transactions"
               },
               "response": []
             },
@@ -1375,23 +957,11 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
+                  "apikey": {
+                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                    "key": "Ocp-Apim-Subscription-Key",
+                    "in": "header"
+                  }
                 },
                 "method": "POST",
                 "header": [
@@ -1400,25 +970,7 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
+                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
               },
               "response": []
             }
@@ -1487,18 +1039,6 @@
     },
     {
       "key": "totalAmount",
-      "value": ""
-    },
-    {
-      "key": "idPA",
-      "value": ""
-    },
-    {
-      "key": "companyName",
-      "value": ""
-    },
-    {
-      "key": "officeName",
       "value": ""
     }
   ]
