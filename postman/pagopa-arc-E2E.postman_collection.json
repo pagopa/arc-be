@@ -1054,6 +1054,46 @@
               "response": []
             }
           ]
+        },
+        {
+          "name": "TRANSACTION_NOT_FOUND_ERROR",
+          "item": [
+            {
+              "name": "[TRANSACTION_NOT_FOUND_EXCEPTION] transaction details",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "\r",
+                      "if(pm.response.code != 404){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "} else{\r",
+                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception , expected httpStatus: 404\", () => {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.error).to.eq(\"transaction_not_found_error\");\r",
+                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction with transaction id [3562] for the current user\");\r",
+                      "    })\r",
+                      "}\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": "{{baseurlArc}}/transactions/3562"
+              },
+              "response": []
+            }
+          ]
         }
       ]
     }
