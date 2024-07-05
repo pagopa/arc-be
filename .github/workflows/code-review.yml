@@ -23,7 +23,6 @@ jobs:
           java-version: 17
 
       - name: Build with Gradle
-        working-directory: ./pagopa-arc-be
         run: ./gradlew build
 
       - name: SonarCloud Scan
