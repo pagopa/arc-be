@@ -1,13 +1,11 @@
 name: ARC - CodeReview
 
 on:
-  pull_request_target:
+  pull_request:
     types:
       - opened
       - edited
       - synchronize
-    paths:
-      - 'pagopa-arc-be/**'
 
 jobs:
   build:
