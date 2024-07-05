@@ -1,8 +1,8 @@
 {
   "info": {
     "_postman_id": "3ba80321-b9db-47ce-95fc-bafc783af96c",
-    "name": "ARC transactions e2e Copy",
-    "schema": "https://schema.getpostman.com/json/collection/v2.0.0/collection.json",
+    "name": "ARC transactions e2e",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "26204012"
   },
   "item": [
@@ -230,7 +230,16 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}"
+                  ]
+                }
               },
               "response": []
             },
@@ -253,11 +262,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -266,7 +287,25 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             }
@@ -493,7 +532,16 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}"
+                  ]
+                }
               },
               "response": []
             },
@@ -516,11 +564,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -529,7 +589,25 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             },
@@ -552,11 +630,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -565,7 +655,25 @@
                     "value": "{{fakeUser1}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             }
@@ -792,7 +900,16 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": "{{baseurlArc}}/transactions/{{transactionId}}"
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}"
+                  ]
+                }
               },
               "response": []
             },
@@ -815,11 +932,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -828,7 +957,25 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             },
@@ -851,11 +998,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -864,7 +1023,25 @@
                     "value": "{{fakeUser1}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             }
@@ -1013,7 +1190,15 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": "{{baseurlArc}}/transactions"
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions"
+                  ]
+                }
               },
               "response": []
             },
@@ -1036,11 +1221,23 @@
               "request": {
                 "auth": {
                   "type": "apikey",
-                  "apikey": {
-                    "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                    "key": "Ocp-Apim-Subscription-Key",
-                    "in": "header"
-                  }
+                  "apikey": [
+                    {
+                      "key": "value",
+                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                      "type": "string"
+                    },
+                    {
+                      "key": "key",
+                      "value": "Ocp-Apim-Subscription-Key",
+                      "type": "string"
+                    },
+                    {
+                      "key": "in",
+                      "value": "header",
+                      "type": "string"
+                    }
+                  ]
                 },
                 "method": "POST",
                 "header": [
@@ -1049,7 +1246,25 @@
                     "value": "{{CF_MOCK_BE_ARC}}"
                   }
                 ],
-                "url": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable"
+                "url": {
+                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                  "protocol": "https",
+                  "host": [
+                    "api",
+                    "dev",
+                    "platform",
+                    "pagopa",
+                    "it"
+                  ],
+                  "path": [
+                    "bizevents",
+                    "tx-service",
+                    "v1",
+                    "transactions",
+                    "{{transactionId}}",
+                    "disable"
+                  ]
+                }
               },
               "response": []
             }
@@ -1089,7 +1304,16 @@
               "request": {
                 "method": "GET",
                 "header": [],
-                "url": "{{baseurlArc}}/transactions/3562"
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/3562",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "3562"
+                  ]
+                }
               },
               "response": []
             }
