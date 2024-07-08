@@ -82,6 +82,49 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "transaction_not_found_error"
+                error_description: "string"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /transactions/{transactionId}/receipt:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve transaction receipt from arc"
+      operationId: getTransactionReceipt
+      parameters:
+        - name: transactionId
+          in: path
+          description: "A unique id that identifies a transaction"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained transaction details"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Transaction details not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "receipt_not_found_error"
+                error_description: "string"
         '429':
           description: "Too many Requests"
         '500':
@@ -233,6 +276,7 @@ components:
           enum:
             - generic_error
             - transaction_not_found_error
+            - receipt_not_found_error
             - invalid_request
         error_description:
           type: string
