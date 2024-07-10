@@ -22,7 +22,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -163,5 +168,23 @@ class BizEventsServiceImplTest {
 
         Mockito.verify(bizEventsConnectorMock).getTransactionDetails(anyString(),anyString());
         Mockito.verify(transactionDetailsDTOMapperMock).apply(any());
+    }
+
+    @Test
+    void givenTransactionIdWhenCallRetrieveTransactionReceiptFromBizEventsThenReturnTransactionReceipt() throws IOException {
+        //given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+
+        Mockito.when(bizEventsConnectorMock.getTransactionReceipt(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(receipt);
+        //when
+        Resource result = bizEventsService.retrieveTransactionReceiptFromBizEvents(TRANSACTION_ID);
+
+        //then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] resultAsByteArray = result.getContentAsByteArray();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertArrayEquals(resultAsByteArray, expectedContent);
+        Mockito.verify(bizEventsConnectorMock).getTransactionReceipt(anyString(),anyString());
     }
 }

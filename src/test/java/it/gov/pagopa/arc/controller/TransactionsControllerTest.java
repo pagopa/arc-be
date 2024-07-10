@@ -13,8 +13,13 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+
+import java.nio.file.Files;
+import java.nio.file.Paths;
 
 import static org.mockito.ArgumentMatchers.anyInt;
 import static org.mockito.ArgumentMatchers.anyString;
@@ -83,5 +88,27 @@ class TransactionsControllerTest {
         Assertions.assertNotNull(resultResponse);
         Assertions.assertEquals(transactionDetailsDTO,resultResponse);
         Mockito.verify(transactionsServiceMock).retrieveTransactionDetails(anyString());
+    }
+
+    @Test
+    void givenTransactionIdWhenCallGetTransactionReceiptThenReturnTransactionReceipt() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+
+        Mockito.when(transactionsServiceMock.retrieveTransactionReceipt(TRANSACTION_ID)).thenReturn(receipt);
+
+        //When
+        MvcResult result = mockMvc.perform(
+                        get("/arc/transactions/{transactionId}/receipt", TRANSACTION_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        //Then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] actualContent = result.getResponse().getContentAsByteArray();
+
+        Assertions.assertNotNull(actualContent);
+        Assertions.assertArrayEquals(expectedContent, actualContent);
+        Mockito.verify(transactionsServiceMock).retrieveTransactionReceipt(anyString());
     }
 }

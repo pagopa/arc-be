@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -26,5 +27,12 @@ public class TransactionsServiceImpl implements TransactionsService {
         log.info("[GET_TRANSACTION_DETAILS] The current user has requested to retrieve transaction details for transaction with ID {}", transactionId);
         return bizEventsService.retrieveTransactionDetailsFromBizEvents(transactionId);
     }
+
+    @Override
+    public Resource retrieveTransactionReceipt(String transactionId) {
+        log.info("[GET_TRANSACTION_RECEIPT] The current user has requested to retrieve transaction receipt for transaction with ID {}", transactionId);
+        return bizEventsService.retrieveTransactionReceiptFromBizEvents(transactionId);
+    }
+
 }
 

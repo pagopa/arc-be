@@ -10,6 +10,7 @@ import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -56,5 +57,10 @@ public class BizEventsServiceImpl implements BizEventsService{
     public TransactionDetailsDTO retrieveTransactionDetailsFromBizEvents(String transactionId) {
         BizEventsTransactionDetailsDTO bizEventsTransactionDetails = bizEventsConnector.getTransactionDetails(fakeFiscalCode, transactionId);
         return transactionDetailsDTOMapper.apply(bizEventsTransactionDetails);
+    }
+
+    @Override
+    public Resource retrieveTransactionReceiptFromBizEvents(String transactionId) {
+        return bizEventsConnector.getTransactionReceipt(fakeFiscalCode, transactionId);
     }
 }
