@@ -17,7 +17,12 @@ import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -126,5 +131,22 @@ class TransactionsServiceTest {
         Assertions.assertEquals(transactionDetails, result);
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_TRANSACTION_DETAILS] The current user has requested to retrieve transaction details for transaction with ID TRANSACTION_ID"));
         Mockito.verify(bizEventsServiceMock).retrieveTransactionDetailsFromBizEvents(anyString());
+    }
+
+    @Test
+    void givenTransactionIdWhenCallRetrieveTransactionReceiptThenReturnTransactionReceipt() throws IOException {
+        //given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+        Mockito.when(bizEventsServiceMock.retrieveTransactionReceiptFromBizEvents(TRANSACTION_ID)).thenReturn(receipt);
+        //when
+        Resource result = transactionsService.retrieveTransactionReceipt(TRANSACTION_ID);
+        //then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] resultAsByteArray = result.getContentAsByteArray();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertArrayEquals(expectedContent, resultAsByteArray);
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_TRANSACTION_RECEIPT] The current user has requested to retrieve transaction receipt for transaction with ID TRANSACTION_ID"));
+        Mockito.verify(bizEventsServiceMock).retrieveTransactionReceiptFromBizEvents(anyString());
     }
 }
