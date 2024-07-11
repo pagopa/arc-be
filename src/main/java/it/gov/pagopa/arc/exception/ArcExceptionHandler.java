@@ -24,7 +24,15 @@ public class ArcExceptionHandler {
 
     @ExceptionHandler(BizEventsNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleBizEventsNotFoundException(RuntimeException ex, HttpServletRequest request){
-        return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.TRANSACTION_NOT_FOUND_ERROR);
+        ErrorDTO.ErrorEnum errorEnum;
+
+        if(!request.getRequestURI().contains("/pdf")){
+            errorEnum = ErrorDTO.ErrorEnum.TRANSACTION_NOT_FOUND_ERROR;
+        }else {
+            errorEnum = ErrorDTO.ErrorEnum.RECEIPT_NOT_FOUND_ERROR;
+        }
+
+        return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, errorEnum);
     }
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
