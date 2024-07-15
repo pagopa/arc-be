@@ -35,6 +35,6 @@ jobs:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
           args: >
-            -Dsonar.organization=${{ SONARCLOUD_ORG }}
-            -Dsonar.projectKey=${{ SONARCLOUD_PROJECT_KEY }}
-            -Dsonar.projectName="${{ SONARCLOUD_PROJECT_NAME }}"
+            -Dsonar.organization=${{ vars.SONARCLOUD_ORG }}
+            -Dsonar.projectKey=${{ vars.SONARCLOUD_PROJECT_KEY }}
+            -Dsonar.projectName="${{ vars.SONARCLOUD_PROJECT_NAME }}"
