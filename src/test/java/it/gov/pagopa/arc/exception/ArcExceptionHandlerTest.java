@@ -2,7 +2,8 @@ package it.gov.pagopa.arc.exception;
 
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
-import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -87,7 +88,7 @@ class ArcExceptionHandlerTest {
 
     @Test
     void givenRequestWhenBizEventsServiceReturnNotFoundErrorThenHandleBizEventsNotFoundExceptionTransactionError() throws Exception {
-        doThrow(new BizEventsNotFoundException("Error")).when(testControllerSpy).testEndpointTransactionDetails();
+        doThrow(new BizEventsTransactionNotFoundException("Error")).when(testControllerSpy).testEndpointTransactionDetails();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/test/{initiativeId}", TRANSACTION_ID)
                         .param(DATA, DATA)
@@ -98,12 +99,12 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("transaction_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException occurred handling request GET /test/TRANSACTION_ID: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException occurred handling request GET /test/TRANSACTION_ID: HttpStatus 404 - Error"));
     }
 
     @Test
     void givenRequestWhenBizEventsServiceReturnNotFoundErrorThenHandleBizEventsNotFoundExceptionPdfError() throws Exception {
-        doThrow(new BizEventsNotFoundException("Error")).when(testControllerSpy).testEndpointPdf();
+        doThrow(new BizEventsReceiptNotFoundException("Error")).when(testControllerSpy).testEndpointPdf();
 
         mockMvc.perform(MockMvcRequestBuilders.get("/test/{transactionId}/pdf", TRANSACTION_ID)
                         .param(DATA, DATA)
@@ -114,7 +115,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("receipt_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException occurred handling request GET /test/TRANSACTION_ID/pdf: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException occurred handling request GET /test/TRANSACTION_ID/pdf: HttpStatus 404 - Error"));
     }
 
 }

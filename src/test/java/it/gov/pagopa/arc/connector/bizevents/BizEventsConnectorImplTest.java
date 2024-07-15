@@ -9,7 +9,8 @@ import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
 import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
-import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -146,9 +147,9 @@ class BizEventsConnectorImplTest {
     void givenTransactionIdWhenNotFoundThenReturnException() {
         //given
         //when
-        BizEventsNotFoundException bizEventsNotFoundException = assertThrows(BizEventsNotFoundException.class,
+        BizEventsTransactionNotFoundException bizEventsTransactionNotFoundException = assertThrows(BizEventsTransactionNotFoundException.class,
                 () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_NOT_FOUND", "TRANSACTION_ID_NOT_FOUND_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsNotFoundException.getMessage());
+        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsTransactionNotFoundException.getMessage());
     }
 
     @Test
@@ -178,9 +179,9 @@ class BizEventsConnectorImplTest {
     void givenTransactionIdWhenReceiptNotFoundThenReturnException() {
         //given
         //when
-        BizEventsNotFoundException bizEventsNotFoundException = assertThrows(BizEventsNotFoundException.class,
+        BizEventsReceiptNotFoundException bizEventsReceiptNotFoundException = assertThrows(BizEventsReceiptNotFoundException.class,
                 () -> bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT_NOT_FOUND", "TRANSACTION_ID_RECEIPT_NOT_FOUND_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [TRANSACTION_ID_RECEIPT_NOT_FOUND_1] for the current user", bizEventsNotFoundException.getMessage());
+        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [TRANSACTION_ID_RECEIPT_NOT_FOUND_1] for the current user", bizEventsReceiptNotFoundException.getMessage());
     }
 
     @Test
