@@ -34,7 +34,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
         with:
-          projectBaseDir: pagopa-arc-be
           args: >
             -Dsonar.organization=${{ env.SONARCLOUD_ORG }}
             -Dsonar.projectKey=${{ env.SONARCLOUD_PROJECT_KEY }}
