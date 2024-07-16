@@ -39,3 +39,6 @@ jobs:
             -Dsonar.projectKey=${{ vars.SONARCLOUD_PROJECT_KEY }}
             -Dsonar.projectName="${{ vars.SONARCLOUD_PROJECT_NAME }}"
             -Dsonar.java.binaries=build/classes
+
+      - name: Jacoco test report
+        run: ./gradlew build jacocoTestReport sonarqube
