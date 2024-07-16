@@ -1,11 +1,6 @@
 name: ARC - CodeReview
 
 on:
-  pull_request:
-    types:
-      - opened
-      - edited
-      - synchronize
   workflow_dispatch:
     inputs:
       branch:
