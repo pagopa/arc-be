@@ -41,4 +41,4 @@ jobs:
             -Dsonar.java.binaries=build/classes
 
       - name: Jacoco test report
-        run: ./gradlew build jacocoTestReport sonarqube
+        run: ./gradlew build jacocoTestReport sonar
