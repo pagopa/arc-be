@@ -39,4 +39,5 @@ jobs:
             -Dsonar.organization=${{ vars.SONARCLOUD_ORG }}
             -Dsonar.projectKey=${{ vars.SONARCLOUD_PROJECT_KEY }}
             -Dsonar.projectName="${{ vars.SONARCLOUD_PROJECT_NAME }}"
-            -Dsonar.java.binaries=build/classes
+            -Dsonar.java.binaries=build/classes/java/main
+            -Dsonar.coverage.exclusions="**/*Test.java"
