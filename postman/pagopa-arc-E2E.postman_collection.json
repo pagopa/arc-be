@@ -59,43 +59,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -116,7 +80,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"JOHN DOE\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"JOHN DOE\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"JOHN\",\r\n            \"surname\": \"DOE\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -174,7 +138,7 @@
                       "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
                       "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
                       "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(true);\r",
+                      "            pm.expect(transaction.payedByMe).to.eq(true);\r",
                       "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
                       "        }else {\r",
                       "            pm.expect.fail(\"The event is not present\");\r",
@@ -439,43 +403,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -496,7 +424,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITIZEN DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"JOHN DOE\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"JOHN\",\r\n            \"surname\": \"DOE\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -554,7 +482,7 @@
                       "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
                       "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
                       "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(true);\r",
+                      "            pm.expect(transaction.payedByMe).to.eq(true);\r",
                       "            pm.expect(transaction.registeredToMe).to.eq(false);\r",
                       "        }else {\r",
                       "            pm.expect.fail(\"The event is not present\");\r",
@@ -885,43 +813,7 @@
                       "\r",
                       "//total Amount\r",
                       "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);\r",
-                      "\r",
-                      "//Enti\r",
-                      "let creditorAciCF = \"00493410583\";\r",
-                      "let creditorMilanoCF = \"01199250158\";\r",
-                      "let creditorINPSCF = \"80078750587\";\r",
-                      "let creditorAECF = \"06363391001\";\r",
-                      "\r",
-                      "\r",
-                      "if(pm.collectionVariables.get(\"idPA\") == undefined){\r",
-                      "    pm.collectionVariables.set(\"idPA\", creditorAciCF);\r",
-                      "    pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "    pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "}else{\r",
-                      "    switch(pm.collectionVariables.get(\"idPA\")){\r",
-                      "        case creditorAciCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorMilanoCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Comune di Milano\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Comune di Milano office Name\");\r",
-                      "        break;\r",
-                      "        case creditorMilanoCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorINPSCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"INPS\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"INPS - ISTITUTO NAZIONALE PREVIDENZA SOCIALE\");\r",
-                      "        break;\r",
-                      "        case creditorINPSCF:\r",
-                      "        pm.collectionVariables.set(\"idPA\", creditorAECF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"Agenzia delle Entrate\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"Agenzia delle Entrate office Name\");\r",
-                      "        break;\r",
-                      "        case creditorAECF:\r",
-                      "        pm.collectionVariables.set(\"idPA\",creditorAciCF);\r",
-                      "        pm.collectionVariables.set(\"companyName\",\"ACI Automobile Club Italia\");\r",
-                      "        pm.collectionVariables.set(\"officeName\",\"ACI office Name\");\r",
-                      "        break;\r",
-                      "    }\r",
-                      "}"
+                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
                     ],
                     "type": "text/javascript",
                     "packages": {}
@@ -942,7 +834,7 @@
                 ],
                 "body": {
                   "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"{{idPA}}\",\r\n        \"idBrokerPA\": \"{{idPA}}\",\r\n        \"idStation\": \"{{idPA}}_02\",\r\n        \"companyName\": \"{{companyName}}\",\r\n        \"officeName\": \"{{officeName}}\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"JOHN DOE\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITIZEN PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"CITIZEN HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"{{idPA}}\",\r\n            \"companyName\": \"{{companyName}}\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITTADINO PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
                   "options": {
                     "raw": {
                       "language": "json"
@@ -1000,7 +892,7 @@
                       "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
                       "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
                       "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(false);\r",
+                      "            pm.expect(transaction.payedByMe).to.eq(false);\r",
                       "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
                       "        }else {\r",
                       "            pm.expect.fail(\"The event is not present\");\r",
@@ -1666,18 +1558,6 @@
     },
     {
       "key": "totalAmount",
-      "value": ""
-    },
-    {
-      "key": "idPA",
-      "value": ""
-    },
-    {
-      "key": "companyName",
-      "value": ""
-    },
-    {
-      "key": "officeName",
       "value": ""
     }
   ]
