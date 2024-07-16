@@ -41,4 +41,4 @@ jobs:
             -Dsonar.projectName="${{ vars.SONARCLOUD_PROJECT_NAME }}"
             -Dsonar.java.binaries=build/classes/java/main
             -Dsonar.java.test.binaries=build/classes/java/test
-            -Dsonar.coverage.exclusions="**/*Test,**/*Tests,**/*Faker*"
+            -Dsonar.coverage.exclusions="**/*Test.java,**/*Tests.java,**/*Faker.java"
