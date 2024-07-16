@@ -1557,7 +1557,7 @@
           "name": "RECEIPT_NOT_FOUND_ERROR",
           "item": [
             {
-              "name": "[RECEIPT_NOT_FOUND_EXCEPTION] transaction details",
+              "name": "[RECEIPT_NOT_FOUND_EXCEPTION] transaction receipt",
               "event": [
                 {
                   "listen": "test",
@@ -1588,13 +1588,13 @@
                 "method": "GET",
                 "header": [],
                 "url": {
-                  "raw": "{{baseurlArc}}/transactions/dfs/receipt",
+                  "raw": "{{baseurlArc}}/transactions/3562/receipt",
                   "host": [
                     "{{baseurlArc}}"
                   ],
                   "path": [
                     "transactions",
-                    "dfs",
+                    "3562",
                     "receipt"
                   ]
                 }
