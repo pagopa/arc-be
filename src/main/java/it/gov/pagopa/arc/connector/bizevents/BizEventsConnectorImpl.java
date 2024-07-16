@@ -4,7 +4,8 @@ import feign.FeignException;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
-import it.gov.pagopa.arc.exception.custom.BizEventsNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -57,7 +58,7 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             bizEventsTransactionDetailsDTO = bizEventsRestClient.transactionDetails(apikey, fiscalCode, transactionId);
         }catch (FeignException e){
             if(e.status() == HttpStatus.NOT_FOUND.value()){
-                throw new BizEventsNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
+                throw new BizEventsTransactionNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
             }
             throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
@@ -71,7 +72,7 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             transactionReceipt = bizEventsRestClient.transactionReceipt(apikey, fiscalCode, transactionId);
         }catch (FeignException e){
             if (e.status() == HttpStatus.NOT_FOUND.value()){
-                throw  new BizEventsNotFoundException("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [%s] for the current user".formatted(transactionId));
+                throw  new BizEventsReceiptNotFoundException("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [%s] for the current user".formatted(transactionId));
             }
             throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
