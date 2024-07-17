@@ -41,6 +41,6 @@ jobs:
             -Dsonar.projectName="${{ vars.SONARCLOUD_PROJECT_NAME }}"
             -Dsonar.sources=src/main
             -Dsonar.tests=src/test
-            -Dsonar.java.binaries=build/classes/java/main
+            -Dsonar.java.binaries=build/classes
             -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/jacocoTestReport.xml
             -Dsonar.coverage.exclusions=src/java/test/**
