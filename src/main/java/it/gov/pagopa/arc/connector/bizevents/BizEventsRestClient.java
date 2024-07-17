@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
+import feign.Headers;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import org.springframework.cloud.openfeign.FeignClient;
@@ -38,6 +39,7 @@ public interface BizEventsRestClient {
             value = "/transactions/{event-id}/pdf")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
+    @Headers("Accept: */*")
     Resource transactionReceipt(
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
