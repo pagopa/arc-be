@@ -43,3 +43,4 @@ jobs:
             -Dsonar.tests=src/test
             -Dsonar.java.binaries=build/classes/java/main
             -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/jacocoTestReport.xml
+            -Dsonar.coverage.exclusions=src/java/test/**
