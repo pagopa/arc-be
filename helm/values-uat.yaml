@@ -1,6 +1,6 @@
 microservice-chart:
   image:
-    repository: arcuitncorecommonacr.azurecr.io/pagopaarcbe
+    repository: arcuitncorecommonacr.azurecr.io/arcbe
     tag: latest
     pullPolicy: Always
 
