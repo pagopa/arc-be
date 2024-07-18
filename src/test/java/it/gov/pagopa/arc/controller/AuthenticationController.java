@@ -29,6 +29,8 @@ class AuthenticationController {
   @MockBean
   private TransactionsService transactionsServiceMock;
 
+
+
   @Test
   void givenAuthenticationEndpointGetARedirectToIDPLoginPage() throws Exception {
     MvcResult result = mockMvc.perform(

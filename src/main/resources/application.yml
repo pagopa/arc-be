@@ -4,6 +4,7 @@ spring:
     version: ${version}
   jmx.enabled: true
   security:
+    enable-csrf: false
     oauth2:
       client:
         registration:

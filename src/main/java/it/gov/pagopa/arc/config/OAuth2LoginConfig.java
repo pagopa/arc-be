@@ -18,8 +18,7 @@ public class OAuth2LoginConfig {
         )
         .authorizeHttpRequests((authorize) -> authorize
             .anyRequest()
-            .permitAll())
-        .csrf( AbstractHttpConfigurer::disable );
+            .permitAll());
     return http.build();
   }
 
