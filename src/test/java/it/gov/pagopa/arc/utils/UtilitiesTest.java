@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.utils;
 
-import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
+import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -40,7 +41,7 @@ class UtilitiesTest {
         String euroString = "";
         //when
         //then
-        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class,
+        BizEventsInvalidAmountException exception = assertThrows(BizEventsInvalidAmountException.class,
                 () -> Utilities.euroToCents(euroString));
         Assertions.assertEquals("Invalid amount format",exception.getMessage());
 
@@ -64,7 +65,7 @@ class UtilitiesTest {
         String wrongDateString = "";
         //when
         //then
-        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class,
+        BizEventsInvalidDateException exception = assertThrows(BizEventsInvalidDateException.class,
                 () -> Utilities.dateStringToZonedDateTime(wrongDateString));
         Assertions.assertEquals("Invalid date format",exception.getMessage());
     }

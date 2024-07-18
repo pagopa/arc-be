@@ -33,6 +33,16 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.RECEIPT_NOT_FOUND_ERROR);
     }
 
+    @ExceptionHandler(BizEventsInvalidAmountException.class)
+    public ResponseEntity<ErrorDTO> handleBizEventsInvalidAmountException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_AMOUNT);
+    }
+
+    @ExceptionHandler(BizEventsInvalidDateException.class)
+    public ResponseEntity<ErrorDTO> handleBizEventsInvalidDateException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_DATE);
+    }
+
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",
