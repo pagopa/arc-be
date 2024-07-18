@@ -16,7 +16,7 @@ public class OAuth2LoginConfig {
             .authorizationEndpoint(authConfig -> authConfig.baseUri("/login"))
             .redirectionEndpoint(redirection -> redirection.baseUri("/token/*"))
         )
-        .authorizeHttpRequests((authorize) -> authorize
+        .authorizeHttpRequests(authorize -> authorize
             .anyRequest()
             .permitAll());
     return http.build();
