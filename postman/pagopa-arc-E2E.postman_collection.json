@@ -244,6 +244,48 @@
               "response": []
             },
             {
+              "name": "transaction receipt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code != 200 ){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "}else{\r",
+                      "    pm.test(\"[Get transaction receipt - Case 1], expected httpStatus: 200\", () => {\r",
+                      "        pm.response.to.have.status(200);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction receipt - Case 1] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                      "        console.log(pm.response.headers)\r",
+                      "    })\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}",
+                    "receipt"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
               "name": "Disable transaction",
               "event": [
                 {
@@ -540,6 +582,48 @@
                   "path": [
                     "transactions",
                     "{{transactionId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "transaction receipt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code != 200 ){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "}else{\r",
+                      "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
+                      "        pm.response.to.have.status(200);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                      "        console.log(pm.response.headers)\r",
+                      "    })\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}",
+                    "receipt"
                   ]
                 }
               },
@@ -908,6 +992,48 @@
                   "path": [
                     "transactions",
                     "{{transactionId}}"
+                  ]
+                }
+              },
+              "response": []
+            },
+            {
+              "name": "transaction receipt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "if(pm.response.code != 200 ){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "}else{\r",
+                      "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
+                      "        pm.response.to.have.status(200);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                      "        console.log(pm.response.headers)\r",
+                      "    })\r",
+                      "}"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "{{transactionId}}",
+                    "receipt"
                   ]
                 }
               },
@@ -1312,6 +1438,56 @@
                   "path": [
                     "transactions",
                     "3562"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "RECEIPT_NOT_FOUND_ERROR",
+          "item": [
+            {
+              "name": "[RECEIPT_NOT_FOUND_EXCEPTION] transaction receipt",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "\r",
+                      "if(pm.response.code != 404){\r",
+                      "    retryRequest(postman,pm,setTimeout);\r",
+                      "} else{\r",
+                      "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception , expected httpStatus: 404\", () => {\r",
+                      "    pm.response.to.have.status(404);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.error).to.eq(\"receipt_not_found_error\");\r",
+                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [3562] for the current user\");\r",
+                      "    })\r",
+                      "}\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/transactions/3562/receipt",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "transactions",
+                    "3562",
+                    "receipt"
                   ]
                 }
               },
