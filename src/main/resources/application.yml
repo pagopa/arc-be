@@ -10,18 +10,18 @@ spring:
         registration:
           oneidentity:
             provider: oneidentity
-            client-id: \${AUTH_CLIENT_ID:clientid}
-            client-secret: \${AUTH_CLIENT_SECRET:clientsecret}
+            client-id: \${AUTH_CLIENT_ID:}
+            client-secret: \${AUTH_CLIENT_SECRET:}
             authorization-grant-type: authorization_code
-            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:https://dev.cittadini-p4pa.pagopa.it/auth-callback}
+            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:}
             scope: openid
         provider:
           oneidentity:
-            issuer-uri: \${AUTH_ISSUER_URI:https://dev.oneid.pagopa.it}
-            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:https://dev.oneid.pagopa.it/login}
-            token-uri: \${AUTH_CLIENT_TOKEN_URI:https://dev.oneid.pagopa.it/oidc/token}
+            issuer-uri: \${AUTH_ISSUER_URI:}
+            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:}
+            token-uri: \${AUTH_CLIENT_TOKEN_URI:}
             user-name-attribute: sub
-            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:https://dev.oneid.pagopa.it/oidc/keys}
+            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
 
 rest-client:
   biz-events:
