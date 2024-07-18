@@ -1,7 +1,8 @@
 package it.gov.pagopa.arc.utils;
 
 
-import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
+import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -26,7 +27,7 @@ public class Utilities {
             Number parse = nf.parse(euroString);
             return parse.doubleValue();
         }catch (ParseException e){
-            throw new BizEventsInvocationException("Invalid amount format");
+            throw new BizEventsInvalidAmountException("Invalid amount format");
         }
     }
 
@@ -36,7 +37,7 @@ public class Utilities {
             DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ssX");
             return  ZonedDateTime.parse(dateString, formatter);
         }catch (DateTimeParseException e){
-            throw new BizEventsInvocationException("Invalid date format");
+            throw new BizEventsInvalidDateException("Invalid date format");
         }
     }
 }

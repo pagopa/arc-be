@@ -4,7 +4,7 @@ info:
   description: Api and Models
   version: 0.0.1
 servers:
-  - url: "http://localhost:8080/arc"
+  - url: "http://localhost:8080"
     description: Generated server url
 paths:
   /login/oneidentity:
@@ -308,6 +308,8 @@ components:
             - generic_error
             - transaction_not_found_error
             - receipt_not_found_error
+            - invalid_amount
+            - invalid_date
             - invalid_request
         error_description:
           type: string
