@@ -35,8 +35,7 @@ public interface BizEventsRestClient {
     );
 
     @GetMapping(
-            value = "/transactions/{event-id}/pdf",
-            produces = { MediaType.APPLICATION_PDF_VALUE, MediaType.APPLICATION_JSON_VALUE})
+            value = "/transactions/{event-id}/pdf")
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     Resource transactionReceipt(
