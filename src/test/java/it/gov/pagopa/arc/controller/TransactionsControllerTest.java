@@ -51,7 +51,7 @@ class TransactionsControllerTest {
 
         //When
         MvcResult result = mockMvc.perform(
-                get("/arc/transactions")
+                get("/transactions")
                         .param("page", String.valueOf(PAGE))
                         .param("size", String.valueOf(SIZE))
                         .param("filter", FILTER)
@@ -77,7 +77,7 @@ class TransactionsControllerTest {
 
         //When
         MvcResult result = mockMvc.perform(
-                        get("/arc/transactions/{transactionId}", TRANSACTION_ID)
+                        get("/transactions/{transactionId}", TRANSACTION_ID)
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
@@ -100,7 +100,7 @@ class TransactionsControllerTest {
 
         //When
         MvcResult result = mockMvc.perform(
-                        get("/arc/transactions/{transactionId}/receipt", TRANSACTION_ID)
+                        get("/transactions/{transactionId}/receipt", TRANSACTION_ID)
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
