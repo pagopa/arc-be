@@ -7,6 +7,37 @@ servers:
   - url: "http://localhost:8080/arc"
     description: Generated server url
 paths:
+  /login/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the authentication endpoint"
+      operationId: getAuthenticationEndpoint
+      responses:
+        '302':
+          description: "Redirect to the authentication endpoint"
+          headers:
+            Location:
+              description: >
+                The URL to redirect to, including the following query parameters:
+                - response_type: The type of response, e.g., "code".
+                - scope: The scope of the access request, e.g., "openid profile email".
+                - client_id: The client ID, e.g., "abc4hdRkqt3".
+                - state: An opaque value used to maintain state between the request and callback, e.g., "abc4hdRkqt3".
+                - redirect_uri: The URI to redirect to after authorization, e.g., "https://client.example.org/cb".
+              schema:
+                type: string
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+
   /transactions:
     get:
       tags:

@@ -68,7 +68,7 @@ microservice-chart:
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
     BIZ_EVENTS_SERVICE_API_KEY: pagopa-d-bizevents-trx-apimv1-subscription-key
-
+    AUTH_CLIENT_SECRET: oneidentity-client-secret
   # nodeSelector: {}
 
   # tolerations: []
