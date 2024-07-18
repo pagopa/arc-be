@@ -277,6 +277,8 @@ components:
             - generic_error
             - transaction_not_found_error
             - receipt_not_found_error
+            - invalid_amount
+            - invalid_date
             - invalid_request
         error_description:
           type: string
