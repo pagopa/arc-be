@@ -49,7 +49,7 @@ class BizEventsTransactionDTO2TransactionDTOTest {
             assertEquals(bizEventsTransaction.getPayeeTaxCode(), dtoMapped.getPayeeTaxCode());
             assertEquals(Utilities.dateStringToZonedDateTime(bizEventsTransaction.getTransactionDate()), dtoMapped.getTransactionDate());
             assertEquals(bizEventsTransaction.getIsCart(), dtoMapped.getIsCart());
-            assertEquals(bizEventsTransaction.getIsPayer(), dtoMapped.getPayedByMe());
+            assertEquals(bizEventsTransaction.getIsPayer(), dtoMapped.getPaidByMe());
             assertEquals(bizEventsTransaction.getIsDebtor(), dtoMapped.getRegisteredToMe());
         });
     }

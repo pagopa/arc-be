@@ -19,7 +19,7 @@ public class TransactionDTOFaker {
                     .amount(268152L)
                     .transactionDate(ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS))
                     .isCart(false)
-                    .payedByMe(true)
+                    .paidByMe(true)
                     .registeredToMe(true);
         } else {
             return TransactionDTO
@@ -29,7 +29,7 @@ public class TransactionDTOFaker {
                     .payeeTaxCode("")
                     .transactionDate(ZonedDateTime.now().truncatedTo(ChronoUnit.MILLIS))
                     .isCart(true)
-                    .payedByMe(false)
+                    .paidByMe(false)
                     .registeredToMe(true);
         }
     }

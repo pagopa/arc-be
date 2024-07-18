@@ -66,8 +66,8 @@ paths:
           required: false
           schema:
             type: string
-            enum: ["payedByMe", "registeredToMe"]
-          example: payedByMe
+            enum: ["paidByMe", "registeredToMe"]
+          example: paidByMe
       responses:
         '200':
           description: "Obtained transaction list"
@@ -203,7 +203,7 @@ components:
           example: "2024-05-31T13:07:25Z"
         isCart:
           type: boolean
-        payedByMe:
+        paidByMe:
           type: boolean
         registeredToMe:
           type: boolean

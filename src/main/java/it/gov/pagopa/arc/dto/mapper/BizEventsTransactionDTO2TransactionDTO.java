@@ -15,7 +15,7 @@ public class BizEventsTransactionDTO2TransactionDTO {
                     .amount(transaction.getAmount() != null ? Utilities.euroToCents(transaction.getAmount()) : null)
                     .transactionDate(transaction.getTransactionDate() != null ? Utilities.dateStringToZonedDateTime(transaction.getTransactionDate()) : null)
                     .isCart(transaction.getIsCart())
-                    .payedByMe(transaction.getIsPayer())
+                    .paidByMe(transaction.getIsPayer())
                     .registeredToMe(transaction.getIsDebtor())
                     .build();
     }
