@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.arc.config.OAuth2LoginConfig;
 import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
 import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
@@ -13,6 +14,7 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
+import org.springframework.context.annotation.Import;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
@@ -29,6 +31,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @WebMvcTest(value = {
         ArcTransactionsApi.class
 })
+@Import(OAuth2LoginConfig.class)
 class TransactionsControllerTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;

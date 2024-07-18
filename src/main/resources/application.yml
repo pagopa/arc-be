@@ -3,6 +3,24 @@ spring:
     name: ${artifactId}
     version: ${version}
   jmx.enabled: true
+  security:
+    oauth2:
+      client:
+        registration:
+          oneidentity:
+            provider: oneidentity
+            client-id: \${AUTH_CLIENT_ID:dev-arc-id}
+            client-secret: \${AUTH_CLIENT_SECRET:XhkM4YOflRuDkFHRSVg9}
+            authorization-grant-type: authorization_code
+            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:https://dev.cittadini-p4pa.pagopa.it/auth-callback}
+            scope: openid
+        provider:
+          oneidentity:
+            issuer-uri: \${AUTH_ISSUER_URI:https://dev.oneid.pagopa.it}
+            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:https://dev.oneid.pagopa.it/login}
+            token-uri: \${AUTH_CLIENT_TOKEN_URI:https://dev.oneid.pagopa.it/oidc/token}
+            user-name-attribute: sub
+            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:https://dev.oneid.pagopa.it/oidc/keys}
 
 rest-client:
   biz-events:
