@@ -3,6 +3,25 @@ spring:
     name: ${artifactId}
     version: ${version}
   jmx.enabled: true
+  security:
+    enable-csrf: false
+    oauth2:
+      client:
+        registration:
+          oneidentity:
+            provider: oneidentity
+            client-id: \${AUTH_CLIENT_ID:}
+            client-secret: \${AUTH_CLIENT_SECRET:}
+            authorization-grant-type: authorization_code
+            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:}
+            scope: openid
+        provider:
+          oneidentity:
+            issuer-uri: \${AUTH_ISSUER_URI:}
+            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:}
+            token-uri: \${AUTH_CLIENT_TOKEN_URI:}
+            user-name-attribute: sub
+            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
 
 rest-client:
   biz-events:

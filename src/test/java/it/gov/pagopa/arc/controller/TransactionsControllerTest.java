@@ -1,5 +1,10 @@
 package it.gov.pagopa.arc.controller;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
 import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
@@ -7,10 +12,13 @@ import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.TransactionsService;
 import it.gov.pagopa.arc.utils.TestUtils;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.io.FileSystemResource;
@@ -18,17 +26,10 @@ import org.springframework.core.io.Resource;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
-import java.nio.file.Files;
-import java.nio.file.Paths;
-
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 @WebMvcTest(value = {
         ArcTransactionsApi.class
 })
+@AutoConfigureMockMvc(addFilters = false)
 class TransactionsControllerTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;
