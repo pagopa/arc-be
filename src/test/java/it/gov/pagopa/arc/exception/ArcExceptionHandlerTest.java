@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.exception;
 import static org.mockito.Mockito.doThrow;
 
 import ch.qos.logback.classic.LoggerContext;
+import it.gov.pagopa.arc.config.OAuth2LoginConfig;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
 import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
@@ -10,24 +11,27 @@ import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
-import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.SpyBean;
 import org.springframework.http.MediaType;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 
-@SpringBootTest(classes = {
+@ExtendWith({SpringExtension.class, MockitoExtension.class})
+@WebMvcTest(value = {ArcExceptionHandlerTest.TestController.class})
+@ContextConfiguration(classes = {
     ArcExceptionHandlerTest.TestController.class,
-    ArcExceptionHandler.class})
-@EnableWebMvc
-@AutoConfigureMockMvc(addFilters = false)
+    ArcExceptionHandler.class,
+    OAuth2LoginConfig.class})
 class ArcExceptionHandlerTest {
 
     public static final String DATA = "data";
