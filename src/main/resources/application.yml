@@ -24,7 +24,10 @@ spring:
             jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
 
 rest-client:
+  fake-fiscal-code: "HSLZYB90L59D030S"
   biz-events:
     baseUrl: \${BIZ_EVENTS_BASE_URL:}
     api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
-    fake-fiscal-code: "HSLZYB90L59D030S"
+  pull-payment:
+    baseUrl: \${PULL_PAYMENT_BASE_URL:}
+    api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
