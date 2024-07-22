@@ -68,8 +68,8 @@ microservice-chart:
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
-    BIZ_EVENTS_SERVICE_API_KEY: pagopa-d-bizevents-trx-apimv1-subscription-key
-    PULL_PAYMENT_SERVICE_API_KEY: pagopa-d-pullpayment-apimv1-subscription-key
+    BIZ_EVENTS_SERVICE_API_KEY: pagopa-bizevents-trx-apimv1-subscription-key
+    PULL_PAYMENT_SERVICE_API_KEY: pagopa-pullpayment-apimv1-subscription-key
     AUTH_CLIENT_SECRET: oneidentity-client-secret
   # nodeSelector: {}
 
