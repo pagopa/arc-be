@@ -25,7 +25,7 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper;
 
-    public BizEventsServiceImpl(@Value("${rest-client.biz-events.fake-fiscal-code}") String fakeFiscalCode,
+    public BizEventsServiceImpl(@Value("${rest-client.fake-fiscal-code}") String fakeFiscalCode,
                                 BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTO transactionDTOMapper,
                                 BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper,
