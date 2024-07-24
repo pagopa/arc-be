@@ -1,8 +1,7 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
 import ch.qos.logback.classic.LoggerContext;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
+import it.gov.pagopa.arc.WireMock.BaseWireMock;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
@@ -18,25 +17,19 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static it.gov.pagopa.arc.WireMock.BaseWireMock.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
-@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(
-        initializers = BizEventsConnectorImplTest.WireMockInitializer.class,
         classes = {
                 BizEventsConnectorImpl.class,
                 FeignConfig.class,
@@ -47,8 +40,9 @@ import static org.junit.jupiter.api.Assertions.*;
 @TestPropertySource(
         properties = {
                 "rest-client.biz-events.api-key=x_api_key0",
+                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.baseUrl=bizEventsMock"
 })
-class BizEventsConnectorImplTest {
+class BizEventsConnectorImplTest extends BaseWireMock {
 
     @Autowired
      private BizEventsConnector bizEventsConnector;
@@ -193,26 +187,4 @@ class BizEventsConnectorImplTest {
         Assertions.assertEquals( "An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 
-    public static class WireMockInitializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().usingFilesUnderClasspath("src/test/resources/stub"));
-            wireMockServer.start();
-
-            applicationContext.getBeanFactory().registerSingleton("wireMockServer", wireMockServer);
-            applicationContext.addApplicationListener(
-                    applicationEvent -> {
-                        if (applicationEvent instanceof ContextClosedEvent) {
-                            wireMockServer.stop();
-                        }
-                    });
-
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    String.format(
-                            "rest-client.biz-events.baseUrl=http://%s:%d/bizEventsMock",
-                            wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
-        }
-    }
 }
