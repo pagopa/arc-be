@@ -1,10 +1,11 @@
 package it.gov.pagopa.arc.connector.pullpayment;
 
 import ch.qos.logback.classic.LoggerContext;
-import it.gov.pagopa.arc.WireMock.BaseWireMock;
+import com.github.tomakehurst.wiremock.WireMockServer;
+import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
-import it.gov.pagopa.arc.fakers.pullPayment.PullPaymentNoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -12,16 +13,22 @@ import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
+import org.springframework.context.ApplicationContextInitializer;
+import org.springframework.context.ConfigurableApplicationContext;
+import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import java.time.LocalDate;
 import java.util.List;
 
-import static it.gov.pagopa.arc.WireMock.BaseWireMock.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 
+@SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(
+        initializers = PullPaymentConnectorImplTest.WireMockInitializer.class,
         classes = {
                 PullPaymentConnectorImpl.class,
                 FeignConfig.class,
@@ -31,10 +38,9 @@ import static it.gov.pagopa.arc.WireMock.BaseWireMock.WIREMOCK_TEST_PROP2BASEPAT
         })
 @TestPropertySource(
         properties = {
-                "rest-client.pull-payment.api-key=x_api_key0",
-                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock"
+                "rest-client.pull-payment.api-key=x_api_key0"
         })
-class PullPaymentConnectorImplTest extends BaseWireMock {
+class PullPaymentConnectorImplTest {
     @Autowired
     private PullPaymentConnector pullPaymentConnector;
 
@@ -81,6 +87,29 @@ class PullPaymentConnectorImplTest extends BaseWireMock {
         //Then
         Assertions.assertThrows(RuntimeException.class,
                 ()-> pullPaymentConnector.getPaymentNotices("DUMMY_FISCAL_CODE_ERROR", LocalDate.now(), 10, 0));
+    }
+
+    public static class WireMockInitializer
+            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
+        @Override
+        public void initialize(ConfigurableApplicationContext applicationContext) {
+            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().usingFilesUnderClasspath("src/test/resources/stub").dynamicPort());
+            wireMockServer.start();
+
+            applicationContext.getBeanFactory().registerSingleton("wireMockServer", wireMockServer);
+            applicationContext.addApplicationListener(
+                    applicationEvent -> {
+                        if (applicationEvent instanceof ContextClosedEvent) {
+                            wireMockServer.stop();
+                        }
+                    });
+
+            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
+                    applicationContext,
+                    String.format(
+                            "rest-client.pull-payment.baseUrl=http://%s:%d/pullPaymentMock",
+                            wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
+        }
     }
 
 }
