@@ -15,8 +15,8 @@ public class PullPaymentNoticeDTOFaker {
         return mockInstanceBuilder().build();
     }
 
-    public static PullPaymentNoticeDTO.PullPaymentNoticeDTOBuilder mockInstanceBuilder(){
-        PullPaymentInstallmentDTO installment = PullPaymentInstallmentDTO.builder()
+    public static PullPaymentInstallmentDTO mockInstanceBuilderInstllmentDTO(){
+        return PullPaymentInstallmentDTO.builder()
                 .nav("347000000880099993")
                 .iuv("47000000880099993")
                 .paTaxCode("99999000013")
@@ -30,8 +30,10 @@ public class PullPaymentNoticeDTOFaker {
                 .status(PullPaymentOptionStatus.PO_UNPAID)
                 .lastUpdatedDate(LocalDateTime.parse("2024-04-11T06:56:14.845126"))
                 .build();
+    }
 
-        PullPaymentOptionDTO option =  PullPaymentOptionDTO.builder()
+    public static PullPaymentOptionDTO mockInstanceBuilderOptionDTO(PullPaymentInstallmentDTO installment){
+        return PullPaymentOptionDTO.builder()
                 .description("Test Pull - unica opzione")
                 .numberOfInstallments(1)
                 .amount(120L)
@@ -40,6 +42,10 @@ public class PullPaymentNoticeDTOFaker {
                 .switchToExpired(false)
                 .installments(List.of(installment))
                 .build();
+    }
+    public static PullPaymentNoticeDTO.PullPaymentNoticeDTOBuilder mockInstanceBuilder(){
+        PullPaymentInstallmentDTO installment = mockInstanceBuilderInstllmentDTO();
+        PullPaymentOptionDTO option = mockInstanceBuilderOptionDTO(installment);
 
         return PullPaymentNoticeDTO.builder()
                 .iupd("99999000013-64c8e41bfec846e99c92fc0fe5899993")
