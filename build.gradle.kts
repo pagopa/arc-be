@@ -29,6 +29,7 @@ val springdocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.5.4"
+val mapstructVersion = "1.5.5.Final"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -42,10 +43,18 @@ dependencies {
 	// Spring Security
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
-
 	//lombok
-	compileOnly("org.projectlombok:lombok")
 	annotationProcessor("org.projectlombok:lombok")
+	compileOnly("org.projectlombok:lombok")
+
+	/**
+	* Mapstruct
+	* https://mapstruct.org/
+	* mapstruct dependencies must always be placed after the lombok dependency
+ 	* or the generated mappers will return an empty object
+	**/
+	implementation("org.mapstruct:mapstruct:$mapstructVersion")
+	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
