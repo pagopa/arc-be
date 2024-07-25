@@ -39,12 +39,13 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
-	compileOnly("org.projectlombok:lombok")
-	annotationProcessor("org.projectlombok:lombok")
-
 	// Spring Security
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
+	//lombok
+	compileOnly("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -122,6 +123,7 @@ openApiGenerate {
 			"additionalModelTypeAnnotations" to "@lombok.Data @lombok.Builder @lombok.AllArgsConstructor @lombok.RequiredArgsConstructor"
 	))
 	typeMappings.set(mapOf(
-			"DateTime" to "java.time.ZonedDateTime"
+			"DateTime" to "java.time.LocalDateTime",
+			"zoned-date-time" to "java.time.ZonedDateTime"
 	))
 }
