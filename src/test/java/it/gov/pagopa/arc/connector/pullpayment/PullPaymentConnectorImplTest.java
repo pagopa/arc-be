@@ -5,7 +5,7 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
-import it.gov.pagopa.arc.fakers.pullPayment.PullPaymentNoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -59,7 +59,7 @@ class PullPaymentConnectorImplTest {
     @Test
     void givenHeaderAndParameterWhenCallPullPaymentConnectorThenReturnPaymentNoticesList() {
         //given
-        PullPaymentNoticeDTO pullPaymentNoticeDTO = PullPaymentNoticeDTOFaker.mockInstance();
+        PullPaymentNoticeDTO pullPaymentNoticeDTO = PullPaymentNoticeDTOFaker.mockInstance(true);
         //when
         List<PullPaymentNoticeDTO> result = pullPaymentConnector.getPaymentNotices("DUMMY_FISCAL_CODE", LocalDate.now(), 10, 0);
         //then
