@@ -261,6 +261,7 @@ components:
         token_type:
           type: string
           default: Bearer
+          x-field-extra-annotation: "@lombok.Builder.Default"
         expires_in:
           type: integer
         refresh_token:
