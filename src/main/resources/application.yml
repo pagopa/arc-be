@@ -23,6 +23,13 @@ spring:
             user-name-attribute: sub
             jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
 
+jwt:
+  audience: "\${JWT_TOKEN_AUDIENCE:application-audience}"
+  access-token:
+    expire-in: "\${JWT_TOKEN_EXPIRATION_SECONDS:3600}"
+    private-key: "\${JWT_TOKEN_PRIVATE_KEY:}"
+    public-key: "\${JWT_TOKEN_PUBLIC_KEY:}"
+
 rest-client:
   biz-events:
     baseUrl: \${BIZ_EVENTS_BASE_URL:}

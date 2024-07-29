@@ -3,6 +3,8 @@
 # This file is expected to be part of source control.
 ch.qos.logback:logback-classic:1.4.14=compileClasspath
 ch.qos.logback:logback-core:1.4.14=compileClasspath
+com.auth0:java-jwt:4.4.0=compileClasspath
+com.auth0:jwks-rsa:0.22.1=compileClasspath
 com.fasterxml.jackson.core:jackson-annotations:2.15.4=compileClasspath
 com.fasterxml.jackson.core:jackson-core:2.15.4=compileClasspath
 com.fasterxml.jackson.core:jackson-databind:2.15.4=compileClasspath

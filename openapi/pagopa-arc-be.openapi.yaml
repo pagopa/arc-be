@@ -37,7 +37,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-
+  /token/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide authorization endpoint for exchanging code for token"
+      operationId: getAuthenticationToken
+      parameters:
+        - name: code
+          in: query
+          description: "The value used for exchanging code for token"
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: "The value of the state this value is handled by the security component"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transactions:
     get:
       tags:
@@ -166,6 +201,26 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
+    TokenResponse:
+      type: object
+      required:
+        - access_token
+        - token_type
+        - expires_in
+        - refresh_token
+        - id_token
+      properties:
+        access_token:
+          type: string
+        token_type:
+          type: string
+          default: Bearer
+        expires_in:
+          type: integer
+        refresh_token:
+          type: string
+        id_token:
+          type: string
     TransactionsListDTO:
       type: object
       properties:
