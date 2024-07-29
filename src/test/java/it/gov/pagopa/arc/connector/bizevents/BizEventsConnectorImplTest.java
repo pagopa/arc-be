@@ -46,7 +46,7 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(
         properties = {
-                "rest-client.biz-events.api-key=x_api_key0",
+                "rest-client.biz-events.api-key=x_api_key0"
 })
 class BizEventsConnectorImplTest {
 
@@ -197,7 +197,7 @@ class BizEventsConnectorImplTest {
             implements ApplicationContextInitializer<ConfigurableApplicationContext> {
         @Override
         public void initialize(ConfigurableApplicationContext applicationContext) {
-            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().usingFilesUnderClasspath("src/test/resources/stub"));
+            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().usingFilesUnderClasspath("src/test/resources/stub").dynamicPort());
             wireMockServer.start();
 
             applicationContext.getBeanFactory().registerSingleton("wireMockServer", wireMockServer);
@@ -215,4 +215,5 @@ class BizEventsConnectorImplTest {
                             wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
         }
     }
+
 }

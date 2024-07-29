@@ -64,11 +64,15 @@ microservice-chart:
   externalConfigMapValues:
     rest-client:
       BIZ_EVENTS_BASE_URL: bizevents-base-url
+      PULL_PAYMENT_BASE_URL: pullpayment-base-url
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
-    BIZ_EVENTS_SERVICE_API_KEY: pagopa-d-bizevents-trx-apimv1-subscription-key
+    BIZ_EVENTS_SERVICE_API_KEY: pagopa-bizevents-trx-apimv1-subscription-key
+    PULL_PAYMENT_SERVICE_API_KEY: pagopa-pullpayment-apimv1-subscription-key
     AUTH_CLIENT_SECRET: oneidentity-client-secret
+    JWT_TOKEN_PRIVATE_KEY: jwt-private-key
+    JWT_TOKEN_PUBLIC_KEY: jwt-public-key
   # nodeSelector: {}
 
   # tolerations: []
