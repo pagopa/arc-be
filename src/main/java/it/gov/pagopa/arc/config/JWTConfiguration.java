@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 public class JWTConfiguration {
 
   private String audience;
+  private String tokenType;
   private AccessToken accessToken;
 
   @Getter @Setter @AllArgsConstructor @NoArgsConstructor

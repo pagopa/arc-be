@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.service;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -16,17 +17,21 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   AccessTokenBuilderService accessTokenBuilderService;
   ObjectMapper objectMapper;
 
+  JWTConfiguration jwtConfiguration;
+
   CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
-      ObjectMapper objectMapper){
+      ObjectMapper objectMapper,
+      JWTConfiguration jwtConfiguration){
     this.accessTokenBuilderService = accessTokenBuilderService;
     this.objectMapper = objectMapper;
+    this.jwtConfiguration = jwtConfiguration;
   }
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException {
-    TokenResponse accessToken = accessTokenBuilderService.build();
+    TokenResponse accessToken = new TokenResponse(accessTokenBuilderService.build(),jwtConfiguration.getTokenType(),jwtConfiguration.getAccessToken().getExpireIn(),null,null);
     response.setContentType(MediaType.APPLICATION_JSON_VALUE);
     response.getWriter().write( objectMapper.writeValueAsString(accessToken) );
     response.getWriter().flush();

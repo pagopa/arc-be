@@ -32,7 +32,6 @@ public class OAuth2LoginConfig {
             )
             .successHandler(customAuthenticationSuccessHandler)
         )
-        .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
         .authorizeHttpRequests(authorize -> authorize
             .anyRequest().permitAll());
     return http.build();

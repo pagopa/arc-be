@@ -64,32 +64,28 @@ class AccessTokenBuilderServiceTest {
 
   @BeforeEach
   void init(){
-    JWTConfiguration jwtConfiguration = new JWTConfiguration("APPLICATION_AUDIENCE",new AccessToken(EXPIRE_IN,PRIVATE_KEY,PUBLIC_KEY));
+    JWTConfiguration jwtConfiguration = new JWTConfiguration("APPLICATION_AUDIENCE","Bearer",new AccessToken(EXPIRE_IN,PRIVATE_KEY,PUBLIC_KEY));
     accessTokenBuilderService = new AccessTokenBuilderService(jwtConfiguration);
   }
 
   @Test
-  void testException(){
-    JWTConfiguration jwtConfiguration = new JWTConfiguration("APPLICATION_AUDIENCE",new AccessToken(EXPIRE_IN,PRIVATE_KEY,INVALID_PUBLIC_KEY));
+  void givenInvalidKeyThenThrowException(){
+    JWTConfiguration jwtConfiguration = new JWTConfiguration("APPLICATION_AUDIENCE","Bearer",new AccessToken(EXPIRE_IN,PRIVATE_KEY,INVALID_PUBLIC_KEY));
     assertThrows(IllegalStateException.class,()-> new AccessTokenBuilderService(jwtConfiguration) );
   }
 
   @Test
-  void test(){
+  void givenCorrectAccessTokenThenVerifyHeaderAndBodyForRequiredFields(){
     // When
-    TokenResponse result = accessTokenBuilderService.build();
+    String token = accessTokenBuilderService.build();
 
-    // Then
-    Assertions.assertEquals("bearer", result.getTokenType());
-    Assertions.assertEquals(EXPIRE_IN, result.getExpiresIn());
-
-    DecodedJWT decodedAccessToken = JWT.decode(result.getAccessToken());
+    DecodedJWT decodedAccessToken = JWT.decode(token);
     String decodedHeader = new String(Base64.getDecoder().decode(decodedAccessToken.getHeader()));
     String decodedPayload = new String(Base64.getDecoder().decode(decodedAccessToken.getPayload()));
 
     Assertions.assertEquals("{\"alg\":\"RS512\",\"typ\":\"JWT\"}", decodedHeader);
     Assertions.assertEquals(EXPIRE_IN, (decodedAccessToken.getExpiresAtAsInstant().toEpochMilli() - decodedAccessToken.getIssuedAtAsInstant().toEpochMilli()) / 1_000);
-    Assertions.assertTrue(Pattern.compile("\\{\"typ\":\"bearer\",\"iss\":\"APPLICATION_AUDIENCE\",\"jti\":\"[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}\",\"iat\":[0-9]+,\"exp\":[0-9]+}").matcher(decodedPayload).matches(), "Payload not matches requested pattern: " + decodedPayload);
+    Assertions.assertTrue(Pattern.compile("\\{\"typ\":\"Bearer\",\"iss\":\"APPLICATION_AUDIENCE\",\"jti\":\"[0-9a-z]{8}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{4}-[0-9a-z]{12}\",\"iat\":[0-9]+,\"exp\":[0-9]+}").matcher(decodedPayload).matches(), "Payload not matches requested pattern: " + decodedPayload);
   }
 
 }
