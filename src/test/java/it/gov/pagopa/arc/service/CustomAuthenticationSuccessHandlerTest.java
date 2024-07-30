@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
-import it.gov.pagopa.arc.config.JWTConfigurationTest;
+import it.gov.pagopa.arc.config.JWTSampleConfiguration;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import java.io.IOException;
 import org.junit.jupiter.api.BeforeEach;
@@ -28,7 +28,7 @@ public class CustomAuthenticationSuccessHandlerTest {
 
   @BeforeEach
   void setUp(){
-    JWTConfiguration jwtConfiguration = JWTConfigurationTest.getCorrectConfiguration();
+    JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
     accessTokenBuilderService = new AccessTokenBuilderService(jwtConfiguration);
     customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(accessTokenBuilderService,new ObjectMapper(),jwtConfiguration);
   }

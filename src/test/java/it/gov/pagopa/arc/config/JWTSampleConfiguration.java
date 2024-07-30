@@ -2,7 +2,7 @@ package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.config.JWTConfiguration.AccessToken;
 
-public class JWTConfigurationTest {
+public class JWTSampleConfiguration {
 
   private static final int EXPIRE_IN = 3600;
 
