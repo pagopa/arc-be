@@ -38,7 +38,7 @@ public class CustomAuthenticationSuccessHandlerTest {
     MockHttpServletRequest request = new MockHttpServletRequest();
     customAuthenticationSuccessHandler.onAuthenticationSuccess(request,response,authentication);
     assertEquals(response.getHeader("Content-Type"),"application/json");
-    TokenResponse token = customAuthenticationSuccessHandler.objectMapper.readValue(response.getContentAsString(),TokenResponse.class);
+    TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(),TokenResponse.class);
     assertNotNull(token.getAccessToken());
     assertNotNull(token.getTokenType());
     assertNotNull(token.getExpiresIn());

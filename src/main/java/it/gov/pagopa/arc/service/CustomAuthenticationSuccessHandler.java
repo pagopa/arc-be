@@ -14,10 +14,9 @@ import org.springframework.stereotype.Component;
 @Component
 public class CustomAuthenticationSuccessHandler implements AuthenticationSuccessHandler {
 
-  AccessTokenBuilderService accessTokenBuilderService;
-  ObjectMapper objectMapper;
-
-  JWTConfiguration jwtConfiguration;
+  private final AccessTokenBuilderService accessTokenBuilderService;
+  private final ObjectMapper objectMapper;
+  private final JWTConfiguration jwtConfiguration;
 
   CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
