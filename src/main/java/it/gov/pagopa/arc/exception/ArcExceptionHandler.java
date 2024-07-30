@@ -43,6 +43,16 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_DATE);
     }
 
+    @ExceptionHandler(PullPaymentInvalidRequestException.class)
+    public ResponseEntity<ErrorDTO> handlePullPaymentInvalidRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_REQUEST);
+    }
+
+    @ExceptionHandler(PullPaymentInvocationException.class)
+    public ResponseEntity<ErrorDTO> handlePullPaymentInvocationException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",

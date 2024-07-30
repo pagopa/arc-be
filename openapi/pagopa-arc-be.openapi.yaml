@@ -222,7 +222,7 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
               example:
                 error: invalid_request
-                error_description: "A parameter or the tax code used during the request phase is not correct"
+                error_description: "One or more inputs provided during the request from pull payment are invalid"
         '401':
           description: "Wrong or missing function key"
         '500':
