@@ -29,6 +29,8 @@ val springdocOpenApiVersion = "2.5.0"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.5.4"
+val javaJwtVersion = "4.4.0"
+val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
 
 dependencies {
@@ -55,6 +57,10 @@ dependencies {
 	**/
 	implementation("org.mapstruct:mapstruct:$mapstructVersion")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapstructVersion")
+
+	// validation token jwt
+	implementation("com.auth0:java-jwt:$javaJwtVersion")
+	implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
