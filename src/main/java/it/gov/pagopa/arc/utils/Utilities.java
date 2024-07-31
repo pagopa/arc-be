@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.utils;
 
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
+import lombok.extern.slf4j.Slf4j;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -11,6 +12,7 @@ import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
 import java.util.Locale;
 
+@Slf4j
 public class Utilities {
     private Utilities(){}
 
@@ -39,5 +41,14 @@ public class Utilities {
         }catch (DateTimeParseException e){
             throw new BizEventsInvalidDateException("Invalid date format");
         }
+    }
+
+    /**
+     * To log the full error stack
+     *
+     * @param ex exception to log
+     */
+    public static void logExceptionDetails(RuntimeException ex){
+        log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
     }
 }
