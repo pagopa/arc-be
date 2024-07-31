@@ -25,10 +25,6 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 @ExtendWith(MockitoExtension.class)
 public class CustomAuthenticationSuccessHandlerTest {
 
-  @Mock
-  private AccessTokenBuilderService accessTokenBuilderService;
-
-  @Mock
   private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
   @Mock
@@ -38,8 +34,7 @@ public class CustomAuthenticationSuccessHandlerTest {
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
     JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
-    accessTokenBuilderService = new AccessTokenBuilderService(jwtConfiguration);
-    customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(accessTokenBuilderService,new ObjectMapper(),jwtConfiguration,tokenStoreService);
+    customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(new AccessTokenBuilderService(jwtConfiguration),new ObjectMapper(),jwtConfiguration,tokenStoreService);
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
