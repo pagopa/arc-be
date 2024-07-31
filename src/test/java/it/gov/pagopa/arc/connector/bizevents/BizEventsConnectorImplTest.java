@@ -1,9 +1,8 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
 import ch.qos.logback.classic.LoggerContext;
-import com.github.tomakehurst.wiremock.WireMockServer;
-import com.github.tomakehurst.wiremock.core.WireMockConfiguration;
 import it.gov.pagopa.arc.config.FeignConfig;
+import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
@@ -20,23 +19,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
-import org.springframework.context.ApplicationContextInitializer;
-import org.springframework.context.ConfigurableApplicationContext;
-import org.springframework.context.event.ContextClosedEvent;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
-import org.springframework.test.context.support.TestPropertySourceUtils;
 
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
+import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(
-        initializers = BizEventsConnectorImplTest.WireMockInitializer.class,
+        initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 BizEventsConnectorImpl.class,
                 FeignConfig.class,
@@ -46,12 +42,13 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(
         properties = {
-                "rest-client.biz-events.api-key=x_api_key0"
-})
+                "rest-client.biz-events.api-key=x_api_key0",
+                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.baseUrl=bizEventsMock"
+        })
 class BizEventsConnectorImplTest {
 
     @Autowired
-     private BizEventsConnector bizEventsConnector;
+    private BizEventsConnector bizEventsConnector;
     private MemoryAppender memoryAppender;
 
     @BeforeEach
@@ -88,7 +85,7 @@ class BizEventsConnectorImplTest {
         //when
         BizEventsTransactionsListDTO bizEventsTransactionsListDTO = bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_NOT_FOUND", 2);
         //then
-        Assertions.assertEquals(0,bizEventsTransactionsListDTO.getTransactions().size());
+        Assertions.assertEquals(0, bizEventsTransactionsListDTO.getTransactions().size());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
                 .contains(("A class feign.FeignException$NotFound occurred handling request getTransactionsList from biz-Events: HttpStatus 404"))
         );
@@ -99,7 +96,7 @@ class BizEventsConnectorImplTest {
         //When
         //Then
         Assertions.assertThrows(BizEventsInvocationException.class,
-                ()-> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", 2));
+                () -> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", 2));
 
     }
 
@@ -112,19 +109,19 @@ class BizEventsConnectorImplTest {
         //then
         Assertions.assertNotNull(transactionDetails.getBizEventsInfoTransactionDTO());
         Assertions.assertEquals(1, transactionDetails.getBizEventsCartsDTO().size());
-        Assertions.assertEquals( "TRANSACTION_ID", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionId());
-        Assertions.assertEquals( "250863", transactionDetails.getBizEventsInfoTransactionDTO().getAuthCode());
-        Assertions.assertEquals( "223560110624", transactionDetails.getBizEventsInfoTransactionDTO().getRrn());
-        Assertions.assertEquals( "2024-06-13T15:22:04Z", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionDate());
-        Assertions.assertEquals( "Worldline Merchant Services Italia S.p.A.", transactionDetails.getBizEventsInfoTransactionDTO().getPspName());
+        Assertions.assertEquals("TRANSACTION_ID", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionId());
+        Assertions.assertEquals("250863", transactionDetails.getBizEventsInfoTransactionDTO().getAuthCode());
+        Assertions.assertEquals("223560110624", transactionDetails.getBizEventsInfoTransactionDTO().getRrn());
+        Assertions.assertEquals("2024-06-13T15:22:04Z", transactionDetails.getBizEventsInfoTransactionDTO().getTransactionDate());
+        Assertions.assertEquals("Worldline Merchant Services Italia S.p.A.", transactionDetails.getBizEventsInfoTransactionDTO().getPspName());
 
-        Assertions.assertEquals( "ERNESTO HOLDER", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getAccountHolder());
-        Assertions.assertEquals( "MASTERCARD", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBrand());
-        Assertions.assertEquals( "0403", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBlurredNumber());
+        Assertions.assertEquals("ERNESTO HOLDER", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getAccountHolder());
+        Assertions.assertEquals("MASTERCARD", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBrand());
+        Assertions.assertEquals("0403", transactionDetails.getBizEventsInfoTransactionDTO().getBizEventsWalletInfoDTO().getBlurredNumber());
 
-        Assertions.assertEquals( PaymentMethod.PO, transactionDetails.getBizEventsInfoTransactionDTO().getPaymentMethod());
-        Assertions.assertEquals( "ERNESTO PAYER", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getName());
-        Assertions.assertEquals( "TAX_CODE", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getTaxCode());
+        Assertions.assertEquals(PaymentMethod.PO, transactionDetails.getBizEventsInfoTransactionDTO().getPaymentMethod());
+        Assertions.assertEquals("ERNESTO PAYER", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getName());
+        Assertions.assertEquals("TAX_CODE", transactionDetails.getBizEventsInfoTransactionDTO().getPayer().getTaxCode());
 
         Assertions.assertEquals("634,37", transactionDetails.getBizEventsInfoTransactionDTO().getAmount());
         Assertions.assertEquals("0,53", transactionDetails.getBizEventsInfoTransactionDTO().getFee());
@@ -149,7 +146,7 @@ class BizEventsConnectorImplTest {
         //when
         BizEventsTransactionNotFoundException bizEventsTransactionNotFoundException = assertThrows(BizEventsTransactionNotFoundException.class,
                 () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_NOT_FOUND", "TRANSACTION_ID_NOT_FOUND_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsTransactionNotFoundException.getMessage());
+        Assertions.assertEquals("An error occurred handling request from biz-Events to retrieve transaction with transaction id [TRANSACTION_ID_NOT_FOUND_1] for the current user", bizEventsTransactionNotFoundException.getMessage());
     }
 
     @Test
@@ -158,7 +155,7 @@ class BizEventsConnectorImplTest {
         //Then
         BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
                 () -> bizEventsConnector.getTransactionDetails("DUMMY_FISCAL_CODE_ERROR", "TRANSACTION_ID_ERROR_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
+        Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 
     @Test
@@ -181,7 +178,7 @@ class BizEventsConnectorImplTest {
         //when
         BizEventsReceiptNotFoundException bizEventsReceiptNotFoundException = assertThrows(BizEventsReceiptNotFoundException.class,
                 () -> bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT_NOT_FOUND", "TRANSACTION_ID_RECEIPT_NOT_FOUND_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [TRANSACTION_ID_RECEIPT_NOT_FOUND_1] for the current user", bizEventsReceiptNotFoundException.getMessage());
+        Assertions.assertEquals("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [TRANSACTION_ID_RECEIPT_NOT_FOUND_1] for the current user", bizEventsReceiptNotFoundException.getMessage());
     }
 
     @Test
@@ -190,30 +187,7 @@ class BizEventsConnectorImplTest {
         //Then
         BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
                 () -> bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT_ERROR", "TRANSACTION_ID_RECEIPT_ERROR_1"));
-        Assertions.assertEquals( "An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
-    }
-
-    public static class WireMockInitializer
-            implements ApplicationContextInitializer<ConfigurableApplicationContext> {
-        @Override
-        public void initialize(ConfigurableApplicationContext applicationContext) {
-            WireMockServer wireMockServer = new WireMockServer(new WireMockConfiguration().usingFilesUnderClasspath("src/test/resources/stub").dynamicPort());
-            wireMockServer.start();
-
-            applicationContext.getBeanFactory().registerSingleton("wireMockServer", wireMockServer);
-            applicationContext.addApplicationListener(
-                    applicationEvent -> {
-                        if (applicationEvent instanceof ContextClosedEvent) {
-                            wireMockServer.stop();
-                        }
-                    });
-
-            TestPropertySourceUtils.addInlinedPropertiesToEnvironment(
-                    applicationContext,
-                    String.format(
-                            "rest-client.biz-events.baseUrl=http://%s:%d/bizEventsMock",
-                            wireMockServer.getOptions().bindAddress(), wireMockServer.port()));
-        }
+        Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 
 }
