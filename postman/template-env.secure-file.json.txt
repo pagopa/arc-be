@@ -67,7 +67,7 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "enabled": true
     },
     {
-      "key": "Apim-Subcription-key-PaymentNotices",
+      "key": "Apim-Subcription-key-PullPayment",
       "value": "<!SubscriptionKeyPullPayment!>",
       "type": "secret",
       "enabled": true
