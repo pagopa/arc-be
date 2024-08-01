@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.service;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
@@ -17,8 +18,8 @@ public class TokenStoreServiceImpl implements TokenStoreService{
   }
 
   @Override
-  public IamUserInfoDTO getUserInfo(String accessToken) {
-    return tokens.getOrDefault(accessToken, null);
+  public Optional<IamUserInfoDTO> getUserInfo(String accessToken) {
+    return Optional.ofNullable(tokens.get(accessToken));
   }
 
 }

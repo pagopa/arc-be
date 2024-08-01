@@ -38,7 +38,7 @@ public class CustomAuthenticationSuccessHandlerTest {
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
-    String sample_id_token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1hcmNvIiwiaWF0IjoxNTE2MjM5MDIyLCJmaXNjYWxOdW1iZXIiOiI3ODkwMTIiLCJmYW1pbHlOYW1lIjoiUG9sbyIsImVtYWlsIjoibWFyY28ucG9sb0BleGFtcGxlLmNvbSIsImlzcyI6Imlzc3VlciJ9.AErwXpbHrT_0WvN86QuQ0nvnZndVxt8jnmiD1lfj1_A";
+    String sampleIdToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1hcmNvIiwiaWF0IjoxNTE2MjM5MDIyLCJmaXNjYWxOdW1iZXIiOiI3ODkwMTIiLCJmYW1pbHlOYW1lIjoiUG9sbyIsImVtYWlsIjoibWFyY28ucG9sb0BleGFtcGxlLmNvbSIsImlzcyI6Imlzc3VlciJ9.AErwXpbHrT_0WvN86QuQ0nvnZndVxt8jnmiD1lfj1_A";
     Consumer<Map<String, Object>> attributesConsumer = attributes -> {
       attributes.putAll(Map.of(
           "sub", "123456",
@@ -52,7 +52,7 @@ public class CustomAuthenticationSuccessHandlerTest {
     Instant issuedAt = Instant.now();
     Instant expiresAt = issuedAt.plusSeconds(3600);
 
-    OidcIdToken idToken = OidcIdToken.withTokenValue(sample_id_token)
+    OidcIdToken idToken = OidcIdToken.withTokenValue(sampleIdToken)
         .issuedAt(issuedAt)
         .expiresAt(expiresAt)
         .claims(attributesConsumer)
