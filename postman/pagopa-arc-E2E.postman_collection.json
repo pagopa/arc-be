@@ -1760,7 +1760,8 @@
                       "listen": "prerequest",
                       "script": {
                         "exec": [
-                          "pm.environment.set(\"state\", \"1234567890\");"
+                          "pm.environment.set(\"state\", \"1234567890\");\r",
+                          "pm.environment.set(\"code\", \"1234567890\");"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -1901,6 +1902,16 @@
                   "event": [
                     {
                       "listen": "test",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
                       "script": {
                         "exec": [
                           "pm.environment.set(\"code\", \"123456789\");\r",
