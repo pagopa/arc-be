@@ -1,1497 +1,1943 @@
 {
   "info": {
-    "_postman_id": "3ba80321-b9db-47ce-95fc-bafc783af96c",
-    "name": "ARC transactions e2e",
+    "_postman_id": "e889655f-02b7-41dd-beea-b87aa4153846",
+    "name": "ARC e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "26204012"
+    "_exporter_id": "9202061"
   },
   "item": [
     {
-      "name": "Happy Case",
+      "name": "transactions",
       "item": [
         {
-          "name": "Case 1",
+          "name": "Happy Case",
           "item": [
             {
-              "name": "Send Event to Biz-Events Case 1",
-              "event": [
+              "name": "Case 1",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Send event to Biz-Events, expected httpStatus: 201\", () => {\r",
-                      "    pm.response.to.have.status(201);\r",
-                      "})\r",
-                      ""
+                  "name": "Send Event to Biz-Events Case 1",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Send event to Biz-Events, expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//transaction id\r",
+                          "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
+                          "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
+                          "\r",
+                          "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
+                          "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
+                          "\r",
+                          "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
+                          "let moment = require('moment');\r",
+                          "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
+                          "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
+                          "let amountEur = amount / 100 ;\r",
+                          "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
+                          "pm.collectionVariables.set(\"amountCents\",amount);\r",
+                          "\r",
+                          "//Random fee\r",
+                          "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"fee\",fee);\r",
+                          "\r",
+                          "//total Amount\r",
+                          "let totalAmount = amount + fee;\r",
+                          "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{sharedAccessSignature}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      "//transaction id\r",
-                      "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
-                      "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
-                      "\r",
-                      "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
-                      "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
-                      "\r",
-                      "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
-                      "let moment = require('moment');\r",
-                      "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
-                      "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
-                      "\r",
-                      "//Random Amount\r",
-                      "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
-                      "let amountEur = amount / 100 ;\r",
-                      "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
-                      "pm.collectionVariables.set(\"amountCents\",amount);\r",
-                      "\r",
-                      "//Random fee\r",
-                      "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
-                      "pm.collectionVariables.set(\"fee\",fee);\r",
-                      "\r",
-                      "//total Amount\r",
-                      "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "{{sharedAccessSignature}}"
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
+                      "protocol": "https",
+                      "host": [
+                        "{{namespace}}",
+                        "servicebus",
+                        "windows",
+                        "net"
+                      ],
+                      "path": [
+                        "{{eventHub}}",
+                        "messages"
+                      ],
+                      "query": [
+                        {
+                          "key": "timeout",
+                          "value": "60"
+                        },
+                        {
+                          "key": "api-version",
+                          "value": "2014-01"
+                        }
+                      ]
+                    }
                   },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
-                  "protocol": "https",
-                  "host": [
-                    "{{namespace}}",
-                    "servicebus",
-                    "windows",
-                    "net"
-                  ],
-                  "path": [
-                    "{{eventHub}}",
-                    "messages"
-                  ],
-                  "query": [
-                    {
-                      "key": "timeout",
-                      "value": "60"
-                    },
-                    {
-                      "key": "api-version",
-                      "value": "2014-01"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transactions list",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transactions list - Case 1], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transactions list - Case 1] - When you get the transaction list, ARC return a transaction list with last event injected\", () => {\r",
-                      "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
-                      "\r",
-                      "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
-                      "\r",
-                      "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
-                      "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
-                      "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(true);\r",
-                      "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
-                      "        }else {\r",
-                      "            pm.expect.fail(\"The event is not present\");\r",
-                      "        }\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
+                  "response": []
                 },
                 {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions"
-                  ],
-                  "query": [
+                  "name": "transactions list",
+                  "event": [
                     {
-                      "key": "page",
-                      "value": null,
-                      "disabled": true
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transactions list - Case 1], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transactions list - Case 1] - When you get the transaction list, ARC return a transaction list with last event injected\", () => {\r",
+                          "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
+                          "\r",
+                          "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
+                          "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
+                          "            pm.expect(transaction.isCart).to.eq(false);\r",
+                          "            pm.expect(transaction.paidByMe).to.eq(true);\r",
+                          "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
+                          "        }else {\r",
+                          "            pm.expect.fail(\"The event is not present\");\r",
+                          "        }\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     },
                     {
-                      "key": "size",
-                      "value": null,
-                      "disabled": true
-                    },
-                    {
-                      "key": "filter",
-                      "value": null,
-                      "disabled": true
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction details - Case 1], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details - Case 1] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                      "        let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
                   ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction receipt",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction receipt - Case 1], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction receipt - Case 1] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
-                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
-                      "        console.log(pm.response.headers)\r",
-                      "    })\r",
-                      "}"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}",
-                    "receipt"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Disable transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "size",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "filter",
+                          "value": null,
+                          "disabled": true
+                        }
+                      ]
                     }
-                  ]
+                  },
+                  "response": []
                 },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{CF_MOCK_BE_ARC}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
+                {
+                  "name": "transaction details",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction details - Case 1], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction details - Case 1] - When you get the transaction details, ARC return a transaction details\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
+                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
                   ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transaction receipt",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction receipt - Case 1], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction receipt - Case 1] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                          "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        console.log(pm.response.headers)\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}",
+                        "receipt"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable transaction",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Case 2",
+              "item": [
+                {
+                  "name": "Send Event to Biz-Events Case 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Send event to Biz-Events - case 2, expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//transaction id\r",
+                          "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
+                          "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
+                          "\r",
+                          "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
+                          "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
+                          "\r",
+                          "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
+                          "let moment = require('moment');\r",
+                          "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
+                          "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
+                          "let amountEur = amount / 100 ;\r",
+                          "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
+                          "pm.collectionVariables.set(\"amountCents\",amount);\r",
+                          "\r",
+                          "//Random fee\r",
+                          "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"fee\",fee);\r",
+                          "\r",
+                          "//total Amount\r",
+                          "let totalAmount = amount + fee;\r",
+                          "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{sharedAccessSignature}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
+                      "protocol": "https",
+                      "host": [
+                        "{{namespace}}",
+                        "servicebus",
+                        "windows",
+                        "net"
+                      ],
+                      "path": [
+                        "{{eventHub}}",
+                        "messages"
+                      ],
+                      "query": [
+                        {
+                          "key": "timeout",
+                          "value": "60"
+                        },
+                        {
+                          "key": "api-version",
+                          "value": "2014-01"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transactions list",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transactions list - Case 2], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transactions list - Case 2] - When you get the transaction list, ARC return a transaction list with last event injected\", () => {\r",
+                          "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
+                          "        \r",
+                          "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
+                          "\r",
+                          "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
+                          "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
+                          "            pm.expect(transaction.isCart).to.eq(false);\r",
+                          "            pm.expect(transaction.paidByMe).to.eq(true);\r",
+                          "            pm.expect(transaction.registeredToMe).to.eq(false);\r",
+                          "        }else {\r",
+                          "            pm.expect.fail(\"The event is not present\");\r",
+                          "        }\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "size",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "filter",
+                          "value": null,
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transaction details",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction details - Case 2], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction details - Case 2] - When you get the transaction details, ARC return a transaction details\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
+                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transaction receipt",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                          "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        console.log(pm.response.headers)\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}",
+                        "receipt"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable transaction",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable transaction User 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{fakeUser1}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Case 3",
+              "item": [
+                {
+                  "name": "Send Event to Biz-Events Case 3",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Send event to Biz-Events - case 3, expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//transaction id\r",
+                          "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
+                          "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
+                          "\r",
+                          "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
+                          "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
+                          "\r",
+                          "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
+                          "let moment = require('moment');\r",
+                          "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
+                          "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
+                          "let amountEur = amount / 100 ;\r",
+                          "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
+                          "pm.collectionVariables.set(\"amountCents\",amount);\r",
+                          "\r",
+                          "//Random fee\r",
+                          "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"fee\",fee);\r",
+                          "\r",
+                          "//total Amount\r",
+                          "let totalAmount = amount + fee;\r",
+                          "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{sharedAccessSignature}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
+                    ],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITTADINO PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
+                      "protocol": "https",
+                      "host": [
+                        "{{namespace}}",
+                        "servicebus",
+                        "windows",
+                        "net"
+                      ],
+                      "path": [
+                        "{{eventHub}}",
+                        "messages"
+                      ],
+                      "query": [
+                        {
+                          "key": "timeout",
+                          "value": "60"
+                        },
+                        {
+                          "key": "api-version",
+                          "value": "2014-01"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transactions list",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transactions list - Case 3], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transactions list - Case 3] - When you get the transaction list, ARC return a transaction list  with last event injected\", () => {\r",
+                          "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
+                          "\r",
+                          "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
+                          "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
+                          "            pm.expect(transaction.isCart).to.eq(false);\r",
+                          "            pm.expect(transaction.paidByMe).to.eq(false);\r",
+                          "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
+                          "        }else {\r",
+                          "            pm.expect.fail(\"The event is not present\");\r",
+                          "        }\r",
+                          "    })\r",
+                          "}\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions"
+                      ],
+                      "query": [
+                        {
+                          "key": "page",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "size",
+                          "value": null,
+                          "disabled": true
+                        },
+                        {
+                          "key": "filter",
+                          "value": null,
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transaction details",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction details - Case 3], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction details - Case 3] - When you get the transaction details, ARC return a transaction details\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
+                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
+                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"walletInfo\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"paymentMethod\");\r",
+                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"payer\");\r",
+                          "\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "transaction receipt",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
+                          "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        console.log(pm.response.headers)\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "{{transactionId}}",
+                        "receipt"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable transaction",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable transaction User 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{fakeUser1}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
         {
-          "name": "Case 2",
+          "name": "Unhappy Case",
           "item": [
             {
-              "name": "Send Event to Biz-Events Case 2",
-              "event": [
+              "name": "GENERIC_ERROR",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Send event to Biz-Events - case 2, expected httpStatus: 201\", () => {\r",
-                      "    pm.response.to.have.status(201);\r",
-                      "})\r",
-                      ""
+                  "name": "Send Event to Biz-Events Case 1 Copy",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Send event to Biz-Events, expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//transaction id\r",
+                          "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
+                          "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
+                          "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
+                          "\r",
+                          "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
+                          "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
+                          "\r",
+                          "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
+                          "let moment = require('moment');\r",
+                          "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
+                          "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
+                          "let amountEur = amount / 100 ;\r",
+                          "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
+                          "pm.collectionVariables.set(\"amountCents\",amount);\r",
+                          "\r",
+                          "//Random fee\r",
+                          "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"fee\",fee);\r",
+                          "\r",
+                          "//total Amount\r",
+                          "let totalAmount = amount + fee;\r",
+                          "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "Authorization",
+                        "value": "{{sharedAccessSignature}}"
+                      },
+                      {
+                        "key": "Content-Type",
+                        "value": "application/json"
+                      }
                     ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      "//transaction id\r",
-                      "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
-                      "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
-                      "\r",
-                      "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
-                      "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
-                      "\r",
-                      "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
-                      "let moment = require('moment');\r",
-                      "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
-                      "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
-                      "\r",
-                      "//Random Amount\r",
-                      "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
-                      "let amountEur = amount / 100 ;\r",
-                      "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
-                      "pm.collectionVariables.set(\"amountCents\",amount);\r",
-                      "\r",
-                      "//Random fee\r",
-                      "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
-                      "pm.collectionVariables.set(\"fee\",fee);\r",
-                      "\r",
-                      "//total Amount\r",
-                      "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "{{sharedAccessSignature}}"
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"0.q\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": \"0.q\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
+                      "protocol": "https",
+                      "host": [
+                        "{{namespace}}",
+                        "servicebus",
+                        "windows",
+                        "net"
+                      ],
+                      "path": [
+                        "{{eventHub}}",
+                        "messages"
+                      ],
+                      "query": [
+                        {
+                          "key": "timeout",
+                          "value": "60"
+                        },
+                        {
+                          "key": "api-version",
+                          "value": "2014-01"
+                        }
+                      ]
+                    }
                   },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
-                  "protocol": "https",
-                  "host": [
-                    "{{namespace}}",
-                    "servicebus",
-                    "windows",
-                    "net"
-                  ],
-                  "path": [
-                    "{{eventHub}}",
-                    "messages"
-                  ],
-                  "query": [
-                    {
-                      "key": "timeout",
-                      "value": "60"
-                    },
-                    {
-                      "key": "api-version",
-                      "value": "2014-01"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transactions list",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transactions list - Case 2], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transactions list - Case 2] - When you get the transaction list, ARC return a transaction list with last event injected\", () => {\r",
-                      "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
-                      "        \r",
-                      "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
-                      "\r",
-                      "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
-                      "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
-                      "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(true);\r",
-                      "            pm.expect(transaction.registeredToMe).to.eq(false);\r",
-                      "        }else {\r",
-                      "            pm.expect.fail(\"The event is not present\");\r",
-                      "        }\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
+                  "response": []
                 },
                 {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions"
-                  ],
-                  "query": [
+                  "name": "[GENERIC_EXCEPTION] transactions list",
+                  "event": [
                     {
-                      "key": "page",
-                      "value": null,
-                      "disabled": true
-                    },
-                    {
-                      "key": "size",
-                      "value": null,
-                      "disabled": true
-                    },
-                    {
-                      "key": "filter",
-                      "value": null,
-                      "disabled": true
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "\r",
+                          "if(pm.response.code != 500){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "} else{\r",
+                          "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception , expected httpStatus: 500\", () => {\r",
+                          "    pm.response.to.have.status(500);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception with expected error message and description , expected httpStatus: 500\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"generic_error\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events\");\r",
+                          "    })\r",
+                          "}\r",
+                          "\r",
+                          "\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction details - Case 2], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details - Case 2] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                      "        let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
                   ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction receipt",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
-                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
-                      "        console.log(pm.response.headers)\r",
-                      "    })\r",
-                      "}"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}",
-                    "receipt"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Disable transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions"
+                      ]
                     }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{CF_MOCK_BE_ARC}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Disable transaction User 2",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{fakeUser1}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Case 3",
-          "item": [
-            {
-              "name": "Send Event to Biz-Events Case 3",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Send event to Biz-Events - case 3, expected httpStatus: 201\", () => {\r",
-                      "    pm.response.to.have.status(201);\r",
-                      "})\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      "//transaction id\r",
-                      "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
-                      "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
-                      "\r",
-                      "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
-                      "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
-                      "\r",
-                      "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
-                      "let moment = require('moment');\r",
-                      "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
-                      "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
-                      "\r",
-                      "//Random Amount\r",
-                      "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
-                      "let amountEur = amount / 100 ;\r",
-                      "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
-                      "pm.collectionVariables.set(\"amountCents\",amount);\r",
-                      "\r",
-                      "//Random fee\r",
-                      "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
-                      "pm.collectionVariables.set(\"fee\",fee);\r",
-                      "\r",
-                      "//total Amount\r",
-                      "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "{{sharedAccessSignature}}"
                   },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659975\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"CITTADINO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"payer\": {\r\n        \"fullName\": \"CITTADINO PAYER\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{fakeUser1}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": {{amountEur}},\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": {{amountEur}},\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
-                    }
-                  }
-                },
-                "url": {
-                  "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
-                  "protocol": "https",
-                  "host": [
-                    "{{namespace}}",
-                    "servicebus",
-                    "windows",
-                    "net"
-                  ],
-                  "path": [
-                    "{{eventHub}}",
-                    "messages"
-                  ],
-                  "query": [
-                    {
-                      "key": "timeout",
-                      "value": "60"
-                    },
-                    {
-                      "key": "api-version",
-                      "value": "2014-01"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transactions list",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "if(jsonResponse.transactions.length === 0 || !jsonResponse.transactions.some(t => t.transactionId == pm.collectionVariables.get('transactionId'))){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transactions list - Case 3], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transactions list - Case 3] - When you get the transaction list, ARC return a transaction list  with last event injected\", () => {\r",
-                      "        pm.expect(jsonResponse.transactions).to.be.an('array').that.is.not.empty;\r",
-                      "\r",
-                      "        let transaction = jsonResponse.transactions.find(t => t.transactionId == pm.collectionVariables.get('transactionId'));\r",
-                      "\r",
-                      "        if(transaction.transactionId == pm.collectionVariables.get('transactionId')){\r",
-                      "            pm.expect(transaction.amount).to.eq(pm.collectionVariables.get('amountCents'));\r",
-                      "            pm.expect(transaction.isCart).to.eq(false);\r",
-                      "            pm.expect(transaction.paidByMe).to.eq(false);\r",
-                      "            pm.expect(transaction.registeredToMe).to.eq(true);\r",
-                      "        }else {\r",
-                      "            pm.expect.fail(\"The event is not present\");\r",
-                      "        }\r",
-                      "    })\r",
-                      "}\r",
-                      "\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
+                  "response": []
                 },
                 {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions"
-                  ],
-                  "query": [
+                  "name": "Disable transaction",
+                  "event": [
                     {
-                      "key": "page",
-                      "value": null,
-                      "disabled": true
-                    },
-                    {
-                      "key": "size",
-                      "value": null,
-                      "disabled": true
-                    },
-                    {
-                      "key": "filter",
-                      "value": null,
-                      "disabled": true
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction details",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction details - Case 3], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details - Case 3] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                      "        let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                      "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"walletInfo\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"paymentMethod\");\r",
-                      "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"payer\");\r",
-                      "\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                  "host": [
-                    "{{baseurlArc}}"
                   ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "transaction receipt",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "if(pm.response.code != 200 ){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "}else{\r",
-                      "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
-                      "        pm.response.to.have.status(200);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction receipt - Case 2] - When you get the transaction receipt, ARC return a transaction receipt\", () => {\r",
-                      "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
-                      "        console.log(pm.response.headers)\r",
-                      "    })\r",
-                      "}"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/{{transactionId}}/receipt",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions",
-                    "{{transactionId}}",
-                    "receipt"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Disable transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
-                    {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
                     },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
+                      "protocol": "https",
+                      "host": [
+                        "api",
+                        "dev",
+                        "platform",
+                        "pagopa",
+                        "it"
+                      ],
+                      "path": [
+                        "bizevents",
+                        "tx-service",
+                        "v1",
+                        "transactions",
+                        "{{transactionId}}",
+                        "disable"
+                      ]
                     }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{CF_MOCK_BE_ARC}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
-                  ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "Disable transaction User 2",
-              "event": [
+              "name": "TRANSACTION_NOT_FOUND_ERROR",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
+                  "name": "[TRANSACTION_NOT_FOUND_EXCEPTION] transaction details",
+                  "event": [
                     {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "\r",
+                          "if(pm.response.code != 404){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "} else{\r",
+                          "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception , expected httpStatus: 404\", () => {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"transaction_not_found_error\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction with transaction id [3562] for the current user\");\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{fakeUser1}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
                   ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/3562",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "3562"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "RECEIPT_NOT_FOUND_ERROR",
+              "item": [
+                {
+                  "name": "[RECEIPT_NOT_FOUND_EXCEPTION] transaction receipt",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "\r",
+                          "if(pm.response.code != 404){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "} else{\r",
+                          "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception , expected httpStatus: 404\", () => {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"receipt_not_found_error\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [3562] for the current user\");\r",
+                          "    })\r",
+                          "}\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/transactions/3562/receipt",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "transactions",
+                        "3562",
+                        "receipt"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         }
       ]
     },
     {
-      "name": "Unhappy Case",
+      "name": "auth",
       "item": [
         {
-          "name": "GENERIC_ERROR",
+          "name": "Happy Case",
           "item": [
             {
-              "name": "Send Event to Biz-Events Case 1 Copy",
-              "event": [
+              "name": "Case 1",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Send event to Biz-Events, expected httpStatus: 201\", () => {\r",
-                      "    pm.response.to.have.status(201);\r",
-                      "})\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                },
-                {
-                  "listen": "prerequest",
-                  "script": {
-                    "exec": [
-                      "//transaction id\r",
-                      "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
-                      "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                      "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
-                      "\r",
-                      "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
-                      "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
-                      "\r",
-                      "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
-                      "let moment = require('moment');\r",
-                      "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
-                      "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
-                      "\r",
-                      "//Random Amount\r",
-                      "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
-                      "let amountEur = amount / 100 ;\r",
-                      "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
-                      "pm.collectionVariables.set(\"amountCents\",amount);\r",
-                      "\r",
-                      "//Random fee\r",
-                      "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
-                      "pm.collectionVariables.set(\"fee\",fee);\r",
-                      "\r",
-                      "//total Amount\r",
-                      "let totalAmount = amount + fee;\r",
-                      "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "Authorization",
-                    "value": "{{sharedAccessSignature}}"
+                  "name": "login endpoint",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var redirectUrl = pm.response.headers.get('Location');\r",
+                          "var parser = require('postman-collection').Url.parse;\r",
+                          "\r",
+                          "console.log(parser(redirectUrl));\r",
+                          "\r",
+                          "pm.test(\"Request login endpoint to the configured IDP, expected httpStatus: 302\", () => {\r",
+                          "    pm.response.to.have.status(302);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirct is using HTTPS, expected HTTPS protcol\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).protocol).to.eql('https');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains response_type in query params, expected 'code' url\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"response_type\").value).to.eql('code');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains client_id in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"client_id\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains scope in query params, expected value 'openid'\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"scope\").value).to.eql('openid');\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains redirect_uri in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"redirect_uri\").value).not.equal(null);\r",
+                          "});\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains nonce in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"nonce\").value).not.equal(null);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": false
                   },
-                  {
-                    "key": "Content-Type",
-                    "value": "application/json"
-                  }
-                ],
-                "body": {
-                  "mode": "raw",
-                  "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"0.q\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": \"0.q\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
-                  "options": {
-                    "raw": {
-                      "language": "json"
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "oneidentity"
+                      ]
                     }
-                  }
-                },
-                "url": {
-                  "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
-                  "protocol": "https",
-                  "host": [
-                    "{{namespace}}",
-                    "servicebus",
-                    "windows",
-                    "net"
-                  ],
-                  "path": [
-                    "{{eventHub}}",
-                    "messages"
-                  ],
-                  "query": [
-                    {
-                      "key": "timeout",
-                      "value": "60"
-                    },
-                    {
-                      "key": "api-version",
-                      "value": "2014-01"
-                    }
-                  ]
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             },
             {
-              "name": "[GENERIC_EXCEPTION] transactions list",
-              "event": [
+              "name": "Case 2",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "\r",
-                      "if(pm.response.code != 500){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "} else{\r",
-                      "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception , expected httpStatus: 500\", () => {\r",
-                      "    pm.response.to.have.status(500);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception with expected error message and description , expected httpStatus: 500\",() =>{\r",
-                      "    let response = pm.response.json();\r",
-                      "    pm.expect(response.error).to.eq(\"generic_error\");\r",
-                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events\");\r",
-                      "    })\r",
-                      "}\r",
-                      "\r",
-                      "\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "transactions"
-                  ]
-                }
-              },
-              "response": []
-            },
-            {
-              "name": "Disable transaction",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "})"
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "apikey",
-                  "apikey": [
+                  "name": "set state",
+                  "event": [
                     {
-                      "key": "value",
-                      "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                      "type": "string"
-                    },
-                    {
-                      "key": "key",
-                      "value": "Ocp-Apim-Subscription-Key",
-                      "type": "string"
-                    },
-                    {
-                      "key": "in",
-                      "value": "header",
-                      "type": "string"
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var redirectUrl = pm.response.headers.get('Location');\r",
+                          "var parser = require('postman-collection').Url.parse;\r",
+                          "\r",
+                          "console.log(parser(redirectUrl));\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
+                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
-                  ]
-                },
-                "method": "POST",
-                "header": [
-                  {
-                    "key": "x-fiscal-code",
-                    "value": "{{CF_MOCK_BE_ARC}}"
-                  }
-                ],
-                "url": {
-                  "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                  "protocol": "https",
-                  "host": [
-                    "api",
-                    "dev",
-                    "platform",
-                    "pagopa",
-                    "it"
                   ],
-                  "path": [
-                    "bizevents",
-                    "tx-service",
-                    "v1",
-                    "transactions",
-                    "{{transactionId}}",
-                    "disable"
-                  ]
+                  "protocolProfileBehavior": {
+                    "followRedirects": false
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "oneidentity"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "token endpoint",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"Get token response, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"Verify that accessToken is present, expected accessToken is present\", () => {\r",
+                          "    pm.expect(jsonResponse).to.have.property('accessToken');\r",
+                          "    pm.expect(jsonResponse.accessToken).not.eq(null);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"Verify that tokenType is present, expected tokenType is present\", () => {\r",
+                          "    pm.expect(jsonResponse).to.have.property('tokenType');\r",
+                          "    pm.expect(jsonResponse.tokenType).not.eq(null);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"Verify that expiresIn is present, expected expiresIn is present\", () => {\r",
+                          "    pm.expect(jsonResponse).to.have.property('expiresIn');\r",
+                          "    pm.expect(jsonResponse.expiresIn).not.eq(null);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "code",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "state",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
             }
           ]
         },
         {
-          "name": "TRANSACTION_NOT_FOUND_ERROR",
+          "name": "Unhappy Case",
           "item": [
             {
-              "name": "[TRANSACTION_NOT_FOUND_EXCEPTION] transaction details",
-              "event": [
+              "name": "Not Found",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "\r",
-                      "if(pm.response.code != 404){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "} else{\r",
-                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception , expected httpStatus: 404\", () => {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
-                      "    let response = pm.response.json();\r",
-                      "    pm.expect(response.error).to.eq(\"transaction_not_found_error\");\r",
-                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction with transaction id [3562] for the current user\");\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/3562",
-                  "host": [
-                    "{{baseurlArc}}"
+                  "name": "resource not found",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request not found resourse, expected httpStatus: 404\", () => {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
                   ],
-                  "path": [
-                    "transactions",
-                    "3562"
-                  ]
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/1identity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "1identity"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "RECEIPT_NOT_FOUND_ERROR",
-          "item": [
+              ]
+            },
             {
-              "name": "[RECEIPT_NOT_FOUND_EXCEPTION] transaction receipt",
-              "event": [
+              "name": "Invalid State",
+              "item": [
                 {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "\r",
-                      "if(pm.response.code != 404){\r",
-                      "    retryRequest(postman,pm,setTimeout);\r",
-                      "} else{\r",
-                      "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception , expected httpStatus: 404\", () => {\r",
-                      "    pm.response.to.have.status(404);\r",
-                      "    })\r",
-                      "\r",
-                      "    pm.test(\"[Get transaction receipt- TRANSACTION_RECEIPT_NOT_FOUND_EXCEPTION] - When you retrieve the transaction receipt from Biz-Event and it responds with not found, ARC returns a transaction receipt not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
-                      "    let response = pm.response.json();\r",
-                      "    pm.expect(response.error).to.eq(\"receipt_not_found_error\");\r",
-                      "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [3562] for the current user\");\r",
-                      "    })\r",
-                      "}\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/transactions/3562/receipt",
-                  "host": [
-                    "{{baseurlArc}}"
+                  "name": "invalid state",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"state\", \"1234567890\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
                   ],
-                  "path": [
-                    "transactions",
-                    "3562",
-                    "receipt"
-                  ]
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "code",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "state",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
                 }
-              },
-              "response": []
+              ]
+            },
+            {
+              "name": "Invalid Code",
+              "item": [
+                {
+                  "name": "set state",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "var redirectUrl = pm.response.headers.get('Location');\r",
+                          "var parser = require('postman-collection').Url.parse;\r",
+                          "\r",
+                          "console.log(parser(redirectUrl));\r",
+                          "\r",
+                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
+                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
+                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": false
+                  },
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "login",
+                        "oneidentity"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "invalid code",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"code\", \"1234567890\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "code",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "state",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Generic Error",
+              "item": [
+                {
+                  "name": "generic error",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"code\", \"123456789\");\r",
+                          "pm.environment.set(\"state\", \"123456789\");"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/oneidentity?testcode={{code}}&teststate={{state}}",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "oneidentity"
+                      ],
+                      "query": [
+                        {
+                          "key": "testcode",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "teststate",
+                          "value": "{{state}}"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         }
