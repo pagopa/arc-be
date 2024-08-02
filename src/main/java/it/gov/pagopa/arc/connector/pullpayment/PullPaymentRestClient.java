@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.connector.pullpayment;
 
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public interface PullPaymentRestClient {
     List<PullPaymentNoticeDTO> paymentNotices(
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-tax-code") String fiscalCode,
-            @RequestParam(value = "dueDate", required = false ) LocalDate dueDate,
+            @RequestParam(value = "dueDate", required = false ) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate dueDate,
             @RequestParam(value = "limit", required = false, defaultValue = "50") int limit,
             @RequestParam(value = "page", required = false, defaultValue = "0") int page
     );
