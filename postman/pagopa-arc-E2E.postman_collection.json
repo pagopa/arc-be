@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "e889655f-02b7-41dd-beea-b87aa4153846",
-    "name": "ARC e2e",
+    "_postman_id": "b9639369-ba30-441f-b15d-4d14a4893af8",
+    "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "9202061"
+    "_exporter_id": "26204012"
   },
   "item": [
     {
@@ -1503,77 +1503,217 @@
       ]
     },
     {
-      "name": "auth",
+      "name": "payment-notices",
       "item": [
         {
           "name": "Happy Case",
           "item": [
             {
-              "name": "Case 1",
+              "name": "Single Payment",
               "item": [
                 {
-                  "name": "login endpoint",
+                  "name": "1b. GET payment notice from GPD",
                   "event": [
                     {
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "var redirectUrl = pm.response.headers.get('Location');\r",
-                          "var parser = require('postman-collection').Url.parse;\r",
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from GPD - Single Payment Option], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
                           "\r",
-                          "console.log(parser(redirectUrl));\r",
+                          "    pm.test(\"[GET payment notice from GPD - Single Payment Option] - When you get the payment notice, GPD return a payment notice\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "        let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
                           "\r",
-                          "pm.test(\"Request login endpoint to the configured IDP, expected httpStatus: 302\", () => {\r",
-                          "    pm.response.to.have.status(302);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirct is using HTTPS, expected HTTPS protcol\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).protocol).to.eql('https');\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains response_type in query params, expected 'code' url\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"response_type\").value).to.eql('code');\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains client_id in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"client_id\").value).not.equal(null);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains scope in query params, expected value 'openid'\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"scope\").value).to.eql('openid');\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains redirect_uri in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"redirect_uri\").value).not.equal(null);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains nonce in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"nonce\").value).not.equal(null);\r",
-                          "});"
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOption).to.have.length(1);\r",
+                          "        pm.expect(jsonResponse.paymentOption[0].amount).to.eq(588);\r",
+                          "    })\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
                       }
                     }
                   ],
-                  "protocolProfileBehavior": {
-                    "followRedirects": false
-                  },
                   "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "99999000013",
+                        "debtpositions",
+                        "99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "1c. Risultato Pull",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
+                          "\r",
+                          "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - Single Payment Option], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - Single Payment Option] - When you get the payment notice, Pull Payment return a payment notice\", () => {\r",
+                          "        pm.expect(jsonResponse).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let paymentNotice = jsonResponse.find(po => po.iupd == iupd);\r",
+                          "\r",
+                          "        pm.expect(paymentNotice.iupd).to.eq(iupd);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
+                          "\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subcription-key-PullPayment}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "x-tax-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrlPullPayment}}/payment-notices/v1",
+                      "host": [
+                        "{{baseUrlPullPayment}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "v1"
+                      ],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "50",
+                          "disabled": true
+                        },
+                        {
+                          "key": "page",
+                          "value": "1",
+                          "disabled": true
+                        },
+                        {
+                          "key": "dueDate",
+                          "value": "2024-06-02",
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Pull payment Notices from ARC",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
+                          "\r",
+                          "if(jsonResponse.paymentNotices.length === 0 || !jsonResponse.paymentNotices.some(po => po.iupd == iupd)) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from ARC - Single Payment Option], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from ARC - Single Payment Option] - When you get the payment notice, ARC return a payment notice\", () => {\r",
+                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let paymentNotice = jsonResponse.paymentNotices.find(po => po.iupd == iupd);\r",
+                          "\r",
+                          "        pm.expect(paymentNotice.iupd).to.eq(iupd);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices",
                       "host": [
                         "{{baseurlArc}}"
                       ],
                       "path": [
-                        "login",
-                        "oneidentity"
+                        "payment-notices"
                       ]
                     }
                   },
@@ -1582,86 +1722,102 @@
               ]
             },
             {
-              "name": "Case 2",
+              "name": "Single Payment + payment installments",
               "item": [
                 {
-                  "name": "set state",
+                  "name": "1b. GET payment notice from GPD",
                   "event": [
                     {
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "var redirectUrl = pm.response.headers.get('Location');\r",
-                          "var parser = require('postman-collection').Url.parse;\r",
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from GPD - Single Payment Option + payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
                           "\r",
-                          "console.log(parser(redirectUrl));\r",
+                          "    pm.test(\"[GET payment notice from GPD - Single Payment Option + payment installments] - When you get the payment notice, GPD return a payment notice\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "        let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
                           "\r",
-                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
-                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
-                          "});"
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
                       }
                     }
                   ],
-                  "protocolProfileBehavior": {
-                    "followRedirects": false
-                  },
                   "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseurlArc}}/login/oneidentity",
+                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-6pycf97by18e298ufg43134dfqf4qca",
                       "host": [
-                        "{{baseurlArc}}"
+                        "{{baseUrlGPD}}"
                       ],
                       "path": [
-                        "login",
-                        "oneidentity"
+                        "organizations",
+                        "99999000013",
+                        "debtpositions",
+                        "99999000013-6pycf97by18e298ufg43134dfqf4qca"
                       ]
                     }
                   },
                   "response": []
                 },
                 {
-                  "name": "token endpoint",
+                  "name": "1c. Risultato Pull",
                   "event": [
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
                     {
                       "listen": "test",
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
                           "\r",
-                          "pm.test(\"Get token response, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})\r",
+                          "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - Single Payment + payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
                           "\r",
-                          "pm.test(\"Verify that accessToken is present, expected accessToken is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('accessToken');\r",
-                          "    pm.expect(jsonResponse.accessToken).not.eq(null);\r",
-                          "})\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - Single Payment + payment installments] - When you get the payment notice, Pull Payment return a payment notice\", () => {\r",
+                          "        pm.expect(jsonResponse).to.be.an('array').that.is.not.empty;\r",
                           "\r",
-                          "pm.test(\"Verify that tokenType is present, expected tokenType is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('tokenType');\r",
-                          "    pm.expect(jsonResponse.tokenType).not.eq(null);\r",
-                          "})\r",
+                          "        let paymentNotice = jsonResponse.find(po => po.iupd == iupd);\r",
                           "\r",
-                          "pm.test(\"Verify that expiresIn is present, expected expiresIn is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('expiresIn');\r",
-                          "    pm.expect(jsonResponse.expiresIn).not.eq(null);\r",
-                          "})"
+                          "        pm.expect(paymentNotice.iupd).to.eq(iupd);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[1].numberOfInstallments).to.eq(3);\r",
+                          "\r",
+                          "    })\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -1669,26 +1825,529 @@
                     }
                   ],
                   "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subcription-key-PullPayment}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "x-tax-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrlPullPayment}}/payment-notices/v1",
+                      "host": [
+                        "{{baseUrlPullPayment}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "v1"
+                      ],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "50",
+                          "disabled": true
+                        },
+                        {
+                          "key": "page",
+                          "value": "1",
+                          "disabled": true
+                        },
+                        {
+                          "key": "dueDate",
+                          "value": "2024-06-02",
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Pull payment Notices from ARC",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
+                          "\r",
+                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from ARC - Single Payment Option + payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from ARC - Single Payment Option + payment installments] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
+                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
+                          "        \r",
+                          "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
+                          "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
+                          "        }\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
+                      "raw": "{{baseurlArc}}/payment-notices",
                       "host": [
                         "{{baseurlArc}}"
                       ],
                       "path": [
-                        "token",
-                        "oneidentity"
+                        "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "payment with different dueDate",
+              "item": [
+                {
+                  "name": "1b. GET payment notice from GPD",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from GPD - payment with different dueDate], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from GPD - payment with different dueDate] - When you get the payment notice, GPD return a payment notice\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "        let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "99999000013",
+                        "debtpositions",
+                        "99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "1c. Risultato Pull",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "\r",
+                          "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - payment with different dueDate], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - payment with different dueDate] - When you get the payment notice, Pull Payment return a payment notice\", () => {\r",
+                          "        pm.expect(jsonResponse).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let paymentNotice = jsonResponse.find(po => po.iupd == iupd);\r",
+                          "\r",
+                          "        pm.expect(paymentNotice.iupd).to.eq(iupd);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
+                          "\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subcription-key-PullPayment}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "x-tax-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrlPullPayment}}/payment-notices/v1",
+                      "host": [
+                        "{{baseUrlPullPayment}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "v1"
                       ],
                       "query": [
                         {
-                          "key": "code",
-                          "value": "{{code}}"
+                          "key": "limit",
+                          "value": "50",
+                          "disabled": true
                         },
                         {
-                          "key": "state",
-                          "value": "{{state}}"
+                          "key": "page",
+                          "value": "1",
+                          "disabled": true
+                        },
+                        {
+                          "key": "dueDate",
+                          "value": "2024-06-02",
+                          "disabled": true
                         }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Pull payment Notices from ARC",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "\r",
+                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from ARC - payment with different dueDate], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from ARC - payment with different dueDate] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
+                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
+                          "        \r",
+                          "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
+                          "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
+                          "        }\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "4  payment installments",
+              "item": [
+                {
+                  "name": "1b. GET payment notice from GPD",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from GPD - 4 payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from GPD - 4 payment installments] - When you get the payment notice, GPD return a payment notice\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "        let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-61crd1e480amph34o78ic31rv5jbvghs",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "99999000013",
+                        "debtpositions",
+                        "99999000013-61crd1e480amph34o78ic31rv5jbvghs"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "1c. Risultato Pull",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "\r",
+                          "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - 4 payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from Pull Payment - 4 payment installments] - When you get the payment notice, Pull Payment return a payment notice\", () => {\r",
+                          "        pm.expect(jsonResponse).to.be.an('array').that.is.not.empty;\r",
+                          "\r",
+                          "        let paymentNotice = jsonResponse.find(po => po.iupd == iupd);\r",
+                          "\r",
+                          "        pm.expect(paymentNotice.iupd).to.eq(iupd);\r",
+                          "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(4);\r",
+                          "\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subcription-key-PullPayment}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [
+                      {
+                        "key": "x-tax-code",
+                        "value": "{{CF_MOCK_BE_ARC}}"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrlPullPayment}}/payment-notices/v1",
+                      "host": [
+                        "{{baseUrlPullPayment}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "v1"
+                      ],
+                      "query": [
+                        {
+                          "key": "limit",
+                          "value": "50",
+                          "disabled": true
+                        },
+                        {
+                          "key": "page",
+                          "value": "1",
+                          "disabled": true
+                        },
+                        {
+                          "key": "dueDate",
+                          "value": "2024-06-02",
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Pull payment Notices from ARC",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "\r",
+                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice from ARC - 4 payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice from ARC - 4 payment installments] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
+                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
+                          "        \r",
+                          "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
+                          "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
+                          "        }\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices"
                       ]
                     }
                   },
@@ -1702,253 +2361,50 @@
           "name": "Unhappy Case",
           "item": [
             {
-              "name": "Not Found",
-              "item": [
+              "name": "[BAD_REQUEST] Pull payment Notices from ARC",
+              "event": [
                 {
-                  "name": "resource not found",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Request not found resourse, expected httpStatus: 404\", () => {\r",
-                          "    pm.response.to.have.status(404);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/login/1identity",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "login",
-                        "1identity"
-                      ]
-                    }
-                  },
-                  "response": []
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      " pm.test(\"[GET payment notice from ARC - BAD_REQUEST], expected httpStatus: 400\", () => {\r",
+                      "    pm.response.to.have.status(400);\r",
+                      "    })\r",
+                      "\r",
+                      "    pm.test(\"[GET payment notice from ARC - BAD_REQUEST] - When you retrieve the payment notices from Pull Payment and it responds with bad request, ARC returns a invalid request Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                      "    let response = pm.response.json();\r",
+                      "    pm.expect(response.error).to.eq(\"invalid_request\");\r",
+                      "    pm.expect(response.error_description).to.eq(\"One or more inputs provided during the request from pull payment are invalid\");\r",
+                      "    })"
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
                 }
-              ]
-            },
-            {
-              "name": "Invalid State",
-              "item": [
-                {
-                  "name": "invalid state",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 401\", () => {\r",
-                          "    pm.response.to.have.status(401);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          "pm.environment.set(\"state\", \"1234567890\");\r",
-                          "pm.environment.set(\"code\", \"1234567890\");"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "oneidentity"
-                      ],
-                      "query": [
-                        {
-                          "key": "code",
-                          "value": "{{code}}"
-                        },
-                        {
-                          "key": "state",
-                          "value": "{{state}}"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "Invalid Code",
-              "item": [
-                {
-                  "name": "set state",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "var redirectUrl = pm.response.headers.get('Location');\r",
-                          "var parser = require('postman-collection').Url.parse;\r",
-                          "\r",
-                          "console.log(parser(redirectUrl));\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
-                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "protocolProfileBehavior": {
-                    "followRedirects": false
-                  },
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/login/oneidentity",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "login",
-                        "oneidentity"
-                      ]
-                    }
-                  },
-                  "response": []
+              ],
+              "request": {
+                "auth": {
+                  "type": "noauth"
                 },
-                {
-                  "name": "invalid code",
-                  "event": [
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          "pm.environment.set(\"code\", \"1234567890\");"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
-                          "    pm.response.to.have.status(401);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/payment-notices?size=-3",
+                  "host": [
+                    "{{baseurlArc}}"
                   ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "oneidentity"
-                      ],
-                      "query": [
-                        {
-                          "key": "code",
-                          "value": "{{code}}"
-                        },
-                        {
-                          "key": "state",
-                          "value": "{{state}}"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "Generic Error",
-              "item": [
-                {
-                  "name": "generic error",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          "pm.environment.set(\"code\", \"123456789\");\r",
-                          "pm.environment.set(\"state\", \"123456789\");"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
+                  "path": [
+                    "payment-notices"
                   ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?testcode={{code}}&teststate={{state}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "oneidentity"
-                      ],
-                      "query": [
-                        {
-                          "key": "testcode",
-                          "value": "{{code}}"
-                        },
-                        {
-                          "key": "teststate",
-                          "value": "{{state}}"
-                        }
-                      ]
+                  "query": [
+                    {
+                      "key": "size",
+                      "value": "-3"
                     }
-                  },
-                  "response": []
+                  ]
                 }
-              ]
+              },
+              "response": []
             }
           ]
         }
@@ -1994,27 +2450,15 @@
   ],
   "variable": [
     {
-      "key": "transactionId",
+      "key": "iupd",
       "value": ""
     },
     {
-      "key": "transactionDate",
+      "key": "iuv",
       "value": ""
     },
     {
-      "key": "amountEur",
-      "value": ""
-    },
-    {
-      "key": "amountCents",
-      "value": ""
-    },
-    {
-      "key": "fee",
-      "value": ""
-    },
-    {
-      "key": "totalAmount",
+      "key": "amount",
       "value": ""
     }
   ]

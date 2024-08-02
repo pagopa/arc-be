@@ -26,7 +26,7 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
     },
     {
       "key": "Apim-Subscription-Key-bizevents-<ENV>",
-      "value": "<!SubscriptionKey!>",
+      "value": "<!SubscriptionKeyBizEvents!>",
       "type": "secret",
       "enabled": true
     },
@@ -47,7 +47,32 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
        "value": "<!CF_User1!>",
        "type": "secret",
        "enabled": true
-    }
+    },
+    {
+      "key": "baseUrlGPD",
+      "value": "https://api.<ENV>.platform.pagopa.it/gpd/debt-positions-service/v1",
+      "type": "default",
+      "enabled": true
+    },
+    {
+        "key": "baseUrlPullPayment",
+        "value": "https://api.<ENV>.platform.pagopa.it/pagopa-gpd-payments-pull/v1",
+        "type": "default",
+        "enabled": true
+    },
+    {
+      "key": "Apim-Subscription-key-GPD>",
+      "value": "<!SubscriptionKeyGPD!>",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "Apim-Subcription-key-PullPayment",
+      "value": "<!SubscriptionKeyPullPayment!>",
+      "type": "secret",
+      "enabled": true
+    },
+
   ],
   "_postman_variable_scope": "environment",
 }
@@ -66,9 +91,15 @@ Nome                    | Descrizione
 SharedAccessSignature   | Token SAS generato che consente l'accesso alla risorsa specificata per un periodo definito
                         | di 50 settimane
 ------------------------|----------------------------------------------------------------------------------------------
-SubscriptionKey         | Subscription key per utilizzare le chiamate verso il servizio di Biz-Events
+SubscriptionKeyBizEvents| Subscription key per utilizzare le chiamate verso il servizio di Biz-Events
 ------------------------|----------------------------------------------------------------------------------------------
 _CF_                    | Codice fiscale FAKE utilizzato a BE come header da passare al Servizio di Biz-Events
                         | per recuperare la lista e il dettaglio transazioni legate a quell'utente
 ------------------------|----------------------------------------------------------------------------------------------
 CF_User1                | Codice fiscale FAKE utilizzato nei test per simulare un secondo cittadino
+------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKeyGDP      | Subscription key per utilizzare le chiamate verso il servizio di GPD
+------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKeyPull     | Subscription key per utilizzare le chiamate verso il servizio di Pull Payment
+Payment                 |
+------------------------|----------------------------------------------------------------------------------------------

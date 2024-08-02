@@ -39,3 +39,10 @@ rest-client:
   pull-payment:
     baseUrl: \${PULL_PAYMENT_BASE_URL:}
     api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG
