@@ -65,6 +65,7 @@ microservice-chart:
     rest-client:
       BIZ_EVENTS_BASE_URL: bizevents-base-url
       PULL_PAYMENT_BASE_URL: pullpayment-base-url
+    assistance:
       ASSISTANCE_ZENDESK_PRODUCT_ID: assistance-arc-zendesk-product-id
       ASSISTANCE_ZENDESK_ORGANIZATION: assistance-arc-zendesk-organization
       HELP_CENTER_URL: arc-help-center-url
