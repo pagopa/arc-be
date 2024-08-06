@@ -1,20 +1,23 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
 @Configuration
 public class OAuth2LoginConfig {
 
   private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
-
+  private final JwtAuthenticationFilter jwtAuthenticationFilter;
   OAuth2LoginConfig(
-      CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
+      CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler,
+      JwtAuthenticationFilter jwtAuthenticationFilter) {
     this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
+    this.jwtAuthenticationFilter = jwtAuthenticationFilter;
   }
 
 
@@ -32,6 +35,7 @@ public class OAuth2LoginConfig {
             )
             .successHandler(customAuthenticationSuccessHandler)
         )
+        .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
             .anyRequest().permitAll());
     return http.build();

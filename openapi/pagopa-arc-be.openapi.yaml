@@ -73,6 +73,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /auth/user:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide information regarding authenticated user"
+      operationId: getUserInfo
+      parameters:
+        - name: Authorization
+          in: header
+          description: "Required for access token"
+          required: true
+          schema:
+            type: string
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: "Request cannot be processed, required parameters are not present"
+        '401':
+          description: "Unauthorized"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transactions:
     get:
       tags:
@@ -267,6 +301,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     TokenResponse:
       type: object
@@ -274,8 +313,6 @@ components:
         - access_token
         - token_type
         - expires_in
-        - refresh_token
-        - id_token
       properties:
         access_token:
           type: string
@@ -288,6 +325,22 @@ components:
         refresh_token:
           type: string
         id_token:
+          type: string
+    UserInfo:
+      type: object
+      required:
+        - userId
+        - fiscalCode
+      properties:
+        userId:
+          type: string
+        fiscalCode:
+          type: string
+        familyName:
+          type: string
+        name:
+          type: string
+        email:
           type: string
     TransactionsListDTO:
       type: object
