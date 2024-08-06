@@ -65,6 +65,10 @@ microservice-chart:
     rest-client:
       BIZ_EVENTS_BASE_URL: bizevents-base-url
       PULL_PAYMENT_BASE_URL: pullpayment-base-url
+    assistance:
+      ASSISTANCE_ZENDESK_PRODUCT_ID: assistance-arc-zendesk-product-id
+      ASSISTANCE_ZENDESK_ORGANIZATION: assistance-arc-zendesk-organization
+      HELP_CENTER_URL: arc-help-center-url
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
@@ -74,6 +78,7 @@ microservice-chart:
     AUTH_CLIENT_SECRET: oneidentity-client-secret
     JWT_TOKEN_PRIVATE_KEY: jwt-private-key
     JWT_TOKEN_PUBLIC_KEY: jwt-public-key
+    JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY: jwt-assistance-zendesk-private-key
   # nodeSelector: {}
 
   # tolerations: []

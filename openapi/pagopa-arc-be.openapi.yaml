@@ -310,21 +310,21 @@ components:
     TokenResponse:
       type: object
       required:
-        - access_token
-        - token_type
-        - expires_in
+        - accessToken
+        - tokenType
+        - expiresIn
       properties:
-        access_token:
+        accessToken:
           type: string
-        token_type:
+        tokenType:
           type: string
           default: Bearer
           x-field-extra-annotation: "@lombok.Builder.Default"
-        expires_in:
+        expiresIn:
           type: integer
-        refresh_token:
+        refreshToken:
           type: string
-        id_token:
+        idToken:
           type: string
     UserInfo:
       type: object
