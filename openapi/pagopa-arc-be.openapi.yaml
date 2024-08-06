@@ -266,6 +266,42 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /token/assistance:
+    get:
+      tags:
+        - arc zendesk assistance
+      summary: "Retrieve jwt token for the zendesk assistance"
+      operationId: getZendeskAssistanceToken
+      parameters:
+        - name: userEmail
+          in: query
+          description: Required user mail for the assistance
+          required: true
+          schema:
+            type: string
+            format: email
+            example: "someone@example.com"
+      responses:
+        '200':
+          description: "Obtained token for zendesk assistance"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZendeskAssistanceTokenResponse'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
 components:
   schemas:
     TokenResponse:
@@ -287,6 +323,22 @@ components:
           type: string
         idToken:
           type: string
+    ZendeskAssistanceTokenResponse:
+      type: object
+      required:
+        - assistance_token
+        - token_type
+        - return_to
+      properties:
+        assistance_token:
+          type: string
+        token_type:
+          type: string
+          default: JWT
+          x-field-extra-annotation: "@lombok.Builder.Default"
+        return_to:
+          type: string
+          description: URL of the Help Center to return
     TransactionsListDTO:
       type: object
       properties:
