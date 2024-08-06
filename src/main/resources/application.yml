@@ -32,11 +32,12 @@ jwt:
     public-key: "\${JWT_TOKEN_PUBLIC_KEY:}"
 
 zendesk-assistance:
-    tokenType: JWT
+  tokenType: JWT
+  return-to: \${HELP_CENTER_URL:}
+  assistance-token:
     product-id: \${ASSISTANCE_ZENDESK_PRODUCT_ID:}
     organization: \${ASSISTANCE_ZENDESK_ORGANIZATION:}
     private-key: \${JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY:}
-    return-to: \${HELP_CENTER_URL:}
 
 rest-client:
   fake-fiscal-code: "HSLZYB90L59D030S"
