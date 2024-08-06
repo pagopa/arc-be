@@ -4,7 +4,6 @@ import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
@@ -28,7 +27,7 @@ public class OAuth2LoginConfig {
             )
             .redirectionEndpoint(redirection ->
                 redirection
-                    .baseUri("/token/*")
+                    .baseUri("/token/oneidentity")
             )
             .successHandler(customAuthenticationSuccessHandler)
         )
