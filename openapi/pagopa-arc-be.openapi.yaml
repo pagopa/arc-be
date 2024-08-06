@@ -79,13 +79,6 @@ paths:
         - arc auth
       summary: "Provide information regarding authenticated user"
       operationId: getUserInfo
-      parameters:
-        - name: Authorization
-          in: header
-          description: "Required for access token"
-          required: true
-          schema:
-            type: string
       security:
         - bearerAuth: []
       responses:

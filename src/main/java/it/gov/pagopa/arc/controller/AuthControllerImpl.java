@@ -18,7 +18,7 @@ public class AuthControllerImpl implements ArcAuthApi {
   }
 
   @Override
-  public ResponseEntity<UserInfo> getUserInfo(String accessToken) {
+  public ResponseEntity<UserInfo> getUserInfo() {
     return new ResponseEntity<>(authService.getUserLoginInfo(), HttpStatus.OK);
   }
 

@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.security;
 
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -34,15 +35,19 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (StringUtils.hasText(authorization)) {
         Optional<IamUserInfoDTO> userInfo = tokenStoreService.getUserInfo(authorization.replace("Bearer ", ""));
 
+        if(userInfo.isEmpty()) throw new InvalidTokenException("Provided token is invalid");
+
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.get(), null, null);
         authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
 
+        // https://docs.spring.io/spring-security/site/docs/5.2.11.RELEASE/reference/html/overall-architecture.html#:~:text=SecurityContextHolder%2C%20SecurityContext%20and%20Authentication%20Objects
         SecurityContextHolder.getContext().setAuthentication(authentication);
       }
+    } catch (InvalidTokenException e){
+      log.error("Provided token is invalid", e);
     } catch (Exception e){
       log.error("Something gone wrong while retrieving UserInfo", e);
     }
-
     filterChain.doFilter(request, response);
   }
 
