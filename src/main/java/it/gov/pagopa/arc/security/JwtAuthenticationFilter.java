@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc.security;
 
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -10,7 +9,6 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,7 +16,6 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
 @Slf4j
