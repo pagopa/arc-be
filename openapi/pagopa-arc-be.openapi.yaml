@@ -665,6 +665,7 @@ components:
             - invalid_amount
             - invalid_date
             - invalid_request
+            - auth_user_unauthorized
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
