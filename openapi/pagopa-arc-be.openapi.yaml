@@ -326,17 +326,17 @@ components:
     ZendeskAssistanceTokenResponse:
       type: object
       required:
-        - assistance_token
-        - token_type
-        - return_to
+        - assistanceToken
+        - tokenType
+        - returnTo
       properties:
-        assistance_token:
+        assistanceToken:
           type: string
-        token_type:
+        tokenType:
           type: string
           default: JWT
           x-field-extra-annotation: "@lombok.Builder.Default"
-        return_to:
+        returnTo:
           type: string
           description: URL of the Help Center to return
     TransactionsListDTO:
