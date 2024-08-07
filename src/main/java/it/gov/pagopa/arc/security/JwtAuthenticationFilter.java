@@ -10,6 +10,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -17,12 +18,14 @@ import org.springframework.security.web.authentication.WebAuthenticationDetailsS
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import org.springframework.web.servlet.HandlerExceptionResolver;
 
 @Component
 @Slf4j
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final TokenStoreService tokenStoreService;
+
 
   public JwtAuthenticationFilter(TokenStoreService tokenStoreService) {
     this.tokenStoreService = tokenStoreService;
@@ -33,20 +36,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     try {
       String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
       if (StringUtils.hasText(authorization)) {
-        Optional<IamUserInfoDTO> userInfo = tokenStoreService.getUserInfo(authorization.replace("Bearer ", ""));
-
-        if(userInfo.isEmpty()) throw new InvalidTokenException("Provided token is invalid");
-
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.get(), null, null);
-        authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
-        // https://docs.spring.io/spring-security/site/docs/5.2.11.RELEASE/reference/html/overall-architecture.html#:~:text=SecurityContextHolder%2C%20SecurityContext%20and%20Authentication%20Objects
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        String token = authorization.replace("Bearer ", "");
+        Optional<IamUserInfoDTO> userInfo = tokenStoreService.getUserInfo(token);
+        if(userInfo.isPresent()){
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.get(), null, null);
+          authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
+          // https://docs.spring.io/spring-security/site/docs/5.2.11.RELEASE/reference/html/overall-architecture.html#:~:text=SecurityContextHolder%2C%20SecurityContext%20and%20Authentication%20Objects
+          SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
       }
-    } catch (InvalidTokenException e){
-      log.error("Provided token is invalid", e);
-    } catch (Exception e){
-      log.error("Something gone wrong while retrieving UserInfo", e);
+    } catch (Exception e) {
+      log.error("Something gone wrong ", e);
     }
     filterChain.doFilter(request, response);
   }

@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -37,6 +38,14 @@ public class OAuth2LoginConfig {
         )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
+
+            // Auth endpoint must be protected
+            .requestMatchers(
+                "/auth",
+                "/auth/*"
+            ).authenticated()
+
+            // Should be changed
             .anyRequest().permitAll());
     return http.build();
   }
