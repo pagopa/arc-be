@@ -327,15 +327,10 @@ components:
       type: object
       required:
         - assistanceToken
-        - tokenType
         - returnTo
       properties:
         assistanceToken:
           type: string
-        tokenType:
-          type: string
-          default: JWT
-          x-field-extra-annotation: "@lombok.Builder.Default"
         returnTo:
           type: string
           description: URL of the Help Center to return
