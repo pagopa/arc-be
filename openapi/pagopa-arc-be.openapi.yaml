@@ -32,7 +32,7 @@ paths:
         '429':
           description: "Too many Requests"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -68,7 +68,7 @@ paths:
         '429':
           description: "Too many Requests"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -149,7 +149,7 @@ paths:
         '401':
           description: "Wrong or missing function key"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -195,7 +195,7 @@ paths:
                 error: "transaction_not_found_error"
                 error_description: "string"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -233,7 +233,7 @@ paths:
                 error: "receipt_not_found_error"
                 error_description: "string"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -288,7 +288,43 @@ paths:
         '401':
           description: "Wrong or missing function key"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /token/assistance:
+    get:
+      tags:
+        - arc zendesk assistance
+      summary: "Retrieve jwt token for the zendesk assistance"
+      operationId: getZendeskAssistanceToken
+      parameters:
+        - name: userEmail
+          in: query
+          description: Required user mail for the assistance
+          required: true
+          schema:
+            type: string
+            format: email
+            example: "someone@example.com"
+      responses:
+        '200':
+          description: "Obtained token for zendesk assistance"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZendeskAssistanceTokenResponse'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -335,6 +371,17 @@ components:
           type: string
         email:
           type: string
+    ZendeskAssistanceTokenResponse:
+      type: object
+      required:
+        - assistanceToken
+        - returnTo
+      properties:
+        assistanceToken:
+          type: string
+        returnTo:
+          type: string
+          description: URL of the Help Center to return
     TransactionsListDTO:
       type: object
       properties:
