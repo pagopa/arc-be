@@ -17,8 +17,8 @@ public class AuthServiceImpl implements AuthService{
 
   @Override
   public UserInfo getUserLoginInfo() {
-    IamUserInfoDTO sessionToken = SecurityUtils.getPrincipal();
-    return iamUserInfoDTO2UserInfo.mapIamUserToUserInfo(sessionToken);
+    IamUserInfoDTO user = SecurityUtils.getPrincipal();
+    return iamUserInfoDTO2UserInfo.mapIamUserToUserInfo(user);
   }
 
 }
