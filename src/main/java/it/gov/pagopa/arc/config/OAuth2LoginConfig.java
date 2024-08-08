@@ -4,9 +4,11 @@ import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.web.SecurityFilterChain;
 
 @Configuration
+@EnableWebSecurity
 public class OAuth2LoginConfig {
 
   private final CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -15,7 +17,6 @@ public class OAuth2LoginConfig {
       CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler) {
     this.customAuthenticationSuccessHandler = customAuthenticationSuccessHandler;
   }
-
 
   @Bean
   public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -27,7 +28,7 @@ public class OAuth2LoginConfig {
             )
             .redirectionEndpoint(redirection ->
                 redirection
-                    .baseUri("/token/oneidentity")
+                    .baseUri("/token/oneidentity*")
             )
             .successHandler(customAuthenticationSuccessHandler)
         )
