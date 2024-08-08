@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc.service;
 
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;

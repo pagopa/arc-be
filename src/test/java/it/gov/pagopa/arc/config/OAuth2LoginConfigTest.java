@@ -2,9 +2,11 @@ package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
+import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -28,7 +30,8 @@ class OAuth2LoginConfigTest {
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandlerMock;
     @MockBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
-
+    @MockBean
+    AuthService authService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
