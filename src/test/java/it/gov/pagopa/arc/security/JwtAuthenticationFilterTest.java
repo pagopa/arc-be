@@ -30,14 +30,14 @@ class JwtAuthenticationFilterTest {
   @Mock
   private TokenStoreService tokenStoreService;
 
-  private final String SAMPLE_JWT = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+  private final String sampleJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
   @BeforeEach
   public void setUp() {
     SecurityContextHolder.clearContext();
     tokenStoreService = new TokenStoreServiceImpl();
     jwtAuthenticationFilter = new JwtAuthenticationFilter(tokenStoreService);
-    tokenStoreService.save(SAMPLE_JWT,IamUserInfoDTOFaker.mockInstance());
+    tokenStoreService.save(sampleJwt,IamUserInfoDTOFaker.mockInstance());
   }
   @AfterEach
   public void clearContext() {
@@ -49,7 +49,7 @@ class JwtAuthenticationFilterTest {
       throws ServletException, IOException {
 
     MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addHeader("Authorization","Bearer "+SAMPLE_JWT);
+    request.addHeader("Authorization","Bearer "+sampleJwt);
     MockHttpServletResponse response = new MockHttpServletResponse();
     jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
     Assertions.assertNotNull(SecurityContextHolder.getContext().getAuthentication().getPrincipal());
