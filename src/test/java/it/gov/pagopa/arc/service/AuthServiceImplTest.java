@@ -1,5 +1,7 @@
 package it.gov.pagopa.arc.service;
 
+import static org.mockito.ArgumentMatchers.any;
+
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfo;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
@@ -52,6 +54,8 @@ class AuthServiceImplTest {
     Assertions.assertEquals(user.getFamilyName(),iamUserInfoDTO.getFamilyName());
     Assertions.assertEquals(user.getEmail(),iamUserInfoDTO.getEmail());
     Assertions.assertEquals(user.getFiscalCode(),iamUserInfoDTO.getFiscalCode());
+
+    Mockito.verify(mapperMock).mapIamUserToUserInfo(any());
   }
 
 }

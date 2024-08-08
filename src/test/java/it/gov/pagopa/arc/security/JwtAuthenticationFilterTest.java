@@ -34,7 +34,6 @@ class JwtAuthenticationFilterTest {
   @BeforeEach
   public void setUp() {
     SecurityContextHolder.clearContext();
-    //tokenStoreService.save(sampleJwt,IamUserInfoDTOFaker.mockInstance());
   }
   @AfterEach
   public void clearContext() {
