@@ -95,7 +95,7 @@ paths:
         '429':
           description: "Too many Requests"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
