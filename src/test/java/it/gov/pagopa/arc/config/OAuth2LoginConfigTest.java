@@ -1,12 +1,14 @@
 package it.gov.pagopa.arc.config;
 
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
@@ -15,9 +17,6 @@ import org.springframework.security.oauth2.client.registration.ClientRegistratio
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest({ArcAuthApi.class, ArcZendeskAssistanceApi.class})
@@ -31,7 +30,7 @@ class OAuth2LoginConfigTest {
     @MockBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
     @MockBean
-    AuthService authService;
+    AuthService authServiceMock;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
