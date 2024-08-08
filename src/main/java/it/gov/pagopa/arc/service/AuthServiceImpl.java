@@ -2,7 +2,6 @@ package it.gov.pagopa.arc.service;
 
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfo;
-import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
@@ -19,12 +18,7 @@ public class AuthServiceImpl implements AuthService{
   @Override
   public UserInfo getUserLoginInfo() {
     IamUserInfoDTO sessionToken = SecurityUtils.getPrincipal();
-    if(sessionToken==null){
-      throw new InvalidTokenException("Invalid token used");
-    }else {
-      return iamUserInfoDTO2UserInfo.mapIamUserToUserInfo(sessionToken);
-    }
-
+    return iamUserInfoDTO2UserInfo.mapIamUserToUserInfo(sessionToken);
   }
 
 }
