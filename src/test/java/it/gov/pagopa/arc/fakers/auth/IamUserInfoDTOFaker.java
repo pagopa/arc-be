@@ -7,11 +7,11 @@ public class IamUserInfoDTOFaker {
 
   public static IamUserInfoDTO mockInstance(){
     Map<String, Object> attributes = Map.of(
-        "sub", "123456",
-        "fiscalNumber", "789012",
-        "familyName", "Polo",
-        "name", "Marco",
-        "email", "marco.polo@example.com",
+        "sub", "user_id",
+        "fiscalNumber", "FISCAL-CODE789456",
+        "familyName", "familyName",
+        "name", "name",
+        "email", "sample@sample.com",
         "iss", "issuer"
     );
     return IamUserInfoDTO.map2IamUserInfoDTO(attributes);

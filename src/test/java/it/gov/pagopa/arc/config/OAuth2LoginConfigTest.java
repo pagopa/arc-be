@@ -31,15 +31,15 @@ class OAuth2LoginConfigTest {
   @MockBean
   private PaymentNoticesService paymentNoticesServiceMock;
   @Mock
-  private JwtAuthenticationFilter jwtAuthenticationFilter;
+  private JwtAuthenticationFilter jwtAuthenticationFilterMock;
   @MockBean
-  private AuthService authService;
+  private AuthService authServiceMock;
   @Autowired
   private MockMvc mockMvc;
   @Autowired
   private WebApplicationContext context;
   @MockBean
-  private TokenStoreService tokenStoreService;
+  private TokenStoreService tokenStoreServiceMock;
   @Test
   void givenURLWithoutCodeAndStateWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {
     mockMvc.perform(MockMvcRequestBuilders.get("/token/oneidentity"))
