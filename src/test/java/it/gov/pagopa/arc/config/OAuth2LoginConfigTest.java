@@ -1,9 +1,9 @@
 package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
-import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
+import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
-import it.gov.pagopa.arc.service.PaymentNoticesService;
+import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,7 +18,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
-@WebMvcTest({ArcAuthApi.class, ArcPaymentNoticesApi.class})
+@WebMvcTest({ArcAuthApi.class, ArcZendeskAssistanceApi.class})
 @Import(OAuth2LoginConfig.class)
 class OAuth2LoginConfigTest {
 
@@ -27,7 +27,7 @@ class OAuth2LoginConfigTest {
     @MockBean
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandlerMock;
     @MockBean
-    private PaymentNoticesService paymentNoticesServiceMock;
+    private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
 
     @Autowired
     private MockMvc mockMvc;
@@ -49,8 +49,9 @@ class OAuth2LoginConfigTest {
     }
 
     @Test
-    void givenUnsecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
-        mockMvc.perform(MockMvcRequestBuilders.get("/payment-notices"))
+    void givenInsecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
+                        .param("userEmail", "someone@email.com"))
                 .andExpect(status().isOk());
     }
 
