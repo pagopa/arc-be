@@ -73,6 +73,33 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /auth/user:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide information regarding authenticated user"
+      operationId: getUserInfo
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: "Request cannot be processed, required parameters are not present"
+        '401':
+          description: "Unauthorized"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Service unavailable"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transactions:
     get:
       tags:
@@ -267,6 +294,11 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
 components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
   schemas:
     TokenResponse:
       type: object
@@ -286,6 +318,22 @@ components:
         refreshToken:
           type: string
         idToken:
+          type: string
+    UserInfo:
+      type: object
+      required:
+        - userId
+        - fiscalCode
+      properties:
+        userId:
+          type: string
+        fiscalCode:
+          type: string
+        familyName:
+          type: string
+        name:
+          type: string
+        email:
           type: string
     TransactionsListDTO:
       type: object
@@ -617,6 +665,7 @@ components:
             - invalid_amount
             - invalid_date
             - invalid_request
+            - auth_user_unauthorized
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
