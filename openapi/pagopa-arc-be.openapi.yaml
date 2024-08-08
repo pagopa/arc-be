@@ -32,7 +32,7 @@ paths:
         '429':
           description: "Too many Requests"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -68,7 +68,7 @@ paths:
         '429':
           description: "Too many Requests"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -122,7 +122,7 @@ paths:
         '401':
           description: "Wrong or missing function key"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -168,7 +168,7 @@ paths:
                 error: "transaction_not_found_error"
                 error_description: "string"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -206,7 +206,7 @@ paths:
                 error: "receipt_not_found_error"
                 error_description: "string"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -261,7 +261,7 @@ paths:
         '401':
           description: "Wrong or missing function key"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
@@ -297,7 +297,7 @@ paths:
         '401':
           description: "Wrong or missing function key"
         '500':
-          description: "Service unavailable"
+          description: "Internal Server Error"
           content:
             application/json:
               schema:
