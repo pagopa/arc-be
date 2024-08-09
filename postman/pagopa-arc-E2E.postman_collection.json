@@ -2608,6 +2608,66 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "Case 3",
+              "item": [
+                {
+                  "name": "user info",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 3], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 3] - When you get user info\", () => {\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"userId\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"fiscalCode\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"familyName\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"name\");\r",
+                          "    pm.expect(jsonResponse).to.have.property(\"email\");\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6ImFhZmUzMGRiLTVlNDktNDc2ZS04YzhjLWU3OWJmNDk5YzJlNiIsImlhdCI6MTcyMzIxNzM4NCwiZXhwIjoxNzIzMjIwOTg0fQ.LFI0YFjS7bjv3VYGDTR3GgdPFbbUKrza2H8eeh7g6OtzBhcor0U0B_M_8LI98s-eob3TpWM9wq8zTwnvZtz_tmI37FU83RJF513Mrhi5YBYR8MI78XMSmRH7xRPIzlIAruCYbcv6JVs5daf7UKLjWGZWr3cXH7-TzWoA2OAE2MhzzI23R8b8pXDXrRearR5blyhEM1Wk4TRz3RZSksajGRQQ_gwO0K_8pT3zpk-hsZfWZ2iGwjWdKsTBwSmhYL68Qns2ic5McvM_gC5_xW3hrzqTP27NQJnkRjdT03uIFXkZSrLRBbgzPs286k4DiFaWMrASWofv35AQvqalUIXwmQ",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -2817,7 +2877,9 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          ""
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 500\", () => {\r",
+                          "    pm.response.to.have.status(500);\r",
+                          "});"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -2856,6 +2918,94 @@
                           "key": "teststate",
                           "value": "{{state}}"
                         }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Unauthorized",
+              "item": [
+                {
+                  "name": "user info unauthorized",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6ImFhZmUzMGRiLTVlNDktNDc2ZS04YzhjLWU3OWJmNDk5YzJlNiIsImlhdCI6MTcyMzIxNzM4NCwiZXhwIjoxNzIzMjIwOTg0fQ.LFI0YFjS7bjv3VYGDTR3GgdPFbbUKrza2H8eeh7g6OtzBhcor0U0B_M_8LI98s-eob3TpWM9wq8zTwnvZtz_tmI37FU83RJF513Mrhi5YBYR8MI78XMSmRH7xRPIzlIAruCYbcv6JVs5daf7UKLjWGZWr3cXH7-TzWoA2OAE2MhzzI23R8b8pXDXrRearR5blyhEM1Wk4TRz3RZSksajGRQQ_gwO0K_8pT3zpk-hsZfWZ2iGwjWdKsTBwSmhYL68Qns2ic5McvM_gC5_xW3hrzqTP27NQJnkRjdT03uIFXkZSrLRBbgzPs286k4DiFaWMrASWofv35AQvqalUIXwmQ",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "user info without access token",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
                       ]
                     }
                   },
