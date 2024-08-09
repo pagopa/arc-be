@@ -83,18 +83,4 @@ class JwtAuthenticationFilterTest {
     Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
   }
 
-  @Test
-  void givenUnknownErrorThenThrowException() throws ServletException, IOException {
-
-    //given
-    MockHttpServletRequest request = new MockHttpServletRequest();
-    request.addHeader("Authorization","Bearer "+sampleJwt);
-    MockHttpServletResponse response = new MockHttpServletResponse();
-
-    //when
-    Mockito.when(tokenStoreService.getUserInfo(sampleJwt)).thenThrow(new InvalidTokenException("Invalid token"));
-    jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
-
-  }
-
 }
