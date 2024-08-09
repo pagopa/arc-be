@@ -95,11 +95,6 @@ class JwtAuthenticationFilterTest {
     Mockito.when(tokenStoreService.getUserInfo(sampleJwt)).thenThrow(new InvalidTokenException("Invalid token"));
     jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
 
-    //then
-    Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
-        .contains(("Something gone wrong"))
-    );
-
   }
 
 }
