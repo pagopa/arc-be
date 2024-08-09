@@ -7,6 +7,7 @@ import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
+import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,13 @@ class OAuth2LoginConfigTest {
     @MockBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
     @MockBean
-    AuthService authServiceMock;
+    private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private WebApplicationContext context;
+    @MockBean
+    private TokenStoreService tokenStoreService;
 
     @Test
     void givenURLWithoutCodeAndStateWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {
