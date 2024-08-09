@@ -1,14 +1,15 @@
 package it.gov.pagopa.arc.config;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Builder;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.context.annotation.Configuration;
 
-@Getter
-@Setter
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Configuration
 @ConfigurationProperties(prefix = "zendesk-assistance")
 public class ZendeskAssistanceTokenConfig {
@@ -17,8 +18,8 @@ public class ZendeskAssistanceTokenConfig {
     private String returnTo;
     private AssistanceToken assistanceToken;
 
-    @Getter
-    @Setter
+    @Data
+    @Builder
     @AllArgsConstructor
     @NoArgsConstructor
     public static class AssistanceToken{
