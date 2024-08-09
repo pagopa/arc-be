@@ -4,6 +4,7 @@ package it.gov.pagopa.arc.utils;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 
 import java.text.NumberFormat;
 import java.text.ParseException;
@@ -50,5 +51,21 @@ public class Utilities {
      */
     public static void logExceptionDetails(RuntimeException ex){
         log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+    }
+
+    /**
+     * To extract name value from email
+     */
+    public static String extractNameFromEmailAssistanceToken(String userMail){
+        String nameExtracted;
+
+        if(!StringUtils.isBlank(userMail) && userMail.contains("@")){
+            int index = userMail.indexOf("@");
+            nameExtracted = userMail.substring(0, index);
+        }else {
+            //Replace this exception with custom exception
+            throw new RuntimeException("Invalid user email");
+        }
+        return  nameExtracted;
     }
 }
