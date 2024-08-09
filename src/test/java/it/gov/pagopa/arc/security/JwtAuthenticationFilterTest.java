@@ -29,6 +29,8 @@ class JwtAuthenticationFilterTest {
   private JwtAuthenticationFilter jwtAuthenticationFilter;
   private final String sampleJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
+  private final String sampleJwtNotInStorage = "eaJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";;
+
   @BeforeEach
   public void setUp() {
     SecurityContextHolder.clearContext();
@@ -62,10 +64,29 @@ class JwtAuthenticationFilterTest {
   }
 
   @Test
-  void givenInValidAuthenticationTokenThenVerifyThatSecurityContextIsCreated()
+  void givenValidAuthenticationTokenButNotStoredInMemoryThenVerifyThatSecurityContextIsNotCreated()
+      throws ServletException, IOException {
+    MockHttpServletRequest request = new MockHttpServletRequest();
+    request.addHeader("Authorization","Bearer "+sampleJwtNotInStorage);
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
+    Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
+  }
+
+  @Test
+  void givenInValidAuthenticationTokenThenVerifyThatSecurityContextIsNotCreated()
       throws ServletException, IOException {
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization","Bearer ");
+    MockHttpServletResponse response = new MockHttpServletResponse();
+    jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
+    Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
+  }
+
+  @Test
+  void givenEmptyHeaderThenVerifyThatSecurityContextIsNotCreated()
+      throws ServletException, IOException {
+    MockHttpServletRequest request = new MockHttpServletRequest();
     MockHttpServletResponse response = new MockHttpServletResponse();
     jwtAuthenticationFilter.doFilterInternal(request,response,new MockFilterChain());
     Assertions.assertNull(SecurityContextHolder.getContext().getAuthentication());
