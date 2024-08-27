@@ -38,7 +38,7 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
     },
     {
       "key": "baseurlArc",
-      "value": "https://api.<ENV>.cittadini-p4pa.pagopa.it/arc/v1",
+      "value": "https://api.<ENV>.cittadini.pagopa.it/arc/v1",
       "type": "default",
       "enabled": true
     },

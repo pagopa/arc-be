@@ -4,8 +4,8 @@ microservice-chart:
     tag: latest
     pullPolicy: Always
 
-    ingress:
-      host: "citizen.internal.uat.cittadini-p4pa.pagopa.it"
+  ingress:
+    host: "citizen.internal.uat.cittadini.pagopa.it"
 
   resources:
     requests:
@@ -30,11 +30,11 @@ microservice-chart:
   envConfig:
     ENV: "UAT"
     JAVA_TOOL_OPTIONS: "-Xms128m -Xmx4g -Djava.util.concurrent.ForkJoinPool.common.parallelism=7 -agentlib:jdwp=transport=dt_socket,server=y,address=8001,suspend=n -Dcom.sun.management.jmxremote=true -Dcom.sun.management.jmxremote.port=3002 -Dcom.sun.management.jmxremote.rmi.port=3003 -Djava.rmi.server.hostname=127.0.0.1 -Dcom.sun.management.jmxremote.authenticate=false -Dcom.sun.management.jmxremote.ssl=false"
-    AUTH_CLIENT_REDIRECT_URI: TBD
-    AUTH_ISSUER_URI: TBD
-    AUTH_CLIENT_AUTHORIZATION_URI: TBD
-    AUTH_CLIENT_TOKEN_URI: TBD
-    AUTH_CLIENT_JWK_URI: TBD
+    AUTH_CLIENT_REDIRECT_URI: https://uat.cittadini.pagopa.it/auth-callback
+    AUTH_ISSUER_URI: https://uat.oneid.pagopa.it
+    AUTH_CLIENT_AUTHORIZATION_URI: https://uat.oneid.pagopa.it/login
+    AUTH_CLIENT_TOKEN_URI: https://uat.oneid.pagopa.it/oidc/token
+    AUTH_CLIENT_JWK_URI: https://uat.oneid.pagopa.it/oidc/keys
 
   keyvault:
     name: "arc-u-itn-cittadini-kv"
