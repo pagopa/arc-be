@@ -1,0 +1,39 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/bizEventsMock/transactions",
+    "headers": {
+      "Ocp-Apim-Subscription-Key": {
+        "matches": "x_api_key([0-9]?)+"
+      },
+      "x-fiscal-code": {
+        "matches": "DUMMY_FISCAL_CODE"
+      }
+    },
+    "queryParameters": {
+      "size": {
+        "equalTo": "1"
+      }
+    }
+  },
+  "response": {
+    "status": 200,
+    "headers": {
+      "Content-Type": "application/json"
+    },
+    "jsonBody": {
+      "transactions": [
+        {
+          "transactionId": "1",
+          "payeeName": "Comune di Milano",
+          "payeeTaxCode": "MI_XXX",
+          "amount": "180,00",
+          "transactionDate": "2024-03-27T13:07:25Z",
+          "isCart": false,
+          "isPayer": true,
+          "isDebtor": true
+        }
+      ]
+    }
+  }
+}

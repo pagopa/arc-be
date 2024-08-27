@@ -1,0 +1,56 @@
+spring:
+  application:
+    name: ${artifactId}
+    version: ${version}
+  jmx.enabled: true
+  security:
+    enable-csrf: false
+    oauth2:
+      client:
+        registration:
+          oneidentity:
+            provider: oneidentity
+            client-id: \${AUTH_CLIENT_ID:}
+            client-secret: \${AUTH_CLIENT_SECRET:}
+            authorization-grant-type: authorization_code
+            redirect-uri: \${AUTH_CLIENT_REDIRECT_URI:}
+            scope: openid
+        provider:
+          oneidentity:
+            issuer-uri: \${AUTH_ISSUER_URI:}
+            authorization-uri: \${AUTH_CLIENT_AUTHORIZATION_URI:}
+            token-uri: \${AUTH_CLIENT_TOKEN_URI:}
+            user-name-attribute: sub
+            jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
+
+jwt:
+  audience: "\${JWT_TOKEN_AUDIENCE:application-audience}"
+  tokenType: "\${JWT_TOKEN_TYPE:Bearer}"
+  access-token:
+    expire-in: "\${JWT_TOKEN_EXPIRATION_SECONDS:3600}"
+    private-key: "\${JWT_TOKEN_PRIVATE_KEY:}"
+    public-key: "\${JWT_TOKEN_PUBLIC_KEY:}"
+
+zendesk-assistance:
+  tokenType: JWT
+  return-to: \${HELP_CENTER_URL:}
+  assistance-token:
+    product-id: \${ASSISTANCE_ZENDESK_PRODUCT_ID:}
+    organization: \${ASSISTANCE_ZENDESK_ORGANIZATION:}
+    private-key: \${JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY:}
+
+rest-client:
+  fake-fiscal-code: "HSLZYB90L59D030S"
+  biz-events:
+    baseUrl: \${BIZ_EVENTS_BASE_URL:}
+    api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
+  pull-payment:
+    baseUrl: \${PULL_PAYMENT_BASE_URL:}
+    api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
+
+logging:
+  level:
+    org:
+      springframework:
+        security: DEBUG
+        web: DEBUG

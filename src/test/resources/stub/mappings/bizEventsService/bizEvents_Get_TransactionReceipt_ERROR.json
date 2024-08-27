@@ -1,0 +1,18 @@
+{
+  "request": {
+    "method": "GET",
+    "urlPathPattern": "/bizEventsMock/transactions/TRANSACTION_ID_RECEIPT_ERROR_1/pdf",
+    "headers": {
+      "Ocp-Apim-Subscription-Key": {
+        "matches": "x_api_key([0-9]?)+"
+      },
+      "x-fiscal-code": {
+        "matches": "DUMMY_FISCAL_CODE_RECEIPT_ERROR"
+      }
+    }
+  },
+  "response": {
+    "status": 500
+  }
+}
+
