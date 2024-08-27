@@ -70,4 +70,30 @@ class UtilitiesTest {
         Assertions.assertEquals("Invalid date format",exception.getMessage());
     }
 
+    @ParameterizedTest
+    @CsvSource(value = {
+            "someone@email.com, someone",
+            "test.someone@email.it, test.someone",
+            "some.one.!test#@email.com, some.one.!test#"
+    })
+    void givenCorrectEmailFormatWhenCallExtractNameFromEmailAssistanceTokenThenReturnName(String email, String name){
+        //when
+        String nameFromEmailAssistanceToken = Utilities.extractNameFromEmailAssistanceToken(email);
+
+        //then
+        assertEquals(nameFromEmailAssistanceToken, name);
+    }
+
+    @Test
+    void givenWrongEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
+        //given
+        String wrongEmail = "email";
+        //when
+        //then
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
+        Assertions.assertEquals("Invalid user email",exception.getMessage());
+
+    }
+
 }
