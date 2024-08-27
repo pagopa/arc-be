@@ -85,9 +85,21 @@ class UtilitiesTest {
     }
 
     @Test
-    void givenWrongEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
+    void givenEmptyEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
         //given
         String wrongEmail = "";
+        //when
+        //then
+        RuntimeException exception = assertThrows(RuntimeException.class,
+                () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
+        Assertions.assertEquals("Invalid user email",exception.getMessage());
+
+    }
+
+    @Test
+    void givenWrongEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
+        //given
+        String wrongEmail = "email";
         //when
         //then
         RuntimeException exception = assertThrows(RuntimeException.class,
