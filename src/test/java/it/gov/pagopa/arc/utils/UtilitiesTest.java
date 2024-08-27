@@ -87,7 +87,7 @@ class UtilitiesTest {
     @Test
     void givenWrongEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
         //given
-        String wrongEmail = "email";
+        String wrongEmail = "";
         //when
         //then
         RuntimeException exception = assertThrows(RuntimeException.class,
