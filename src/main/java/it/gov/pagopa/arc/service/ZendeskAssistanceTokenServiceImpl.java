@@ -9,20 +9,20 @@ import org.springframework.stereotype.Service;
 @Service
 public class ZendeskAssistanceTokenServiceImpl implements ZendeskAssistanceTokenService{
     private final ZendeskAssistanceTokenBuilder zendeskAssistanceTokenBuilder;
-    private final ZendeskAssistanceTokenConfig zendeskAssistanceToken;
+    private final ZendeskAssistanceTokenConfig zendeskAssistanceTokenConfig;
     private final ZendeskAssistanceTokenResponseMapper zendeskAssistanceTokenResponseMapper;
 
-    public ZendeskAssistanceTokenServiceImpl(ZendeskAssistanceTokenBuilder zendeskAssistanceTokenBuilder, ZendeskAssistanceTokenConfig zendeskAssistanceToken, ZendeskAssistanceTokenResponseMapper zendeskAssistanceTokenResponseMapper) {
+    public ZendeskAssistanceTokenServiceImpl(ZendeskAssistanceTokenBuilder zendeskAssistanceTokenBuilder, ZendeskAssistanceTokenConfig zendeskAssistanceTokenConfig, ZendeskAssistanceTokenResponseMapper zendeskAssistanceTokenResponseMapper) {
         this.zendeskAssistanceTokenBuilder = zendeskAssistanceTokenBuilder;
-        this.zendeskAssistanceToken = zendeskAssistanceToken;
+        this.zendeskAssistanceTokenConfig = zendeskAssistanceTokenConfig;
         this.zendeskAssistanceTokenResponseMapper = zendeskAssistanceTokenResponseMapper;
     }
 
     @Override
     public ZendeskAssistanceTokenResponse retrieveZendeskAssistanceTokenResponse(@NotNull String userEmail) {
-        String assistanceToken = zendeskAssistanceTokenBuilder.buildZendeskAssistanceToken(userEmail);
-        String returnTo = zendeskAssistanceToken.getReturnTo();
+        String zendeskAssistanceToken = zendeskAssistanceTokenBuilder.buildZendeskAssistanceToken(userEmail);
+        String returnTo = this.zendeskAssistanceTokenConfig.getReturnTo();
 
-        return zendeskAssistanceTokenResponseMapper.toZendeskAssistanceTokenResponse(assistanceToken, returnTo);
+        return zendeskAssistanceTokenResponseMapper.toZendeskAssistanceTokenResponse(zendeskAssistanceToken, returnTo);
     }
 }

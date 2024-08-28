@@ -23,7 +23,7 @@ public class ZendeskAssistanceTokenBuilder {
     }
 
     public String buildZendeskAssistanceToken(String userEmail) {
-        Map<String, String> imUserInfoMap = mapImUserInfo(userEmail);
+        Map<String, String> imUserInfoMap = mapImUserInfo();
 
         String nameFromEmailAssistanceToken = Utilities.extractNameFromEmailAssistanceToken(userEmail);
 
@@ -41,16 +41,12 @@ public class ZendeskAssistanceTokenBuilder {
                 .sign(algorithm);
     }
 
-    private Map<String, String> mapImUserInfo(String userEmail){
+    private Map<String, String> mapImUserInfo(){
 
         IamUserInfoDTO iamUserInfoDTO = SecurityUtils.getPrincipal();
 
         return Map.of(
-                "aux_data", iamUserInfoDTO.getFiscalCode(),
-                "name", iamUserInfoDTO.getName(),
-                "familyName", iamUserInfoDTO.getFamilyName(),
-                "email", userEmail
+                "aux_data", iamUserInfoDTO.getFiscalCode()
         );
-
     }
 }

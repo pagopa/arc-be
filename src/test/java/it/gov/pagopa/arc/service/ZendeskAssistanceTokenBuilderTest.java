@@ -54,10 +54,7 @@ class ZendeskAssistanceTokenBuilderTest {
         Mockito.when(zendeskAssistanceTokenMock.getAssistanceToken()).thenReturn(correctConfiguration.getAssistanceToken());
 
         Map<String, String> iamUserInfo = Map.of(
-                "aux_data", "FISCAL-CODE789456",
-                "name", "name",
-                "familyName", "familyName",
-                "email", USER_EMAIL
+                "aux_data", "FISCAL-CODE789456"
         );
 
         //when
@@ -76,9 +73,6 @@ class ZendeskAssistanceTokenBuilderTest {
         Assertions.assertEquals("prod-arc", decodedAccessToken.getClaim("product_id").asString());
 
         Assertions.assertEquals(iamUserInfo.get("aux_data"), userFields.get("aux_data"));
-        Assertions.assertEquals(iamUserInfo.get("name"), userFields.get("name"));
-        Assertions.assertEquals(iamUserInfo.get("familyName"), userFields.get("familyName"));
-        Assertions.assertEquals(iamUserInfo.get("email"), userFields.get("email"));
 
         Mockito.verify(zendeskAssistanceTokenMock).getTokenType();
         Mockito.verify(zendeskAssistanceTokenMock, Mockito.times(3)).getAssistanceToken();
