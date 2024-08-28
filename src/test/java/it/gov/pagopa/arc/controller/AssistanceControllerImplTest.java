@@ -26,7 +26,7 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @AutoConfigureMockMvc(addFilters = false)
 class AssistanceControllerImplTest {
 
-    private final static String FAKE_USER_EMAIL = "someone@email.com";
+    private static final String FAKE_USER_EMAIL = "someone@email.com";
 
     @Autowired
     private ObjectMapper objectMapper;

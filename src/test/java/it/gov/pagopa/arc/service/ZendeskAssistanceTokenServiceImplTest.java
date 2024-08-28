@@ -16,7 +16,7 @@ import static org.mockito.ArgumentMatchers.anyString;
 @ExtendWith(MockitoExtension.class)
 class ZendeskAssistanceTokenServiceImplTest {
 
-    private final static String FAKE_USER_EMAIL = "someone@email.com";
+    private static final String FAKE_USER_EMAIL = "someone@email.com";
 
     @Mock
     private ZendeskAssistanceTokenBuilder zendeskAssistanceTokenBuilderMock;
