@@ -16,10 +16,10 @@ import java.util.UUID;
 @Service
 @Slf4j
 public class ZendeskAssistanceTokenBuilder {
-    private final ZendeskAssistanceTokenConfig zendeskAssistanceToken;
+    private final ZendeskAssistanceTokenConfig zendeskConfig;
 
-    public ZendeskAssistanceTokenBuilder(ZendeskAssistanceTokenConfig zendeskAssistanceToken) {
-        this.zendeskAssistanceToken = zendeskAssistanceToken;
+    public ZendeskAssistanceTokenBuilder(ZendeskAssistanceTokenConfig zendeskConfig) {
+        this.zendeskConfig = zendeskConfig;
     }
 
     public String buildZendeskAssistanceToken(String userEmail) {
@@ -27,16 +27,16 @@ public class ZendeskAssistanceTokenBuilder {
 
         String nameFromEmailAssistanceToken = Utilities.extractNameFromEmailAssistanceToken(userEmail);
 
-        Algorithm algorithm = Algorithm.HMAC256(zendeskAssistanceToken.getAssistanceToken().getPrivateKey());
+        Algorithm algorithm = Algorithm.HMAC256(zendeskConfig.getAssistanceToken().getPrivateKey());
 
         return JWT.create()
-                .withHeader(Map.of("typ", zendeskAssistanceToken.getTokenType()))
+                .withHeader(Map.of("typ", zendeskConfig.getTokenType()))
                 .withJWTId(UUID.randomUUID().toString())
                 .withIssuedAt(Instant.now())
                 .withClaim("name", nameFromEmailAssistanceToken)
                 .withClaim("email", userEmail)
-                .withClaim("organization", zendeskAssistanceToken.getAssistanceToken().getOrganization())
-                .withClaim("product_id", zendeskAssistanceToken.getAssistanceToken().getProductId())
+                .withClaim("organization", zendeskConfig.getAssistanceToken().getOrganization())
+                .withClaim("product_id", zendeskConfig.getAssistanceToken().getProductId())
                 .withClaim("user_fields", imUserInfoMap)
                 .sign(algorithm);
     }
