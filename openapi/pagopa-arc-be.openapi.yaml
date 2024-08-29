@@ -711,6 +711,7 @@ components:
             - receipt_not_found_error
             - invalid_amount
             - invalid_date
+            - invalid_email
             - invalid_request
             - auth_user_unauthorized
         error_description:
