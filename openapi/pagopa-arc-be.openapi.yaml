@@ -299,6 +299,8 @@ paths:
         - arc zendesk assistance
       summary: "Retrieve jwt token for the zendesk assistance"
       operationId: getZendeskAssistanceToken
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: userEmail
           in: query
