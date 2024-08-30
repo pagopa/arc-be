@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.utils;
 
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
+import it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -90,9 +91,9 @@ class UtilitiesTest {
         String wrongEmail = "";
         //when
         //then
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        ZendeskAssistanceInvalidUserEmailException  exception = assertThrows(ZendeskAssistanceInvalidUserEmailException .class,
                 () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
-        Assertions.assertEquals("Invalid user email",exception.getMessage());
+        Assertions.assertEquals("Invalid user email []",exception.getMessage());
 
     }
 
@@ -102,9 +103,9 @@ class UtilitiesTest {
         String wrongEmail = "email";
         //when
         //then
-        RuntimeException exception = assertThrows(RuntimeException.class,
+        ZendeskAssistanceInvalidUserEmailException exception = assertThrows(ZendeskAssistanceInvalidUserEmailException .class,
                 () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
-        Assertions.assertEquals("Invalid user email",exception.getMessage());
+        Assertions.assertEquals("Invalid user email [email]",exception.getMessage());
 
     }
 

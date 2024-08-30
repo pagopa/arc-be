@@ -58,6 +58,11 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.UNAUTHORIZED, ErrorDTO.ErrorEnum.AUTH_USER_UNAUTHORIZED);
     }
 
+    @ExceptionHandler(ZendeskAssistanceInvalidUserEmailException.class)
+    public ResponseEntity<ErrorDTO> handleZendeskAssistanceInvalidUserEmailException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_EMAIL);
+    }
+
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
         log.info("A {} occurred handling request {}: HttpStatus {} - {}",
