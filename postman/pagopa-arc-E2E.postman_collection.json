@@ -3491,6 +3491,140 @@
           ]
         }
       ]
+    },
+    {
+      "name": "zendesk assistance",
+      "item": [
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "GET JWT token for zendesk assistance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
+                      "    let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
+                      "    \r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "token",
+                    "assistance"
+                  ],
+                  "query": [
+                    {
+                      "key": "userEmail",
+                      "value": "someone@email.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "INVALID USER EMAIL",
+              "item": [
+                {
+                  "name": "INVALID USER EMAIL ERROR",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"invalid_email\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"Invalid user email [someone]\");\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "assistance"
+                      ],
+                      "query": [
+                        {
+                          "key": "userEmail",
+                          "value": "someone"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [
