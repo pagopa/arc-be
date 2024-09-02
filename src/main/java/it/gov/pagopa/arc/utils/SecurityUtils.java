@@ -13,8 +13,7 @@ public final class SecurityUtils {
     try{
       return (IamUserInfoDTO) principal;
     }catch (ClassCastException e){
-      //Replace this exception with custom exception
-      throw new RuntimeException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
+      throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
     }
 
   }

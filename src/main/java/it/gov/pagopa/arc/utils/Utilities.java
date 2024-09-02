@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.utils;
 
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
+import it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang3.StringUtils;
 
@@ -63,8 +64,7 @@ public class Utilities {
             int index = userMail.indexOf("@");
             nameExtracted = userMail.substring(0, index);
         }else {
-            //Replace this exception with custom exception
-            throw new RuntimeException("Invalid user email");
+            throw new ZendeskAssistanceInvalidUserEmailException("Invalid user email [%s]".formatted(userMail));
         }
         return  nameExtracted;
     }

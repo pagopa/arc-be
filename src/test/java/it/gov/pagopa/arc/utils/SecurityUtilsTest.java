@@ -35,7 +35,7 @@ class SecurityUtilsTest {
     authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
     SecurityContextHolder.getContext().setAuthentication(authentication);
 
-    RuntimeException ex = Assertions.assertThrows(RuntimeException.class, SecurityUtils::getPrincipal);
+    IllegalStateException ex = Assertions.assertThrows(IllegalStateException.class, SecurityUtils::getPrincipal);
     Assertions.assertEquals("Invalid principal type: expected IamUserInfoDTO but got java.lang.Object", ex.getMessage());
   }
 

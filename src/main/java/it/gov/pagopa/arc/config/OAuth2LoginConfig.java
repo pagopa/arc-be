@@ -41,10 +41,11 @@ public class OAuth2LoginConfig {
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
 
-            // Auth endpoint must be protected
+            // endpoint must be protected
             .requestMatchers(
                 "/auth",
-                "/auth/*"
+                    "/auth/*",
+                    "/assistance"
             ).authenticated()
 
             // Should be changed
