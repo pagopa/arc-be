@@ -30,7 +30,7 @@ public class OAuth2LoginConfig {
             .authorizationEndpoint(authConfig ->
                 authConfig
                     .baseUri("/login")
-                    .authorizationRequestRepository(new InMemoryOAuth2AuthorizationRequestRepository()) // Use a custom repository
+                    .authorizationRequestRepository(new InMemoryOAuth2AuthorizationRequestRepository())
             )
             .redirectionEndpoint(redirection ->
                 redirection
