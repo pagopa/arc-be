@@ -4,24 +4,14 @@ import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-import org.springframework.util.Assert;
 
 class SecurityUtilsTest {
 
-  @BeforeEach
-  public void setUp() {
-    SecurityContextHolder.clearContext();
-    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-        IamUserInfoDTOFaker.mockInstance(), null, null);
-    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
-    SecurityContextHolder.getContext().setAuthentication(authentication);
-  }
   @AfterEach
   public void clearContext() {
     SecurityContextHolder.clearContext();
@@ -29,8 +19,24 @@ class SecurityUtilsTest {
 
   @Test
   void givenConfiguredSecurityContextThenRetrieveTheAuthenticatedUser(){
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            IamUserInfoDTOFaker.mockInstance(), null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
     IamUserInfoDTO user = SecurityUtils.getPrincipal();
     Assertions.assertNotNull(user);
+  }
+
+  @Test
+  void givenWrongConfiguredSecurityContextThenThrowException(){
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            new Object(), null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    IllegalStateException ex = Assertions.assertThrows(IllegalStateException.class, SecurityUtils::getPrincipal);
+    Assertions.assertEquals("Invalid principal type: expected IamUserInfoDTO but got java.lang.Object", ex.getMessage());
   }
 
 }

@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.utils;
 
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
+import it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -68,6 +69,44 @@ class UtilitiesTest {
         BizEventsInvalidDateException exception = assertThrows(BizEventsInvalidDateException.class,
                 () -> Utilities.dateStringToZonedDateTime(wrongDateString));
         Assertions.assertEquals("Invalid date format",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @CsvSource(value = {
+            "someone@email.com, someone",
+            "test.someone@email.it, test.someone",
+            "some.one.!test#@email.com, some.one.!test#"
+    })
+    void givenCorrectEmailFormatWhenCallExtractNameFromEmailAssistanceTokenThenReturnName(String email, String name){
+        //when
+        String nameFromEmailAssistanceToken = Utilities.extractNameFromEmailAssistanceToken(email);
+
+        //then
+        assertEquals(nameFromEmailAssistanceToken, name);
+    }
+
+    @Test
+    void givenEmptyEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
+        //given
+        String wrongEmail = "";
+        //when
+        //then
+        ZendeskAssistanceInvalidUserEmailException  exception = assertThrows(ZendeskAssistanceInvalidUserEmailException .class,
+                () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
+        Assertions.assertEquals("Invalid user email []",exception.getMessage());
+
+    }
+
+    @Test
+    void givenWrongEmailStringWhenExtractNameFromEmailAssistanceTokenThenReturnException() {
+        //given
+        String wrongEmail = "email";
+        //when
+        //then
+        ZendeskAssistanceInvalidUserEmailException exception = assertThrows(ZendeskAssistanceInvalidUserEmailException .class,
+                () -> Utilities.extractNameFromEmailAssistanceToken(wrongEmail));
+        Assertions.assertEquals("Invalid user email [email]",exception.getMessage());
+
     }
 
 }

@@ -7,8 +7,15 @@ public final class SecurityUtils {
 
   private SecurityUtils(){}
 
-  public static IamUserInfoDTO getPrincipal(){
-    return (IamUserInfoDTO) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+  public static IamUserInfoDTO getPrincipal() {
+    Object principal = SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+
+    try{
+      return (IamUserInfoDTO) principal;
+    }catch (ClassCastException e){
+      throw new IllegalStateException("Invalid principal type: expected IamUserInfoDTO but got " + principal.getClass().getName());
+    }
+
   }
 
 }

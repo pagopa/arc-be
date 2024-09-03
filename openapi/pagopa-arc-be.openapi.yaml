@@ -299,6 +299,8 @@ paths:
         - arc zendesk assistance
       summary: "Retrieve jwt token for the zendesk assistance"
       operationId: getZendeskAssistanceToken
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: userEmail
           in: query
@@ -711,6 +713,7 @@ components:
             - receipt_not_found_error
             - invalid_amount
             - invalid_date
+            - invalid_email
             - invalid_request
             - auth_user_unauthorized
         error_description:
