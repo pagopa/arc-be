@@ -40,7 +40,7 @@ zendesk-assistance:
     private-key: \${JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY:}
 
 rest-client:
-  fake-fiscal-code: "HSLZYB90L59D030S"
+  fake-fiscal-code: "PSTRRT80M20B157M"
   biz-events:
     baseUrl: \${BIZ_EVENTS_BASE_URL:}
     api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
