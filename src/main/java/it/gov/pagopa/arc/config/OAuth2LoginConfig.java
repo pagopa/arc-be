@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.security.InMemoryOAuth2AuthorizationRequestRepository;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +30,7 @@ public class OAuth2LoginConfig {
             .authorizationEndpoint(authConfig ->
                 authConfig
                     .baseUri("/login")
+                    .authorizationRequestRepository(new InMemoryOAuth2AuthorizationRequestRepository())
             )
             .redirectionEndpoint(redirection ->
                 redirection
