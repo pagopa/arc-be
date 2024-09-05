@@ -73,6 +73,25 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /logout:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the logout endpoint"
+      operationId: getLogoutEndpoint
+      responses:
+        '200':
+          description: "User successfully logged out"
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /auth/user:
     get:
       tags:
