@@ -20,5 +20,9 @@ public class TokenStoreServiceImpl implements TokenStoreService{
   public Optional<IamUserInfoDTO> getUserInfo(String accessToken) {
     return Optional.ofNullable(tokens.get(accessToken));
   }
+  @Override
+  public Optional<IamUserInfoDTO> delete(String accessToken){
+    return Optional.ofNullable(tokens.remove(accessToken));
+  }
 
 }
