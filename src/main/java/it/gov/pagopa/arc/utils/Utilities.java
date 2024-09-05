@@ -27,7 +27,7 @@ public class Utilities {
     /** To convert euro from String to double */
     private static Double euroStringToDouble(String euroString){
         try {
-            NumberFormat nf = NumberFormat.getInstance(Locale.ITALIAN);
+            NumberFormat nf = NumberFormat.getInstance(Locale.US);
             Number parse = nf.parse(euroString);
             return parse.doubleValue();
         }catch (ParseException e){
