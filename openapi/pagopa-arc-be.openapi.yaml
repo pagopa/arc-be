@@ -378,12 +378,16 @@ components:
       required:
         - assistanceToken
         - returnTo
+        - actionUrl
       properties:
         assistanceToken:
           type: string
         returnTo:
           type: string
           description: URL of the Help Center to return
+        actionUrl:
+          type: string
+          description: URL of Zendesk endpoint
     TransactionsListDTO:
       type: object
       properties:
