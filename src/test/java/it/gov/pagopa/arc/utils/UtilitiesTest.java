@@ -21,12 +21,12 @@ class UtilitiesTest {
 
     @ParameterizedTest
     @CsvSource(delimiter = ';', value = {
-            "1.123.456,80; 112345680",
-            "2.681,52; 268152",
-            "200,35; 20035",
-            "54,1; 5410",
+            "1,123,456.80; 112345680",
+            "2,681.52; 268152",
+            "200.35; 20035",
+            "54.1; 5410",
             "2; 200",
-            "0,24; 24"
+            "0.24; 24"
     })
     void givenCorrectEuroStringWhenCallEuroToCentsThenReturnAmountCents(String euroString, Long expected) {
         //given
