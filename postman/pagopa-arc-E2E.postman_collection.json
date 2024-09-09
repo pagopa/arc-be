@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "1ef070a8-ca2e-4259-a777-4e0c221f958a",
+    "_postman_id": "8ff73b4e-c848-45d2-910e-152d02ff954c",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "9202061"
@@ -1182,224 +1182,6 @@
           "name": "Unhappy Case",
           "item": [
             {
-              "name": "GENERIC_ERROR",
-              "item": [
-                {
-                  "name": "Send Event to Biz-Events Case 1 Copy",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Send event to Biz-Events, expected httpStatus: 201\", () => {\r",
-                          "    pm.response.to.have.status(201);\r",
-                          "})\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          "//transaction id\r",
-                          "let firstNums = (Math.floor(Math.random()*(1000000000000000000 - 1)+1)).toString().padStart(18,'0');\r",
-                          "let secondNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                          "let thirthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                          "let fourthNums = (Math.floor(Math.random()*(10000 - 1)+1)).toString().padStart(4,'0');\r",
-                          "let fifthNums = (Math.floor(Math.random()*(1000 - 1)+1)).toString().padStart(3,'0');\r",
-                          "\r",
-                          "let transactionId = String(\"tst2.\" + firstNums + \"-\" + secondNums + \"-\" + thirthNums + \"-\" + fourthNums + \"-\" + fifthNums + \"-\" + \"0\");\r",
-                          "pm.collectionVariables.set(\"transactionId\", transactionId);\r",
-                          "\r",
-                          "//Format: YYYY-MM-DDTHH:mm:ss[Z]\r",
-                          "let moment = require('moment');\r",
-                          "let nowFormatted =  String(moment().utc().format('YYYY-MM-DDTHH:mm:ss[Z]'));\r",
-                          "pm.collectionVariables.set(\"transactionDate\", nowFormatted);\r",
-                          "\r",
-                          "//Random Amount\r",
-                          "let amount = Math.floor(Math.random()*(100000 - 1)+1);\r",
-                          "let amountEur = amount / 100 ;\r",
-                          "pm.collectionVariables.set(\"amountEur\",amountEur);\r",
-                          "pm.collectionVariables.set(\"amountCents\",amount);\r",
-                          "\r",
-                          "//Random fee\r",
-                          "let fee = Math.floor(Math.random()*(100 - 1)+1);\r",
-                          "pm.collectionVariables.set(\"fee\",fee);\r",
-                          "\r",
-                          "//total Amount\r",
-                          "let totalAmount = amount + fee;\r",
-                          "pm.collectionVariables.set(\"totalAmount\", totalAmount);"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "Authorization",
-                        "value": "{{sharedAccessSignature}}"
-                      },
-                      {
-                        "key": "Content-Type",
-                        "value": "application/json"
-                      }
-                    ],
-                    "body": {
-                      "mode": "raw",
-                      "raw": "{\r\n    \"id\": \"{{transactionId}}\",\r\n    \"version\": \"2\",\r\n    \"complete\": \"true\",\r\n    \"missingInfo\": [],\r\n    \"debtorPosition\": {\r\n        \"modelType\": \"1\",\r\n        \"iuv\": \"960000000094659945\",\r\n        \"iur\": \"2452462462464264264\"\r\n    },\r\n    \"creditor\": {\r\n        \"idPA\": \"00493410583\",\r\n        \"idBrokerPA\": \"00493410583\",\r\n        \"idStation\": \"00493410583_02\",\r\n        \"companyName\": \"ACI Automobile Club Italia\",\r\n        \"officeName\": \"ACI OfficeName\"\r\n    },\r\n    \"psp\": {\r\n        \"idPsp\": \"BPPNIT2PXXX\",\r\n        \"idBrokerPsp\": \"03339200374\",\r\n        \"idChannel\": \"03339200374_01\",\r\n        \"psp\": \"Worldline Merchant Services Italia S.p.A.\"\r\n    },\r\n    \"debtor\": {\r\n        \"fullName\": \"ERNESTO DEBTOR\",\r\n        \"entityUniqueIdentifierType\": \"F\",\r\n        \"entityUniqueIdentifierValue\": \"{{CF_MOCK_BE_ARC}}\"\r\n    },\r\n    \"paymentInfo\": {\r\n        \"paymentDateTime\": \"{{transactionDate}}\",\r\n        \"paymentToken\": \"223F665500001336354\",\r\n        \"amount\": \"0.q\",\r\n        \"fee\": \"0.0\",\r\n        \"paymentMethod\": \"PO\",\r\n        \"remittanceInformation\": \"pagamento\"\r\n    },\r\n    \"transactionDetails\": {\r\n        \"origin\": \"PaymentManager\",\r\n        \"transaction\": {\r\n            \"idTransaction\": \"134528954\",\r\n            \"transactionId\": \"134528954\",\r\n            \"grandTotal\": {{totalAmount}},\r\n            \"amount\": {{amountCents}},\r\n            \"fee\": {{fee}},\r\n            \"transactionStatus\": \"Confermato\",\r\n            \"accountingStatus\": \"Contabilizzato\",\r\n            \"rrn\": \"223560110624\",\r\n            \"authorizationCode\": \"00\",\r\n            \"creationDate\": \"{{transactionDate}}\",\r\n            \"numAut\": \"250863\",\r\n            \"accountCode\": \"0037r972892475982475842\",\r\n            \"psp\": {\r\n                \"idChannel\": \"05963231005_01_ONUS\",\r\n                \"businessName\": \"Worldline Merchant Services Italia S.p.A.\",\r\n                \"serviceName\": \"Pagamento con Carte\"\r\n            },\r\n            \"origin\": \"IO\" // autenticato IO\r\n        },\r\n        \"wallet\": {\r\n            \"idWallet\": 125714007,\r\n            \"walletType\": \"Card\",\r\n            \"enableableFunctions\": [\r\n                \"pagoPA\",\r\n                \"BPD\",\r\n                \"FA\"\r\n            ],\r\n            \"pagoPa\": true,\r\n            \"onboardingChannel\": \"IO\",\r\n            \"favourite\": false,\r\n            \"createDate\": \"{{transactionDate}}\",\r\n            \"info\": {\r\n                \"type\": \"CardInfo\",\r\n                \"holder\": \"ERNESTO HOLDER\",\r\n                \"blurredNumber\": \"0403\",\r\n                \"hashPan\": \"e88aadfd9f40e1482615fd3c8c44f05c53f93aed1bcea69e82b3e5e27668f822\",\r\n                \"expireMonth\": \"06\",\r\n                \"expireYear\": \"2026\",\r\n                \"brand\": \"MASTERCARD\",\r\n                \"brandLogo\": \"https://wisp2.pagopa.gov.it/wallet/assets/img/creditcard/carta_visa.png\"\r\n            }\r\n        },\r\n        \"user\": {\r\n            \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\r\n            \"userId\": \"677676786\",\r\n            \"userStatus\": \"11\",\r\n            \"userStatusDescription\": \"REGISTERED_SPID\",\r\n            \"name\": \"ERNESTO\",\r\n            \"surname\": \"PAYER\"\r\n        },\r\n        \"info\": {\r\n            \"brand\": \"MASTERCARD\",\r\n            \"brandLogo\": \"https://checkout.pagopa.it/assets/creditcard/mastercard.png\",\r\n            \"clientId\": \"CHECKOUT_FAKE\",\r\n            \"paymentMethodName\": \"CARDS\",\r\n            \"type\": \"CP\"\r\n        }\r\n    },\r\n    \"transferList\": [\r\n        {\r\n            \"fiscalCodePA\": \"00493410583\",\r\n            \"companyName\": \"ACI Automobile Club Italia\",\r\n            \"amount\": \"0.q\",\r\n            \"transferCategory\": \"9/0301105TS/3/CB617RP\",\r\n            \"remittanceInformation\": \"/RFB/9600000000/TXT/CB617RP-Mag2022/Apr2023--EC Lorem-E. 261,92 (san 4,91 int 0,95)\"\r\n        }\r\n    ]\r\n}",
-                      "options": {
-                        "raw": {
-                          "language": "json"
-                        }
-                      }
-                    },
-                    "url": {
-                      "raw": "https://{{namespace}}.servicebus.windows.net/{{eventHub}}/messages?timeout=60&api-version=2014-01",
-                      "protocol": "https",
-                      "host": [
-                        "{{namespace}}",
-                        "servicebus",
-                        "windows",
-                        "net"
-                      ],
-                      "path": [
-                        "{{eventHub}}",
-                        "messages"
-                      ],
-                      "query": [
-                        {
-                          "key": "timeout",
-                          "value": "60"
-                        },
-                        {
-                          "key": "api-version",
-                          "value": "2014-01"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "[GENERIC_EXCEPTION] transactions list",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "\r",
-                          "if(pm.response.code != 500){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
-                          "} else{\r",
-                          "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception , expected httpStatus: 500\", () => {\r",
-                          "    pm.response.to.have.status(500);\r",
-                          "    })\r",
-                          "\r",
-                          "    pm.test(\"[Get transactions list- GENERIC EXCEPTION] - When you retrieve the transaction list from Biz-Event and it responds with error, ARC returns a Generic Exception with expected error message and description , expected httpStatus: 500\",() =>{\r",
-                          "    let response = pm.response.json();\r",
-                          "    pm.expect(response.error).to.eq(\"generic_error\");\r",
-                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events\");\r",
-                          "    })\r",
-                          "}\r",
-                          "\r",
-                          "\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/transactions",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "transactions"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "Disable transaction",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Delete event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "apikey",
-                      "apikey": [
-                        {
-                          "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
-                          "type": "string"
-                        },
-                        {
-                          "key": "key",
-                          "value": "Ocp-Apim-Subscription-Key",
-                          "type": "string"
-                        },
-                        {
-                          "key": "in",
-                          "value": "header",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "x-fiscal-code",
-                        "value": "{{CF_MOCK_BE_ARC}}"
-                      }
-                    ],
-                    "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
-                      "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
-                      ],
-                      "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
-                        "transactions",
-                        "{{transactionId}}",
-                        "disable"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
               "name": "TRANSACTION_NOT_FOUND_ERROR",
               "item": [
                 {
@@ -1512,6 +1294,107 @@
               "name": "Single Payment",
               "item": [
                 {
+                  "name": "1a. Create payment notice GPD 1 payment option",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// IUPD\r",
+                          "const base32Chars = '0123456789abcdefghijklmnopqrstuv';\r",
+                          "let result = '';\r",
+                          "\r",
+                          "function generateRandomBase32String(length) {\r",
+                          "    for (let i = 0; i < length; i++) {\r",
+                          "        const randomIndex = Math.floor(Math.random() * base32Chars.length);\r",
+                          "        result += base32Chars[randomIndex];\r",
+                          "    }\r",
+                          "    return result;\r",
+                          "}\r",
+                          "\r",
+                          "let randomAlphaNumeric = generateRandomBase32String(32);\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"iupd\", randomAlphaNumeric);\r",
+                          "\r",
+                          "//IUV\r",
+                          "let iuv = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"iuv\",iuv);\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"ACI\",\n    \"fullName\": \"ACI Automobile Club Italia\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - unica opzione\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions?toPublish=true",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions"
+                      ],
+                      "query": [
+                        {
+                          "key": "toPublish",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
                   "name": "1b. GET payment notice from GPD",
                   "event": [
                     {
@@ -1527,11 +1410,13 @@
                           "\r",
                           "    pm.test(\"[GET payment notice from GPD - Single Payment Option] - When you get the payment notice, GPD return a payment notice\", () => {\r",
                           "        let jsonResponse = pm.response.json();\r",
-                          "        let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
                           "        pm.expect(jsonResponse.paymentOption).to.have.length(1);\r",
-                          "        pm.expect(jsonResponse.paymentOption[0].amount).to.eq(588);\r",
+                          "        let amount = pm.collectionVariables.get(\"amount\")\r",
+                          "        pm.expect(jsonResponse.paymentOption[0].amount).to.eq(amount);\r",
                           "    })\r",
                           "}"
                         ],
@@ -1564,15 +1449,15 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq",
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
                       "host": [
                         "{{baseUrlGPD}}"
                       ],
                       "path": [
                         "organizations",
-                        "99999000013",
+                        "77777777777",
                         "debtpositions",
-                        "99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq"
+                        "77777777777-{{iupd}}"
                       ]
                     }
                   },
@@ -1586,7 +1471,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -1677,7 +1563,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-m1ugqdl17m37b93pq1butmgufl6qhlcq\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.paymentNotices.length === 0 || !jsonResponse.paymentNotices.some(po => po.iupd == iupd)) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -1718,12 +1605,187 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "delete debt position",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions",
+                        "77777777777-{{iupd}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
             {
               "name": "Single Payment + payment installments",
               "item": [
+                {
+                  "name": "1a. Create payment notice GPD single payment + payment installments",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// IUPD\r",
+                          "const base32Chars = '0123456789abcdefghijklmnopqrstuv';\r",
+                          "let result = '';\r",
+                          "\r",
+                          "function generateRandomBase32String(length) {\r",
+                          "    for (let i = 0; i < length; i++) {\r",
+                          "        const randomIndex = Math.floor(Math.random() * base32Chars.length);\r",
+                          "        result += base32Chars[randomIndex];\r",
+                          "    }\r",
+                          "    return result;\r",
+                          "}\r",
+                          "\r",
+                          "let randomAlphaNumeric = generateRandomBase32String(32);\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"iupd\", randomAlphaNumeric);\r",
+                          "\r",
+                          "//IUV\r",
+                          "let iuv = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuv\",iuv);\r",
+                          "\r",
+                          "let iuvFirstInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvFirstInstallment\",iuvFirstInstallment);\r",
+                          "\r",
+                          "let iuvSecondInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvSecondInstallment\",iuvSecondInstallment);\r",
+                          "\r",
+                          "let iuvThirdInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvThirdInstallment\",iuvThirdInstallment);\r",
+                          "\r",
+                          "\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);\r",
+                          "\r",
+                          "let amountFirstInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountFirstInstallment\",amountFirstInstallment);\r",
+                          "\r",
+                          "let amountSecondInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountSecondInstallment\",amountSecondInstallment);\r",
+                          "\r",
+                          "let amountThirdInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountThirdInstallment\",amountThirdInstallment);\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"EC Demo Pagamenti Pull Test\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-11-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-12-30T23:59:59\",\n            \"retentionDate\": \"2024-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions?toPublish=true",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions"
+                      ],
+                      "query": [
+                        {
+                          "key": "toPublish",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "1b. GET payment notice from GPD",
                   "event": [
@@ -1740,7 +1802,8 @@
                           "\r",
                           "    pm.test(\"[GET payment notice from GPD - Single Payment Option + payment installments] - When you get the payment notice, GPD return a payment notice\", () => {\r",
                           "        let jsonResponse = pm.response.json();\r",
-                          "        let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
                           "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
@@ -1776,15 +1839,15 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-6pycf97by18e298ufg43134dfqf4qca",
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
                       "host": [
                         "{{baseUrlGPD}}"
                       ],
                       "path": [
                         "organizations",
-                        "99999000013",
+                        "77777777777",
                         "debtpositions",
-                        "99999000013-6pycf97by18e298ufg43134dfqf4qca"
+                        "77777777777-{{iupd}}"
                       ]
                     }
                   },
@@ -1798,7 +1861,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -1890,7 +1954,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-6pycf97by18e298ufg43134dfqf4qca\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.paymentNotices.length === 0) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -1930,12 +1995,187 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "delete debt position",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions",
+                        "77777777777-{{iupd}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
             {
               "name": "payment with different dueDate",
               "item": [
+                {
+                  "name": "1a. Create payment notice GPD single payment + payment installments",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// IUPD\r",
+                          "const base32Chars = '0123456789abcdefghijklmnopqrstuv';\r",
+                          "let result = '';\r",
+                          "\r",
+                          "function generateRandomBase32String(length) {\r",
+                          "    for (let i = 0; i < length; i++) {\r",
+                          "        const randomIndex = Math.floor(Math.random() * base32Chars.length);\r",
+                          "        result += base32Chars[randomIndex];\r",
+                          "    }\r",
+                          "    return result;\r",
+                          "}\r",
+                          "\r",
+                          "let randomAlphaNumeric = generateRandomBase32String(32);\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"iupd\", randomAlphaNumeric);\r",
+                          "\r",
+                          "//IUV\r",
+                          "let iuv = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuv\",iuv);\r",
+                          "\r",
+                          "let iuvFirstInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvFirstInstallment\",iuvFirstInstallment);\r",
+                          "\r",
+                          "let iuvSecondInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvSecondInstallment\",iuvSecondInstallment);\r",
+                          "\r",
+                          "let iuvThirdInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvThirdInstallment\",iuvThirdInstallment);\r",
+                          "\r",
+                          "\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);\r",
+                          "\r",
+                          "let amountFirstInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountFirstInstallment\",amountFirstInstallment);\r",
+                          "\r",
+                          "let amountSecondInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountSecondInstallment\",amountSecondInstallment);\r",
+                          "\r",
+                          "let amountThirdInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountThirdInstallment\",amountThirdInstallment);\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"EC Demo Pagamenti Pull Test\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-11-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-12-30T23:59:59\",\n            \"retentionDate\": \"2024-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions?toPublish=true",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions"
+                      ],
+                      "query": [
+                        {
+                          "key": "toPublish",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "1b. GET payment notice from GPD",
                   "event": [
@@ -1952,7 +2192,8 @@
                           "\r",
                           "    pm.test(\"[GET payment notice from GPD - payment with different dueDate] - When you get the payment notice, GPD return a payment notice\", () => {\r",
                           "        let jsonResponse = pm.response.json();\r",
-                          "        let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "         let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
                           "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
@@ -1988,15 +2229,15 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr",
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
                       "host": [
                         "{{baseUrlGPD}}"
                       ],
                       "path": [
                         "organizations",
-                        "99999000013",
+                        "77777777777",
                         "debtpositions",
-                        "99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr"
+                        "77777777777-{{iupd}}"
                       ]
                     }
                   },
@@ -2010,7 +2251,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -2101,7 +2343,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-nhqlgd50nskhkqftii6mtv35r255sjvr\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.paymentNotices.length === 0) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -2141,12 +2384,187 @@
                     }
                   },
                   "response": []
+                },
+                {
+                  "name": "delete debt position",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions",
+                        "77777777777-{{iupd}}"
+                      ]
+                    }
+                  },
+                  "response": []
                 }
               ]
             },
             {
               "name": "4  payment installments",
               "item": [
+                {
+                  "name": "1a. Create payment notice GPD 4 payment installments",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "// IUPD\r",
+                          "const base32Chars = '0123456789abcdefghijklmnopqrstuv';\r",
+                          "let result = '';\r",
+                          "\r",
+                          "function generateRandomBase32String(length) {\r",
+                          "    for (let i = 0; i < length; i++) {\r",
+                          "        const randomIndex = Math.floor(Math.random() * base32Chars.length);\r",
+                          "        result += base32Chars[randomIndex];\r",
+                          "    }\r",
+                          "    return result;\r",
+                          "}\r",
+                          "\r",
+                          "let randomAlphaNumeric = generateRandomBase32String(32);\r",
+                          "\r",
+                          "pm.collectionVariables.set(\"iupd\", randomAlphaNumeric);\r",
+                          "\r",
+                          "//IUV\r",
+                          "let iuv = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuv\",iuv);\r",
+                          "\r",
+                          "let iuvFirstInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvFirstInstallment\",iuvFirstInstallment);\r",
+                          "\r",
+                          "let iuvSecondInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvSecondInstallment\",iuvSecondInstallment);\r",
+                          "\r",
+                          "let iuvThirdInstallment = (Math.floor(Math.random()*(100000000000000 - 1)+1)).toString().padStart(14,'0');\r",
+                          "pm.collectionVariables.set(\"iuvThirdInstallment\",iuvThirdInstallment);\r",
+                          "\r",
+                          "\r",
+                          "\r",
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);\r",
+                          "\r",
+                          "let amountFirstInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountFirstInstallment\",amountFirstInstallment);\r",
+                          "\r",
+                          "let amountSecondInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountSecondInstallment\",amountSecondInstallment);\r",
+                          "\r",
+                          "let amountThirdInstallment = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amountThirdInstallment\",amountThirdInstallment);\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
+                          "    pm.response.to.have.status(201);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"EC Demo Pagamenti Pull Test\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-11-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2024-12-30T23:59:59\",\n            \"retentionDate\": \"2024-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions?toPublish=true",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions"
+                      ],
+                      "query": [
+                        {
+                          "key": "toPublish",
+                          "value": "true"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
                 {
                   "name": "1b. GET payment notice from GPD",
                   "event": [
@@ -2163,7 +2581,8 @@
                           "\r",
                           "    pm.test(\"[GET payment notice from GPD - 4 payment installments] - When you get the payment notice, GPD return a payment notice\", () => {\r",
                           "        let jsonResponse = pm.response.json();\r",
-                          "        let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
                           "        pm.expect(jsonResponse.paymentOption).to.have.length(4);\r",
@@ -2199,15 +2618,15 @@
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseUrlGPD}}/organizations/99999000013/debtpositions/99999000013-61crd1e480amph34o78ic31rv5jbvghs",
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
                       "host": [
                         "{{baseUrlGPD}}"
                       ],
                       "path": [
                         "organizations",
-                        "99999000013",
+                        "77777777777",
                         "debtpositions",
-                        "99999000013-61crd1e480amph34o78ic31rv5jbvghs"
+                        "77777777777-{{iupd}}"
                       ]
                     }
                   },
@@ -2220,8 +2639,9 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "let jsonResponse = pm.response.json(); \r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.length === 0 || !jsonResponse.some(po => po.iupd == iupd)) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -2312,7 +2732,8 @@
                       "script": {
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
-                          "let iupd = \"99999000013-61crd1e480amph34o78ic31rv5jbvghs\"\r",
+                          "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
                           "if(jsonResponse.paymentNotices.length === 0) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
@@ -2348,6 +2769,60 @@
                       ],
                       "path": [
                         "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete debt position",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/77777777777-{{iupd}}",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions",
+                        "77777777777-{{iupd}}"
                       ]
                     }
                   },
@@ -2662,6 +3137,52 @@
                       "path": [
                         "auth",
                         "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "case 4",
+              "item": [
+                {
+                  "name": "logout",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Logout - Case 4], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6IjkzYTllMGY1LTYzZGQtNGYxMS1iZjQ4LTExNGYxMzQ3ZjZiZCIsImlhdCI6MTcyNTM3OTEzNCwiZXhwIjoxNzI1MzgyNzM0fQ.Qi6na6ansiLD1ng1SB4TUJ7egjTERWNmM567raeWCZb6IXBJvoXPFvC64fmasSlzSZloteMZSkgXAN7dFbnOlk9wrnelsTFDz6f3ew9VsypmwTNSpbvJb369T1EbMSDZqJ70HOv84spW0o6fvjs2N-tnOxAUxo-yj6shj-G-v6SIJ_mUEk98mw_oRR_S99TtlMsFvw9LaWV2LmeglZzqrfZb67Is0RHaQPnZLRyW_oqLfoTgUtIuVrZ-T_vcMiYKeHwcIxCqoVZhp4OHl5lDE5xwcq2WKSBLwzCcuo_crvkOat3e6PKpYM0e8tDdLZKBjeGMfEED8TAnLbRynkMs8w",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/logout",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "logout"
                       ]
                     }
                   },
@@ -3016,6 +3537,140 @@
           ]
         }
       ]
+    },
+    {
+      "name": "zendesk assistance",
+      "item": [
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "GET JWT token for zendesk assistance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
+                      "    let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
+                      "    \r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "token",
+                    "assistance"
+                  ],
+                  "query": [
+                    {
+                      "key": "userEmail",
+                      "value": "someone@email.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "INVALID USER EMAIL",
+              "item": [
+                {
+                  "name": "INVALID USER EMAIL ERROR",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"invalid_email\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"Invalid user email [someone]\");\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "assistance"
+                      ],
+                      "query": [
+                        {
+                          "key": "userEmail",
+                          "value": "someone"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
     }
   ],
   "event": [
@@ -3066,6 +3721,54 @@
     },
     {
       "key": "amount",
+      "value": ""
+    },
+    {
+      "key": "transactionId",
+      "value": ""
+    },
+    {
+      "key": "transactionDate",
+      "value": ""
+    },
+    {
+      "key": "amountEur",
+      "value": ""
+    },
+    {
+      "key": "amountCents",
+      "value": ""
+    },
+    {
+      "key": "fee",
+      "value": ""
+    },
+    {
+      "key": "totalAmount",
+      "value": ""
+    },
+    {
+      "key": "iuvFirstInstallment",
+      "value": ""
+    },
+    {
+      "key": "iuvSecondInstallment",
+      "value": ""
+    },
+    {
+      "key": "iuvThirdInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountFirstInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountSecondInstallment",
+      "value": ""
+    },
+    {
+      "key": "amountThirdInstallment",
       "value": ""
     }
   ]

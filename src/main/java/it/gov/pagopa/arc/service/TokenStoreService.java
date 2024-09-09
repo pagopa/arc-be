@@ -10,4 +10,6 @@ public interface TokenStoreService {
 
   Optional<IamUserInfoDTO> getUserInfo(String accessToken);
 
+  Optional<IamUserInfoDTO> delete(String accessToken);
+
 }

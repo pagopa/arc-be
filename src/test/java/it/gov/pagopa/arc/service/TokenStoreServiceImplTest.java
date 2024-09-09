@@ -13,22 +13,24 @@ class TokenStoreServiceImplTest {
   @Mock
   TokenStoreServiceImpl tokenStoreService;
 
+  private final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
+  private final Map<String, Object> attributes = Map.of(
+      "sub", "123456",
+      "fiscalNumber", "789012",
+      "familyName", "Polo",
+      "name", "Marco",
+      "email", "marco.polo@example.com",
+      "iss", "issuer"
+  );
   @BeforeEach
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
   }
   @Test
   void givenAccessTokenAndUserInfoThenSaveAndRetrieveTheSameData() {
-    String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
     String wrongToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-    Map<String, Object> attributes = Map.of(
-        "sub", "123456",
-        "fiscalNumber", "789012",
-        "familyName", "Polo",
-        "name", "Marco",
-        "email", "marco.polo@example.com",
-        "iss", "issuer"
-    );
+
     IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
     tokenStoreService.save(token,userInfo);
 
@@ -44,6 +46,16 @@ class TokenStoreServiceImplTest {
     assertEquals(attributes.get("iss"),tokenStoreService.getUserInfo(token).get().getIssuer());
 
     assertFalse(tokenStoreService.getUserInfo(wrongToken).isPresent());
+  }
+
+  @Test
+  void givenAccessTokenAndUserInfoThenRemoveTokenAndNonInfoShouldBeFound(){
+    IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
+    tokenStoreService.save(token,userInfo);
+
+    tokenStoreService.delete(token);
+
+    assertFalse(tokenStoreService.getUserInfo(token).isPresent());
   }
 
 }

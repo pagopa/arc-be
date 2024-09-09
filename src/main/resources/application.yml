@@ -4,7 +4,6 @@ spring:
     version: ${version}
   jmx.enabled: true
   security:
-    enable-csrf: false
     oauth2:
       client:
         registration:
@@ -52,5 +51,9 @@ logging:
   level:
     org:
       springframework:
-        security: DEBUG
-        web: DEBUG
+        security: INFO
+        web: INFO
+        session:
+          web:
+            http:
+              SessionRepositoryFilter: INFO

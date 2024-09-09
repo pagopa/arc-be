@@ -13,7 +13,7 @@ public class BizEventsTransactionDTOFaker {
                     .transactionId("TRANSACTION_ID%d" .formatted(bias))
                     .payeeName("PAYEE_NAME%d" .formatted(bias))
                     .payeeTaxCode("PAYEE_TAX_CODE%d" .formatted(bias))
-                    .amount("2.681,52")
+                    .amount("2,681.52")
                     .transactionDate("2024-05-31T13:07:25Z")
                     .isCart(false)
                     .isPayer(true)

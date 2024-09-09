@@ -11,7 +11,7 @@ public class BizEventsCartItemDTOFaker {
     private static BizEventsCartItemDTO.BizEventsCartItemDTOBuilder mockInstanceBuilder(BizEventsUserDetailDTO payee, BizEventsUserDetailDTO debtor){
         return BizEventsCartItemDTO.builder()
                 .subject("pagamento")
-                .amount("5.452,3")
+                .amount("5,452.3")
                 .payee(payee)
                 .debtor(debtor)
                 .refNumberValue("960000000094659945")
