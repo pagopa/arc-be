@@ -67,8 +67,8 @@ class BizEventsInfoTransaction2InfoTransactionDTOTest {
                 .rrn("51561651")
                 .transactionDate("2024-06-27T13:07:25Z")
                 .pspName("Worldline Merchant Services Italia S.p.A.")
-                .amount("5.654,3")
-                .fee("0,29")
+                .amount("5,654.3")
+                .fee("0.29")
                 .origin(Origin.PM)
                 .build();
 

@@ -20,8 +20,8 @@ public class BizEventsInfoTransactionDTOFaker {
             .bizEventsWalletInfoDTO(walletInfo)
             .paymentMethod(PaymentMethod.PO)
             .payer(payer)
-            .amount("5.654,3")
-            .fee("0,29")
+            .amount("5,654.3")
+            .fee("0.29")
             .origin(Origin.PM);
     }
 }
