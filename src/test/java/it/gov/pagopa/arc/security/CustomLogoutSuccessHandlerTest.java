@@ -4,12 +4,13 @@ import static org.mockito.Mockito.verify;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.io.IOException;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.Authentication;
 
+@ExtendWith(MockitoExtension.class)
 class CustomLogoutSuccessHandlerTest {
 
   @Mock
@@ -24,8 +25,7 @@ class CustomLogoutSuccessHandlerTest {
   private CustomLogoutSuccessHandler logoutSuccessHandler;
 
   @Test
-  void testOnLogoutSuccess() throws IOException {
-    MockitoAnnotations.openMocks(this);
+  void testOnLogoutSuccess() {
     logoutSuccessHandler = new CustomLogoutSuccessHandler();
 
     logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
