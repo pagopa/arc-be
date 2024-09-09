@@ -145,23 +145,23 @@ class IdpIntegrationTest {
     void givenInvalidStateThenRequestAccessToken() throws Exception {
         addStubKeys(MODULUS_BASE64);
 
-        MvcResult result = mockMvc.perform(get(LOGIN_URL))
+        MvcResult firstTimeToken = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = UriComponentsBuilder.newInstance().
-            query(result.getResponse().getRedirectedUrl()).build().getQueryParams();
+            query(firstTimeToken.getResponse().getRedirectedUrl()).build().getQueryParams();
         String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
 
         addStubToken(idpIdToken);
 
-        MvcResult result1 = mockMvc.perform(get(TOKEN_URL)
+        MvcResult secondTimeToken = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code")
                 .param("state", UUID.randomUUID().toString() ))
             .andReturn();
 
-        Assertions.assertNotNull(result1);
-        Assertions.assertNotEquals(200, result1.getResponse().getStatus());
+        Assertions.assertNotNull(secondTimeToken);
+        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
 
     }
 
@@ -196,7 +196,7 @@ class IdpIntegrationTest {
         Assertions.assertNotNull(token);
         Assertions.assertNotNull(firstTimeToken);
         Assertions.assertNotNull(secondTimeToken);
-        Assertions.assertNotEquals(200, secondTimeToken.getResponse().getStatus());
+        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
     }
 
     @Test
