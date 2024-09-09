@@ -9,12 +9,14 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
-import org.mockito.MockitoAnnotations;
+import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
 
+@ExtendWith(MockitoExtension.class)
 class CustomLogoutHandlerTest {
 
   @Mock
@@ -34,8 +36,6 @@ class CustomLogoutHandlerTest {
 
   @Test
   void givenLogoutRequestThenPerformLogout() {
-    MockitoAnnotations.openMocks(this);
-
     String token = "test-token";
     String authorizationHeader = "Bearer " + token;
 
@@ -46,7 +46,6 @@ class CustomLogoutHandlerTest {
 
     verify(tokenStoreService, times(1)).delete(token);
     verify(request, times(1)).getHeader(HttpHeaders.AUTHORIZATION);
-    verify(tokenStoreService,times(1)).delete(token);
   }
 
 }
