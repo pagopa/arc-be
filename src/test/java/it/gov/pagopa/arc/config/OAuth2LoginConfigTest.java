@@ -5,6 +5,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
+import it.gov.pagopa.arc.security.CustomLogoutHandler;
+import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.TokenStoreService;
@@ -28,6 +30,12 @@ class OAuth2LoginConfigTest {
     private ClientRegistrationRepository clientRegistrationRepositoryMock;
     @MockBean
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandlerMock;
+
+    @MockBean
+    private CustomLogoutHandler customLogoutHandler;
+
+    @MockBean
+    private CustomLogoutSuccessHandler customLogoutSuccessHandler;
     @MockBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
     @MockBean
