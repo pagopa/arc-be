@@ -16,17 +16,16 @@ import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
-import java.security.KeyFactory;
-import java.security.PrivateKey;
-import java.security.PublicKey;
+import java.security.KeyPair;
+import java.security.KeyPairGenerator;
+import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
-import java.security.spec.PKCS8EncodedKeySpec;
-import java.security.spec.X509EncodedKeySpec;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -85,6 +84,18 @@ class IdpIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
+    private static RSAPublicKey RSA_PUBLIC_KEY = null;
+    private static RSAPrivateKey RSA_PRIVATE_KEY = null;
+    private static String MODULUS_BASE64 = null;
+    @BeforeAll
+    static void setup() throws NoSuchAlgorithmException {
+        KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
+        keyGen.initialize(2048);
+        KeyPair keyPair = keyGen.generateKeyPair();
+        RSA_PUBLIC_KEY = (RSAPublicKey) keyPair.getPublic();
+        RSA_PRIVATE_KEY = (RSAPrivateKey) keyPair.getPrivate();
+        MODULUS_BASE64 = Base64.getEncoder().encodeToString(RSA_PUBLIC_KEY.getModulus().toByteArray());
+    }
     @Test
     void givenLoginActionThenGetNewState() throws Exception {
 
@@ -104,18 +115,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenValidStateThenRequestAccessToken() throws Exception {
-        RSAPublicKey publicKey = (RSAPublicKey) getPublicKey();
-        RSAPrivateKey privateKey = (RSAPrivateKey) getPrivateKey();
-        String modulusBase64 = Base64.getEncoder().encodeToString(publicKey.getModulus().toByteArray());
-
-        addStubKeys(modulusBase64);
+        addStubKeys(MODULUS_BASE64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,publicKey,privateKey);
+        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
 
         addStubToken(idpIdToken);
 
@@ -136,11 +143,7 @@ class IdpIntegrationTest {
 
     @Test
     void givenInvalidStateThenRequestAccessToken() throws Exception {
-        RSAPublicKey publicKey = (RSAPublicKey) getPublicKey();
-        RSAPrivateKey privateKey = (RSAPrivateKey) getPrivateKey();
-        String modulusBase64 = Base64.getEncoder().encodeToString(publicKey.getModulus().toByteArray());
-
-        addStubKeys(modulusBase64);
+        addStubKeys(MODULUS_BASE64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
@@ -148,7 +151,7 @@ class IdpIntegrationTest {
 
         MultiValueMap<String,String> queryParams = UriComponentsBuilder.newInstance().
             query(result.getResponse().getRedirectedUrl()).build().getQueryParams();
-        String idpIdToken = genIdpIdToken(queryParams,publicKey,privateKey);
+        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
 
         addStubToken(idpIdToken);
 
@@ -165,18 +168,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenAlreadyUsedStateThenRequestAccessToken() throws Exception {
-        RSAPublicKey publicKey = (RSAPublicKey) getPublicKey();
-        RSAPrivateKey privateKey = (RSAPrivateKey) getPrivateKey();
-        String modulusBase64 = Base64.getEncoder().encodeToString(publicKey.getModulus().toByteArray());
-
-        addStubKeys(modulusBase64);
+        addStubKeys(MODULUS_BASE64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,publicKey,privateKey);
+        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
 
         addStubToken(idpIdToken);
 
@@ -198,6 +197,26 @@ class IdpIntegrationTest {
         Assertions.assertNotNull(firstTimeToken);
         Assertions.assertNotNull(secondTimeToken);
         Assertions.assertNotEquals(200, secondTimeToken.getResponse().getStatus());
+    }
+
+    @Test
+    void givenAnEmptyStateThenRequestAccessToken() throws Exception {
+        addStubKeys(MODULUS_BASE64);
+
+        MvcResult result = mockMvc.perform(get(LOGIN_URL))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+        MultiValueMap<String,String> queryParams = extractQueryParams(result);
+        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+
+        addStubToken(idpIdToken);
+
+        MvcResult tokenResult = mockMvc.perform(get(TOKEN_URL)
+                .param("code","code"))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+        Assertions.assertNotNull(tokenResult);
     }
 
     private String genIdpIdToken(MultiValueMap<String,String> m,RSAPublicKey publicKey,RSAPrivateKey privateKey){
@@ -237,22 +256,6 @@ class IdpIntegrationTest {
 
     private String decodeState(String state) throws UnsupportedEncodingException {
         return java.net.URLDecoder.decode(state, StandardCharsets.UTF_8.name());
-    }
-
-    private static PublicKey getPublicKey() throws Exception {
-        String publicKeyPEM = "MIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEA01nPztXbqgexWO2hO/yDtkFzXQPQI4GWV5IoN12VgvVNIuY9RGivXDa9XHVrVqOPoaWpY97V8dYPXVNZ2+kXBcxBER3xBDniRHC5pmI5ytMsUkdOF6ajy0KNMZigofsibmzeNlBK4mK+7o8bf0NT4pK89//ZYNlBkWVh3GToTVi0og6+sLEjr5ap0XXKyI0eL7iYhHn3TAM2dZaZYSxF8cD9gR/t6MgYj/FmC2+Ykw840qC1Z3iRFjvHlGjwRQLnT5WV7iBAisHSi5CSpugch5uz+jO73L/okDeMgbOG6wFbcY8jEtpdcIoNLTnIoTLef/AyQja3edHd/vlwBNxupQIDAQAB";
-        byte[] encoded = Base64.getDecoder().decode(publicKeyPEM);
-        X509EncodedKeySpec keySpec = new X509EncodedKeySpec(encoded);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePublic(keySpec);
-    }
-
-    public static PrivateKey getPrivateKey() throws Exception {
-        String privateKeyPEM = "MIIEvQIBADANBgkqhkiG9w0BAQEFAASCBKcwggSjAgEAAoIBAQDTWc/O1duqB7FY7aE7/IO2QXNdA9AjgZZXkig3XZWC9U0i5j1EaK9cNr1cdWtWo4+hpalj3tXx1g9dU1nb6RcFzEERHfEEOeJEcLmmYjnK0yxSR04XpqPLQo0xmKCh+yJubN42UEriYr7ujxt/Q1Pikrz3/9lg2UGRZWHcZOhNWLSiDr6wsSOvlqnRdcrIjR4vuJiEefdMAzZ1lplhLEXxwP2BH+3oyBiP8WYLb5iTDzjSoLVneJEWO8eUaPBFAudPlZXuIECKwdKLkJKm6ByHm7P6M7vcv+iQN4yBs4brAVtxjyMS2l1wig0tOcihMt5/8DJCNrd50d3++XAE3G6lAgMBAAECggEABDsCUEEuQvsPOZ1vNwdsZV2SqoxKq3PYoKjBVGWF6AMgoPa97GyWukuyWZNmi3SZCbwKaoBQjhLvzHBSpC1/I3FSUxnH3Tmc9fTR0xQGngxBI3gNkAJGXkTygslQSYgJwCYHy6bhk7S0zC+47MnQ+BJhyZgJWOlTzaB//lyfbsNy/9rR/4VhlXEc6xlsvoon6RoQEFvR71zwAFYEbBx10VjkGG+AhHDCPH4fc2B4bZJfN+49o7rk1qmMDb8PedOjDshLzdiQkgw1dkELhMhEn9bHw52NVzGIhIEWVhyrCf6gvqmij1lCjZUGveE8qAa5UjWiJ3KF+XOqrMgMtSwkqQKBgQD2NSgWSaBvk7pvhwmBiO31JLnHwLPnKCdS4sJ5p97AvXMPsyyhm0kEi2BJKl7mJ8uCBnE+evLO6/8nHdNSLjAOB7NKvqZQzAGp8NReIkef149HwPv13U3NQqn7lXQJ08uyx7iidKivWmtlfKNNhn9dTBHZ54GpvEGIynajCzbmrQKBgQDbwb/Ger44CvgrDjq4lnKLM35wKulSFd/8VPhJmZYS3SvzDTVQ9Kgr1vGKies+4Dmyp4T180wgoj9i7V2kqZ98CVUg8WORBTisxN85D6RjKHlIFCI5ngHyF2ZUnjAObjvyjdf241qFJJuj5U9ZYgJv7I6+g0N1KPyGYPQ51Ok+2QKBgHKdilzdx6dJoVf8CCvaP9SIVUgtaFKq+at3Tsttn6AgUak0YwmUjahk7d0BsY35Zp7QOvW4LMKxUGW4V8EBKXPOl+Oq3yfr4LZpG6P611cM9XGU4HazoF12tEUfbRaKF2DR4x0Vq9V+BVMIc8lKXI5lNEY5pL4MmoGApzv9o4A9AoGAQ2RdbX7CyukCRiHs/CKXKf02rytZtiSjNfzQz7FcBpjxG25XhWYiFJ+sHzJAhF27FACvk8Vy+ScIjUwBxbeHA0DRbHLad+TEBqexVQxo+0e0OdiCzmyYaCeo6BZC4ooHtFCvhDUg02fwmwh9lwmpea1v8RjMHSfemU8uVnXmubECgYEA1DXc47zIPMtk1OOLk5dzaWjFIwFJdcEmDckY4n3S+bmpcP30UPmUQ+RvZkrVJSMC/+fgCBND1ilCdKf8PNtzJdWHw5U0apFj82yyDJZsJBH4/6/EHeOiSBgUKXa3oTmFKRorUdMtRKBMicUNt6A7NHDvMVIbdIcoNPo9PSynrrE=";
-        byte[] encoded = Base64.getDecoder().decode(privateKeyPEM);
-        PKCS8EncodedKeySpec keySpec = new PKCS8EncodedKeySpec(encoded);
-        KeyFactory keyFactory = KeyFactory.getInstance("RSA");
-        return keyFactory.generatePrivate(keySpec);
     }
 
 }
