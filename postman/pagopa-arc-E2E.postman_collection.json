@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "58e915f0-2d45-4bd8-9a8c-cb79268762a8",
+    "_postman_id": "8ff73b4e-c848-45d2-910e-152d02ff954c",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "26204012"
+    "_exporter_id": "9202061"
   },
   "item": [
     {
@@ -3137,6 +3137,52 @@
                       "path": [
                         "auth",
                         "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "case 4",
+              "item": [
+                {
+                  "name": "logout",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Logout - Case 4], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6IjkzYTllMGY1LTYzZGQtNGYxMS1iZjQ4LTExNGYxMzQ3ZjZiZCIsImlhdCI6MTcyNTM3OTEzNCwiZXhwIjoxNzI1MzgyNzM0fQ.Qi6na6ansiLD1ng1SB4TUJ7egjTERWNmM567raeWCZb6IXBJvoXPFvC64fmasSlzSZloteMZSkgXAN7dFbnOlk9wrnelsTFDz6f3ew9VsypmwTNSpbvJb369T1EbMSDZqJ70HOv84spW0o6fvjs2N-tnOxAUxo-yj6shj-G-v6SIJ_mUEk98mw_oRR_S99TtlMsFvw9LaWV2LmeglZzqrfZb67Is0RHaQPnZLRyW_oqLfoTgUtIuVrZ-T_vcMiYKeHwcIxCqoVZhp4OHl5lDE5xwcq2WKSBLwzCcuo_crvkOat3e6PKpYM0e8tDdLZKBjeGMfEED8TAnLbRynkMs8w",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/logout",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "logout"
                       ]
                     }
                   },
