@@ -8,6 +8,7 @@ import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -46,6 +47,9 @@ class CustomLogoutHandlerTest {
 
     verify(tokenStoreService, times(1)).delete(token);
     verify(request, times(1)).getHeader(HttpHeaders.AUTHORIZATION);
+
+    Assertions.assertNotNull(request.getHeader(HttpHeaders.AUTHORIZATION));
+    Assertions.assertEquals(request.getHeader(HttpHeaders.AUTHORIZATION),authorizationHeader);
   }
 
 }
