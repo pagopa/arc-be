@@ -1,5 +1,8 @@
 package it.gov.pagopa.arc.security;
 
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
@@ -16,6 +19,7 @@ import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 
 @ExtendWith(MockitoExtension.class)
 class CustomLogoutHandlerTest {
@@ -50,6 +54,17 @@ class CustomLogoutHandlerTest {
 
     Assertions.assertNotNull(request.getHeader(HttpHeaders.AUTHORIZATION));
     Assertions.assertEquals(request.getHeader(HttpHeaders.AUTHORIZATION),authorizationHeader);
+  }
+
+  @Test
+  void givenEmptyAuthHeaderThenPerformLogout(){
+    when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn("");
+
+    customLogoutHandler.logout(request, response, authentication);
+
+    verify(tokenStoreService, never()).delete(anyString());
+    verify(request).getHeader(HttpHeaders.AUTHORIZATION);
+    assertNull(SecurityContextHolder.getContext().getAuthentication());
   }
 
 }
