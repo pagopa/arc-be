@@ -86,17 +86,17 @@ class IdpIntegrationTest {
     @Autowired
     private MockMvc mockMvc;
 
-    private static RSAPublicKey RSA_PUBLIC_KEY = null;
-    private static RSAPrivateKey RSA_PRIVATE_KEY = null;
-    private static String MODULUS_BASE64 = null;
+    private static RSAPublicKey rsaPublicKey = null;
+    private static RSAPrivateKey rsaPrivateKey = null;
+    private static String modulusBase64 = null;
     @BeforeAll
     static void setup() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(2048);
         KeyPair keyPair = keyGen.generateKeyPair();
-        RSA_PUBLIC_KEY = (RSAPublicKey) keyPair.getPublic();
-        RSA_PRIVATE_KEY = (RSAPrivateKey) keyPair.getPrivate();
-        MODULUS_BASE64 = Base64.getEncoder().encodeToString(RSA_PUBLIC_KEY.getModulus().toByteArray());
+        rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
+        rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+        modulusBase64 = Base64.getEncoder().encodeToString(rsaPublicKey.getModulus().toByteArray());
     }
     @Test
     void givenLoginActionThenGetNewState() throws Exception {
@@ -117,14 +117,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenValidStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -145,7 +145,7 @@ class IdpIntegrationTest {
 
     @Test
     void givenInvalidStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult firstTimeToken = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
@@ -153,7 +153,7 @@ class IdpIntegrationTest {
 
         MultiValueMap<String,String> queryParams = UriComponentsBuilder.newInstance().
             query(firstTimeToken.getResponse().getRedirectedUrl()).build().getQueryParams();
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -170,14 +170,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenAlreadyUsedStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -203,14 +203,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenAnEmptyStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -223,14 +223,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenValidAccessTokenThenGetUserInfo() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -259,14 +259,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenInvalidAccessTokenThenGetUserInfo() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -277,7 +277,7 @@ class IdpIntegrationTest {
             .andReturn();
 
         MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
-                .header("Authorization","Bearer "+genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY)))
+                .header("Authorization","Bearer "+genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey)))
             .andExpect(status().is(401))
             .andReturn();
 
