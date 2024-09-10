@@ -3523,7 +3523,7 @@
                       "    \r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.zendesk.com/hc/it/requests/new\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.assistenza.pagopa.it/hc/it/requests/new\")\r",
                       "\r",
                       "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
                       "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
