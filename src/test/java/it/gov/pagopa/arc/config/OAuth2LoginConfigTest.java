@@ -11,6 +11,7 @@ import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
@@ -18,6 +19,7 @@ import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -62,10 +64,10 @@ class OAuth2LoginConfigTest {
     }
 
     @Test
-    void givenInsecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
+    void givenSecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
                         .param("userEmail", "someone@email.com"))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
     }
 
 }
