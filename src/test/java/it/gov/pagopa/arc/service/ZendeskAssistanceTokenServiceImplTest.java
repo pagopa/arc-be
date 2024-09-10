@@ -37,15 +37,18 @@ class ZendeskAssistanceTokenServiceImplTest {
         //given
         String assistanceToken = "FAKE_ASSISTANCE_TOKEN";
         String returnTo = "FAKE_RETURN_TO_URL";
+        String actionUrl = "FAKE_ZENDESK_ACTION_URL";
 
         ZendeskAssistanceTokenResponse assistanceTokenResponse = ZendeskAssistanceTokenResponse.builder()
                 .assistanceToken(assistanceToken)
                 .returnTo(returnTo)
+                .actionUrl(actionUrl)
                 .build();
 
         Mockito.when(zendeskAssistanceTokenBuilderMock.buildZendeskAssistanceToken(FAKE_USER_EMAIL)).thenReturn(assistanceToken);
         Mockito.when(zendeskAssistanceTokenMock.getReturnTo()).thenReturn(returnTo);
-        Mockito.when(zendeskAssistanceTokenResponseMapperMock.toZendeskAssistanceTokenResponse(assistanceToken, returnTo)).thenReturn(assistanceTokenResponse);
+        Mockito.when(zendeskAssistanceTokenMock.getActionUrl()).thenReturn(actionUrl);
+        Mockito.when(zendeskAssistanceTokenResponseMapperMock.toZendeskAssistanceTokenResponse(assistanceToken, returnTo, actionUrl)).thenReturn(assistanceTokenResponse);
         //when
         ZendeskAssistanceTokenResponse result = zendeskAssistanceTokenService.retrieveZendeskAssistanceTokenResponse(FAKE_USER_EMAIL);
 
@@ -56,6 +59,7 @@ class ZendeskAssistanceTokenServiceImplTest {
 
         Mockito.verify(zendeskAssistanceTokenBuilderMock).buildZendeskAssistanceToken(anyString());
         Mockito.verify(zendeskAssistanceTokenMock).getReturnTo();
-        Mockito.verify(zendeskAssistanceTokenResponseMapperMock).toZendeskAssistanceTokenResponse(anyString(), anyString());
+        Mockito.verify(zendeskAssistanceTokenMock).getActionUrl();
+        Mockito.verify(zendeskAssistanceTokenResponseMapperMock).toZendeskAssistanceTokenResponse(anyString(), anyString(), anyString());
     }
 }

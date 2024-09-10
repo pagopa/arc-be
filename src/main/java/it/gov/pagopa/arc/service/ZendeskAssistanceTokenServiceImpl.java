@@ -25,7 +25,8 @@ public class ZendeskAssistanceTokenServiceImpl implements ZendeskAssistanceToken
         log.info("[GET_ZENDESK_ASSISTANCE_TOKEN_RESPONSE] the creation of the jwt token was requested to request assistance on zendesk");
         String zendeskAssistanceToken = zendeskAssistanceTokenBuilder.buildZendeskAssistanceToken(userEmail);
         String returnTo = this.zendeskAssistanceTokenConfig.getReturnTo();
+        String actionUrl = this.zendeskAssistanceTokenConfig.getActionUrl();
 
-        return zendeskAssistanceTokenResponseMapper.toZendeskAssistanceTokenResponse(zendeskAssistanceToken, returnTo);
+        return zendeskAssistanceTokenResponseMapper.toZendeskAssistanceTokenResponse(zendeskAssistanceToken, returnTo , actionUrl);
     }
 }

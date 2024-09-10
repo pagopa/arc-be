@@ -16,6 +16,7 @@ public class ZendeskAssistanceTokenConfig {
 
     private String tokenType;
     private String returnTo;
+    private String actionUrl;
     private AssistanceToken assistanceToken;
 
     @Data

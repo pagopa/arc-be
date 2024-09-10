@@ -69,6 +69,7 @@ microservice-chart:
       ASSISTANCE_ZENDESK_PRODUCT_ID: assistance-arc-zendesk-product-id
       ASSISTANCE_ZENDESK_ORGANIZATION: assistance-arc-zendesk-organization
       HELP_CENTER_URL: arc-help-center-url
+      ZENDESK_ACTION_URL: zendesk-action-url
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string

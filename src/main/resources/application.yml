@@ -33,6 +33,7 @@ jwt:
 zendesk-assistance:
   tokenType: JWT
   return-to: \${HELP_CENTER_URL:}
+  action-url: \${ZENDESK_ACTION_URL:}
   assistance-token:
     product-id: \${ASSISTANCE_ZENDESK_PRODUCT_ID:}
     organization: \${ASSISTANCE_ZENDESK_ORGANIZATION:}

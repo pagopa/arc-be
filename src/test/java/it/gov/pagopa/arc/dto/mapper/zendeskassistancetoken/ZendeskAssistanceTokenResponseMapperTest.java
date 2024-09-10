@@ -12,14 +12,16 @@ class ZendeskAssistanceTokenResponseMapperTest {
         //given
         String assistanceToken = "fakeAssistanceToken";
         String returnTo = "help-center.com";
+        String actionUrl= "zendesk-action-url.com";
 
         ZendeskAssistanceTokenResponse expected = ZendeskAssistanceTokenResponse
                 .builder()
                 .assistanceToken(assistanceToken)
                 .returnTo(returnTo)
+                .actionUrl(actionUrl)
                 .build();
         //when
-        ZendeskAssistanceTokenResponse result = mapper.toZendeskAssistanceTokenResponse(assistanceToken, returnTo);
+        ZendeskAssistanceTokenResponse result = mapper.toZendeskAssistanceTokenResponse(assistanceToken, returnTo, actionUrl);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(expected, result);
