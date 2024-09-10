@@ -65,10 +65,9 @@ class OAuth2LoginConfigTest {
 
     @Test
     void givenSecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
-        MvcResult result = mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
+        mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
                         .param("userEmail", "someone@email.com"))
-                .andExpect(status().is4xxClientError()).andReturn();
-        Assertions.assertNotEquals(302,result.getResponse().getStatus());
+                .andExpect(status().is4xxClientError());
     }
 
 }

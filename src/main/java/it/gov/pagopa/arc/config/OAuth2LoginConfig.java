@@ -63,18 +63,14 @@ public class OAuth2LoginConfig {
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
 
-            // endpoint must be protected
             .requestMatchers(
-                "/auth",
-                "/auth/**",
-                "/token/assistance",
-                "/token/assistance**",
-                "/logout",
-                "/logout**"
-            ).authenticated()
+                "/payment-notices",
+                "/payment-notices/**",
+                "/transactions",
+                "/transactions/**"
+            ).permitAll()
 
-            // Should be changed
-            .anyRequest().permitAll());
+            .anyRequest().authenticated());
     return http.build();
   }
 
