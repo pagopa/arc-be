@@ -278,7 +278,7 @@ class IdpIntegrationTest {
 
         MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
                 .header("Authorization","Bearer "+genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY)))
-            .andExpect(status().is4xxClientError())
+            .andExpect(status().is(401))
             .andReturn();
 
         Assertions.assertNotNull(userResp);
