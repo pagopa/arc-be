@@ -9,6 +9,7 @@ import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetai
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
+import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
@@ -24,6 +25,10 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -38,7 +43,7 @@ class BizEventsServiceImplTest {
     private static final int SIZE = 2;
     private static final String FILTER = "DUMMY_FILTER";
     private static final String TRANSACTION_ID = "TRANSACTION_ID";
-    private static final String DUMMY_FISCAL_CODE = "DUMMY_FISCAL_CODE";
+    private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
 
     @Autowired
     private BizEventsService bizEventsService;
@@ -54,7 +59,12 @@ class BizEventsServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        bizEventsService = new BizEventsServiceImpl(DUMMY_FISCAL_CODE,bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock, transactionDetailsDTOMapperMock);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                IamUserInfoDTOFaker.mockInstance(), null, null);
+        authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        bizEventsService = new BizEventsServiceImpl(bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock, transactionDetailsDTOMapperMock);
     }
 
     @Test

@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentOptionDTO;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTO;
+import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentInstallmentDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentOptionDTOFaker;
@@ -20,6 +21,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -32,7 +37,7 @@ import static org.mockito.ArgumentMatchers.*;
 class PullPaymentServiceImplTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;
-    private static final String DUMMY_FISCAL_CODE = "DUMMY_FISCAL_CODE";
+    private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final LocalDate DUE_DATE = LocalDate.now();
 
     @Autowired
@@ -47,7 +52,12 @@ class PullPaymentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        pullPaymentService = new PullPaymentServiceImpl(DUMMY_FISCAL_CODE, pullPaymentConnectorMock, paymentNoticeDTOMapperMock, paymentNoticesListDTOMapperMock);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                IamUserInfoDTOFaker.mockInstance(), null, null);
+        authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        pullPaymentService = new PullPaymentServiceImpl(pullPaymentConnectorMock, paymentNoticeDTOMapperMock, paymentNoticesListDTOMapperMock);
     }
 
     @Test
