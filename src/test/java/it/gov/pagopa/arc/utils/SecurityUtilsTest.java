@@ -39,4 +39,30 @@ class SecurityUtilsTest {
     Assertions.assertEquals("Invalid principal type: expected IamUserInfoDTO but got java.lang.Object", ex.getMessage());
   }
 
+  @Test
+  void givenConfiguredSecurityContextWhenGetUserFiscalCodeThenReturnAuthenticatedUserFiscalCode(){
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            IamUserInfoDTOFaker.mockInstance(), null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    String userFiscalCode = SecurityUtils.getUserFiscalCode();
+    Assertions.assertNotNull(userFiscalCode);
+    Assertions.assertEquals("FISCAL-CODE789456", userFiscalCode);
+  }
+
+  @Test
+  void givenPrincipalNullFiscalCodeWhenGetUserFiscalCodeThenThrowException(){
+    IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
+    iamUserInfoDTO.setFiscalCode(null);
+
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+           iamUserInfoDTO , null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, SecurityUtils::getUserFiscalCode);
+    Assertions.assertEquals("Fiscal code is missing for the authenticated user", ex.getMessage());
+  }
+
 }
