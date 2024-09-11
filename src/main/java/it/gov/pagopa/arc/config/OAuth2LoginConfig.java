@@ -63,6 +63,12 @@ public class OAuth2LoginConfig {
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
 
+            // Actuator endpoints
+            .requestMatchers(
+                "/actuator",
+                "/actuator/**"
+            ).permitAll()
+
             .requestMatchers(
                 "/payment-notices",
                 "/payment-notices/**",
