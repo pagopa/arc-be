@@ -79,6 +79,8 @@ paths:
         - arc auth
       summary: "Provide the logout endpoint"
       operationId: getLogoutEndpoint
+      security:
+        - bearerAuth: [ ]
       responses:
         '200':
           description: "User successfully logged out"
@@ -125,6 +127,8 @@ paths:
         - arc transactions
       summary: "Retrieve the paged transaction list from arc"
       operationId: getTransactionsList
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: page
           in: query
@@ -179,6 +183,8 @@ paths:
         - arc transactions
       summary: "Retrieve transaction details from arc"
       operationId: getTransactionDetails
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: transactionId
           in: path
@@ -225,6 +231,8 @@ paths:
         - arc transactions
       summary: "Retrieve transaction receipt from arc"
       operationId: getTransactionReceipt
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: transactionId
           in: path
@@ -263,6 +271,8 @@ paths:
         - arc payment notices
       summary: "Retrieve payment notices from arc"
       operationId: getPaymentNotices
+      security:
+        - bearerAuth: [ ]
       parameters:
         - name: dueDate
           in: query
