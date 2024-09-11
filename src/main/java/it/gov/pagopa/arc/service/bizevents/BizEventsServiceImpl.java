@@ -19,27 +19,34 @@ import java.util.List;
 @Service
 public class BizEventsServiceImpl implements BizEventsService{
 
-    private final String userFiscalCode;
     private final BizEventsConnector bizEventsConnector;
     private final BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
     private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper;
+    private String userFiscalCode;
 
     public BizEventsServiceImpl(BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTO transactionDTOMapper,
                                 BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper,
                                 BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper) {
-        this.userFiscalCode = SecurityUtils.getUserFiscalCode();
         this.bizEventsConnector = bizEventsConnector;
         this.transactionDTOMapper = transactionDTOMapper;
         this.transactionsListDTOMapper = transactionsListDTOMapper;
         this.transactionDetailsDTOMapper = transactionDetailsDTOMapper;
     }
 
+    private String getUserFiscalCode() {
+        if (this.userFiscalCode == null) {
+            this.userFiscalCode = SecurityUtils.getUserFiscalCode();
+        }
+        return this.userFiscalCode;
+    }
+
     @Override
     public TransactionsListDTO retrieveTransactionsListFromBizEvents(Integer page, Integer size, String filter) {
+        String retrievedUserFiscalCode = getUserFiscalCode();
         List<TransactionDTO> transactions;
-        BizEventsTransactionsListDTO bizEventsTransactionsList = bizEventsConnector.getTransactionsList(userFiscalCode, size);
+        BizEventsTransactionsListDTO bizEventsTransactionsList = bizEventsConnector.getTransactionsList(retrievedUserFiscalCode, size);
         if(!bizEventsTransactionsList.getTransactions().isEmpty()) {
             transactions = bizEventsTransactionsList
                     .getTransactions()
@@ -54,12 +61,16 @@ public class BizEventsServiceImpl implements BizEventsService{
 
     @Override
     public TransactionDetailsDTO retrieveTransactionDetailsFromBizEvents(String transactionId) {
-        BizEventsTransactionDetailsDTO bizEventsTransactionDetails = bizEventsConnector.getTransactionDetails(userFiscalCode, transactionId);
+        String retrievedUserFiscalCode = getUserFiscalCode();
+        BizEventsTransactionDetailsDTO bizEventsTransactionDetails = bizEventsConnector.getTransactionDetails(retrievedUserFiscalCode, transactionId);
         return transactionDetailsDTOMapper.apply(bizEventsTransactionDetails);
     }
 
     @Override
     public Resource retrieveTransactionReceiptFromBizEvents(String transactionId) {
-        return bizEventsConnector.getTransactionReceipt(userFiscalCode, transactionId);
+        String retrievedUserFiscalCode = getUserFiscalCode();
+        return bizEventsConnector.getTransactionReceipt(retrievedUserFiscalCode, transactionId);
     }
+
+
 }

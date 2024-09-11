@@ -15,23 +15,30 @@ import java.util.List;
 
 @Service
 public class PullPaymentServiceImpl implements PullPaymentService{
-    private final String userFiscalCode;
     private final PullPaymentConnector pullPaymentConnector;
     private final PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper;
     private final PaymentNoticesListDTOMapper paymentNoticesListDTOMapper;
+    private String userFiscalCode;
 
     public PullPaymentServiceImpl(PullPaymentConnector pullPaymentConnector,
                                   PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper,
                                   PaymentNoticesListDTOMapper paymentNoticesListDTOMapper) {
-        this.userFiscalCode = SecurityUtils.getUserFiscalCode();
         this.pullPaymentConnector = pullPaymentConnector;
         this.paymentNoticeDTOMapper = paymentNoticeDTOMapper;
         this.paymentNoticesListDTOMapper = paymentNoticesListDTOMapper;
     }
 
+    private String getUserFiscalCode() {
+        if (this.userFiscalCode == null) {
+            this.userFiscalCode = SecurityUtils.getUserFiscalCode();
+        }
+        return this.userFiscalCode;
+    }
+
     @Override
     public PaymentNoticesListDTO retrievePaymentNoticesListFromPullPayment(LocalDate dueDate, Integer size, Integer page) {
-        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(userFiscalCode, dueDate, size, page);
+        String retrievedUserFiscalCode = getUserFiscalCode();
+        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(retrievedUserFiscalCode, dueDate, size, page);
         List<PaymentNoticeDTO> paymentNoticeDTOFilteredList;
 
         if(!pullPaymentNoticeDTOList.isEmpty()){
