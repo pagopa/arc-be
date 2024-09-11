@@ -71,6 +71,4 @@ public class BizEventsServiceImpl implements BizEventsService{
         String retrievedUserFiscalCode = getUserFiscalCode();
         return bizEventsConnector.getTransactionReceipt(retrievedUserFiscalCode, transactionId);
     }
-
-
 }

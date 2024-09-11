@@ -15,11 +15,13 @@ import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
+import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,12 +33,18 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.*;
+
 @ExtendWith(MockitoExtension.class)
 class BizEventsServiceImplTest {
     private static final int PAGE = 1;
@@ -100,22 +108,22 @@ class BizEventsServiceImplTest {
                 .itemsForPage(SIZE)
                 .build();
 
-        Mockito.when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
-        Mockito.when(transactionDTOMapperMock.apply(bizEventsTransactionDTO)).thenReturn(transactionDTO);
-        Mockito.when(transactionDTOMapperMock.apply(bizEventsTransactionDTO2)).thenReturn(transactionDTO2);
-        Mockito.when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
+        when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
+        when(transactionDTOMapperMock.apply(bizEventsTransactionDTO)).thenReturn(transactionDTO);
+        when(transactionDTOMapperMock.apply(bizEventsTransactionDTO2)).thenReturn(transactionDTO2);
+        when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
 
         //when
         TransactionsListDTO result = bizEventsService.retrieveTransactionsListFromBizEvents(PAGE, SIZE, FILTER);
 
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.getTransactions().size());
-        Assertions.assertEquals(transactions,expectedResult.getTransactions());
-        Assertions.assertEquals(1, result.getCurrentPage());
-        Assertions.assertEquals(2, result.getItemsForPage());
-        Assertions.assertEquals(1, result.getTotalPages());
-        Assertions.assertEquals(10, result.getTotalItems());
+        assertEquals(2, result.getTransactions().size());
+        assertEquals(transactions,expectedResult.getTransactions());
+        assertEquals(1, result.getCurrentPage());
+        assertEquals(2, result.getItemsForPage());
+        assertEquals(1, result.getTotalPages());
+        assertEquals(10, result.getTotalItems());
         Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
         Mockito.verify(transactionDTOMapperMock,Mockito.times(2)).apply(any());
         Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
@@ -141,17 +149,17 @@ class BizEventsServiceImplTest {
                 .itemsForPage(SIZE)
                 .build();
 
-        Mockito.when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
-        Mockito.when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
+        when(bizEventsConnectorMock.getTransactionsList(DUMMY_FISCAL_CODE,SIZE)).thenReturn(bizEventsTransactionsListDTO);
+        when(transactionsListDTOMapperMock.apply(transactions,SIZE)).thenReturn(expectedResult);
         //when
         TransactionsListDTO result = bizEventsService.retrieveTransactionsListFromBizEvents(PAGE, SIZE, FILTER);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.getTransactions().isEmpty());
-        Assertions.assertEquals(1, result.getCurrentPage());
-        Assertions.assertEquals(2, result.getItemsForPage());
-        Assertions.assertEquals(1, result.getTotalPages());
-        Assertions.assertEquals(10, result.getTotalItems());
+        assertEquals(1, result.getCurrentPage());
+        assertEquals(2, result.getItemsForPage());
+        assertEquals(1, result.getTotalPages());
+        assertEquals(10, result.getTotalItems());
         Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
         Mockito.verifyNoInteractions(transactionDTOMapperMock);
         Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
@@ -164,17 +172,17 @@ class BizEventsServiceImplTest {
         BizEventsTransactionDetailsDTO bizEventsTransactionDetails = BizEventsTransactionDetailsDTOFaker.mockInstance();
         TransactionDetailsDTO expectedResult = TransactionDetailsDTOFaker.mockInstance();
 
-        Mockito.when(bizEventsConnectorMock.getTransactionDetails(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(bizEventsTransactionDetails);
-        Mockito.when(transactionDetailsDTOMapperMock.apply(bizEventsTransactionDetails)).thenReturn(expectedResult);
+        when(bizEventsConnectorMock.getTransactionDetails(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(bizEventsTransactionDetails);
+        when(transactionDetailsDTOMapperMock.apply(bizEventsTransactionDetails)).thenReturn(expectedResult);
         //when
         TransactionDetailsDTO result = bizEventsService.retrieveTransactionDetailsFromBizEvents(TRANSACTION_ID);
 
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.getCarts().size());
-        Assertions.assertEquals(expectedResult.getInfoTransaction(), result.getInfoTransaction());
-        Assertions.assertEquals(expectedResult.getCarts(), result.getCarts());
-        Assertions.assertEquals(expectedResult, result);
+        assertEquals(2, result.getCarts().size());
+        assertEquals(expectedResult.getInfoTransaction(), result.getInfoTransaction());
+        assertEquals(expectedResult.getCarts(), result.getCarts());
+        assertEquals(expectedResult, result);
 
         Mockito.verify(bizEventsConnectorMock).getTransactionDetails(anyString(),anyString());
         Mockito.verify(transactionDetailsDTOMapperMock).apply(any());
@@ -185,7 +193,7 @@ class BizEventsServiceImplTest {
         //given
         Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
 
-        Mockito.when(bizEventsConnectorMock.getTransactionReceipt(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(receipt);
+        when(bizEventsConnectorMock.getTransactionReceipt(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(receipt);
         //when
         Resource result = bizEventsService.retrieveTransactionReceiptFromBizEvents(TRANSACTION_ID);
 
@@ -197,4 +205,38 @@ class BizEventsServiceImplTest {
         Assertions.assertArrayEquals(resultAsByteArray, expectedContent);
         Mockito.verify(bizEventsConnectorMock).getTransactionReceipt(anyString(),anyString());
     }
+
+    @Test
+    void givenFiscalCodeWhenGetUserFiscalCodeThenNotCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+
+            Field userFiscalCodeField = BizEventsServiceImpl.class.getDeclaredField("userFiscalCode");
+            userFiscalCodeField.setAccessible(true);
+            userFiscalCodeField.set(bizEventsService, "PRESET_FISCAL_CODE");
+
+            Method getUserFiscalCodeMethod = bizEventsService.getClass().getDeclaredMethod("getUserFiscalCode");
+            getUserFiscalCodeMethod.setAccessible(true);
+            String result = (String) getUserFiscalCodeMethod.invoke(bizEventsService);
+
+            assertEquals("PRESET_FISCAL_CODE", result);
+            mockedSecurityUtils.verify(SecurityUtils::getUserFiscalCode, times(0));
+        }
+    }
+
+    @Test
+    void givenNullWhenGetUserFiscalCodeThenCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+
+            Field userFiscalCodeField = BizEventsServiceImpl.class.getDeclaredField("userFiscalCode");
+            userFiscalCodeField.setAccessible(true);
+            userFiscalCodeField.set(bizEventsService, null);
+
+            Method getUserFiscalCodeMethod = bizEventsService.getClass().getDeclaredMethod("getUserFiscalCode");
+            getUserFiscalCodeMethod.setAccessible(true);
+            String result = (String) getUserFiscalCodeMethod.invoke(bizEventsService);
+
+            assertEquals("FISCAL-CODE789456", result);
+
+
+    }
+
 }
