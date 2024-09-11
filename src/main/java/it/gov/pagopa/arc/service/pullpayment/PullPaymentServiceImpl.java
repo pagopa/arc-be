@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
-import org.springframework.beans.factory.annotation.Value;
+import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -15,16 +15,15 @@ import java.util.List;
 
 @Service
 public class PullPaymentServiceImpl implements PullPaymentService{
-    private final String fakeFiscalCode;
+    private final String userFiscalCode;
     private final PullPaymentConnector pullPaymentConnector;
     private final PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper;
     private final PaymentNoticesListDTOMapper paymentNoticesListDTOMapper;
 
-    public PullPaymentServiceImpl(@Value("${rest-client.fake-fiscal-code}") String fakeFiscalCode,
-                                  PullPaymentConnector pullPaymentConnector,
+    public PullPaymentServiceImpl(PullPaymentConnector pullPaymentConnector,
                                   PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper,
                                   PaymentNoticesListDTOMapper paymentNoticesListDTOMapper) {
-        this.fakeFiscalCode = fakeFiscalCode;
+        this.userFiscalCode = SecurityUtils.getUserFiscalCode();
         this.pullPaymentConnector = pullPaymentConnector;
         this.paymentNoticeDTOMapper = paymentNoticeDTOMapper;
         this.paymentNoticesListDTOMapper = paymentNoticesListDTOMapper;
@@ -32,7 +31,7 @@ public class PullPaymentServiceImpl implements PullPaymentService{
 
     @Override
     public PaymentNoticesListDTO retrievePaymentNoticesListFromPullPayment(LocalDate dueDate, Integer size, Integer page) {
-        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(fakeFiscalCode, dueDate, size, page);
+        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(userFiscalCode, dueDate, size, page);
         List<PaymentNoticeDTO> paymentNoticeDTOFilteredList;
 
         if(!pullPaymentNoticeDTOList.isEmpty()){
