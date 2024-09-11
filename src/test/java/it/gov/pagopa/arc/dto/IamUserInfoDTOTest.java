@@ -22,7 +22,6 @@ class IamUserInfoDTOTest {
 
     assertEquals("123456", userInfo.getUserId());
     assertEquals("PPPPPP01P30P736P", userInfo.getFiscalCode());
-    assertNotEquals("TINIT-PPPPPP01P30P736P", userInfo.getFiscalCode());
     assertEquals("Polo", userInfo.getFamilyName());
     assertEquals("Marco", userInfo.getName());
     assertEquals("marco.polo@example.com", userInfo.getEmail());
