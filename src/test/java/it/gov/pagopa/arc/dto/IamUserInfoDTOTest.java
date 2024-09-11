@@ -8,10 +8,10 @@ import org.junit.jupiter.api.Test;
 class IamUserInfoDTOTest {
 
   @Test
-  public void testMap2IamUserInfoDTO() {
+  void testMap2IamUserInfoDTO() {
     Map<String, Object> attributes = Map.of(
         "sub", "123456",
-        "fiscalNumber", "789012",
+        "fiscalNumber", "TINIT-PPPPPP01P30P736P",
         "familyName", "Polo",
         "name", "Marco",
         "email", "marco.polo@example.com",
@@ -21,7 +21,7 @@ class IamUserInfoDTOTest {
     IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
 
     assertEquals("123456", userInfo.getUserId());
-    assertEquals("789012", userInfo.getFiscalCode());
+    assertEquals("PPPPPP01P30P736P", userInfo.getFiscalCode());
     assertEquals("Polo", userInfo.getFamilyName());
     assertEquals("Marco", userInfo.getName());
     assertEquals("marco.polo@example.com", userInfo.getEmail());
@@ -29,7 +29,7 @@ class IamUserInfoDTOTest {
   }
 
   @Test
-  public void testMap2IamUserInfoDTOWithMissingAttributes() {
+  void testMap2IamUserInfoDTOWithMissingAttributes() {
     Map<String, Object> attributes = Map.of(
         "sub", "123456"
     );
