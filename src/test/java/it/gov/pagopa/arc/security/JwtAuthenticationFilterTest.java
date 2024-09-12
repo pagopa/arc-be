@@ -1,10 +1,15 @@
 package it.gov.pagopa.arc.security;
 
+import static org.mockito.Mockito.doNothing;
+
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
+import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.ServletException;
 import java.io.IOException;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -27,6 +32,9 @@ class JwtAuthenticationFilterTest {
   private TokenStoreService tokenStoreService;
   @InjectMocks
   private JwtAuthenticationFilter jwtAuthenticationFilter;
+
+  @Mock
+  AccessTokenValidationService accessTokenValidationService;
   private final String sampleJwt = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
 
   private final String sampleJwtNotInStorage = "eaJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
@@ -42,10 +50,11 @@ class JwtAuthenticationFilterTest {
 
   @Test
   void givenValidAuthenticationTokenThenVerifyThatSecurityContextIsCreated()
-      throws ServletException, IOException {
+      throws ServletException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
     IamUserInfoDTO userInfoDTO = IamUserInfoDTOFaker.mockInstance();
     Mockito.when(tokenStoreService.getUserInfo(sampleJwt)).thenReturn(
         Optional.of(userInfoDTO));
+    doNothing().when(accessTokenValidationService).validate(sampleJwt);
 
     MockHttpServletRequest request = new MockHttpServletRequest();
     request.addHeader("Authorization","Bearer "+sampleJwt);
