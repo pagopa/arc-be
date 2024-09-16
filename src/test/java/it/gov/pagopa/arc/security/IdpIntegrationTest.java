@@ -293,7 +293,9 @@ class IdpIntegrationTest {
 
         String token = TestUtils.genToken(
             decodePublicKey(environment.getProperty("jwt.access-token.public-key")),
-            decodePrivateKey(environment.getProperty("jwt.access-token.private-key")),-1);
+            decodePrivateKey(environment.getProperty("jwt.access-token.private-key")),
+            -1,
+            "application");
         MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
                 .header("Authorization","Bearer "+token))
             .andExpect(status().is(401))
@@ -307,7 +309,9 @@ class IdpIntegrationTest {
         KeyPair kp = TestUtils.genKeyPair();
         String token = TestUtils.genToken(
             (RSAPublicKey) kp.getPublic(),
-            (RSAPrivateKey) kp.getPrivate(),-1);
+            (RSAPrivateKey) kp.getPrivate(),
+            -1,
+            "application");
         MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
                 .header("Authorization","Bearer "+token))
             .andExpect(status().is(401))

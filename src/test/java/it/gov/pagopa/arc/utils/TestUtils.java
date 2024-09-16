@@ -36,7 +36,7 @@ public class TestUtils {
         }
     }
 
-    public static String genToken(RSAPublicKey publicKey, RSAPrivateKey privateKey,int ttl){
+    public static String genToken(RSAPublicKey publicKey, RSAPrivateKey privateKey,int ttl,String issuer){
         return JWT.create()
             .withClaim("typ","Bearer" )
             .withClaim("sub","_7284fdec21b65e716223feeb9b3564c1")
@@ -46,7 +46,7 @@ public class TestUtils {
             .withClaim("email","ilmilione@virgilio.it")
             .withClaim("aud","mockAudience")
             .withClaim("nonce","nonce")
-            .withIssuer("audience")
+            .withIssuer(issuer)
             .withJWTId(UUID.randomUUID().toString())
             .withIssuedAt(Instant.now())
             .withExpiresAt(Instant.now().plusSeconds(ttl))
