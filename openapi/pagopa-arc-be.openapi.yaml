@@ -126,7 +126,7 @@ paths:
       tags:
         - arc auth
       summary: "Provide information regarding sample user"
-      operationId: getUserInfo
+      operationId: getTestUserInfo
       responses:
         '200':
           description: "Token Response"
