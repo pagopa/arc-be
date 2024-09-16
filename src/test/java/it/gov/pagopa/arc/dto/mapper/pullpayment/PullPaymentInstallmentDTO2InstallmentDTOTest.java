@@ -51,10 +51,10 @@ class PullPaymentInstallmentDTO2InstallmentDTOTest {
             Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
             Assertions.assertEquals(LocalDateTime.parse("2024-10-30T23:59:59"), result.getDueDate());
             Assertions.assertEquals(LocalDateTime.parse("2024-11-30T23:59:59"), result.getRetentionDate());
-            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14.845126"), result.getInsertedDate());
+            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14"), result.getInsertedDate());
             Assertions.assertEquals(0L, result.getNotificationFee());
             Assertions.assertEquals(unpaid, result.getStatus());
-            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14.845126"), result.getLastUpdatedDate());
+            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14"), result.getLastUpdatedDate());
 
             Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMock).toPaymentOptionStatus(any());
         });
