@@ -15,6 +15,9 @@ import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.service.TokenStoreService;
+import it.gov.pagopa.arc.utils.CertUtils;
+import it.gov.pagopa.arc.utils.TestUtils;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -22,6 +25,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
@@ -284,6 +288,34 @@ class IdpIntegrationTest {
         Assertions.assertNotNull(userResp);
     }
 
+    @Test
+    void givenExpiredAccessTokenThenGetUserInfo() throws Exception {
+
+        String token = TestUtils.genToken(
+            decodePublicKey(environment.getProperty("jwt.access-token.public-key")),
+            decodePrivateKey(environment.getProperty("jwt.access-token.private-key")),-1);
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+token))
+            .andExpect(status().is(401))
+            .andReturn();
+
+        Assertions.assertNotNull(userResp);
+    }
+
+    @Test
+    void givenInvalidSignatureThenGetUserInfo() throws Exception {
+        KeyPair kp = TestUtils.genKeyPair();
+        String token = TestUtils.genToken(
+            (RSAPublicKey) kp.getPublic(),
+            (RSAPrivateKey) kp.getPrivate(),-1);
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+token))
+            .andExpect(status().is(401))
+            .andReturn();
+
+        Assertions.assertNotNull(userResp);
+    }
+
     private String genIdpIdToken(MultiValueMap<String,String> m,RSAPublicKey publicKey,RSAPrivateKey privateKey){
         return JWT.create()
             .withClaim("typ","Bearer" )
@@ -321,6 +353,16 @@ class IdpIntegrationTest {
 
     private String decodeState(String state) throws UnsupportedEncodingException {
         return java.net.URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+    }
+
+    public static RSAPublicKey decodePublicKey(String publicKeyPEM)
+        throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        return CertUtils.pemPub2PublicKey(publicKeyPEM);
+    }
+
+    public static RSAPrivateKey decodePrivateKey(String privateKeyPEM)
+        throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        return CertUtils.pemKey2PrivateKey(privateKeyPEM);
     }
 
 }

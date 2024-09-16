@@ -1,5 +1,7 @@
 package it.gov.pagopa.arc.security;
 
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.TokenStoreService;
@@ -48,6 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       }
+    } catch (TokenExpiredException e){
+      log.info("Provided token is expired: "+ e.getMessage());
+    } catch (SignatureVerificationException e) {
+      log.info("Provided signature is invalid: "+ e.getMessage());
     } catch (Exception e) {
       log.error("Something gone wrong ", e);
     }
