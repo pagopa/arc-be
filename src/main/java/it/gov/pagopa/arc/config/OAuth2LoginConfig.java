@@ -69,13 +69,6 @@ public class OAuth2LoginConfig {
                 "/actuator/**"
             ).permitAll()
 
-            .requestMatchers(
-                "/payment-notices",
-                "/payment-notices/**",
-                "/transactions",
-                "/transactions/**"
-            ).permitAll()
-
             .anyRequest().authenticated());
     return http.build();
   }
