@@ -121,6 +121,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /auth/testuser:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide information regarding sample user"
+      operationId: getUserInfo
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: "Request cannot be processed, required parameters are not present"
+        '401':
+          description: "Unauthorized"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transactions:
     get:
       tags:
