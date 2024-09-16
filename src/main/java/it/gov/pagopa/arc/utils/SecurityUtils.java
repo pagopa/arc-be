@@ -18,4 +18,15 @@ public final class SecurityUtils {
 
   }
 
+  public static String getUserFiscalCode() {
+    IamUserInfoDTO principal = getPrincipal();
+
+    if (principal.getFiscalCode() == null) {
+      throw new IllegalArgumentException("Fiscal code is missing for the authenticated user");
+    }
+
+    return principal.getFiscalCode();
+  }
+
+
 }
