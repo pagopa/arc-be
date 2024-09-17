@@ -1,6 +1,9 @@
 package it.gov.pagopa.arc.security;
 
+import com.auth0.jwt.exceptions.SignatureVerificationException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
@@ -23,9 +26,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
   private final TokenStoreService tokenStoreService;
 
+  private final AccessTokenValidationService accessTokenValidationService;
 
-  public JwtAuthenticationFilter(TokenStoreService tokenStoreService) {
+
+  public JwtAuthenticationFilter(TokenStoreService tokenStoreService,
+      AccessTokenValidationService accessTokenValidationService) {
     this.tokenStoreService = tokenStoreService;
+    this.accessTokenValidationService = accessTokenValidationService;
   }
 
   @Override
@@ -34,6 +41,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       String authorization = request.getHeader(HttpHeaders.AUTHORIZATION);
       if (StringUtils.hasText(authorization)) {
         String token = authorization.replace("Bearer ", "");
+        accessTokenValidationService.validate(token);
         Optional<IamUserInfoDTO> userInfo = tokenStoreService.getUserInfo(token);
         if(userInfo.isPresent()){
           UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.get(), null, null);
@@ -42,6 +50,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
           SecurityContextHolder.getContext().setAuthentication(authentication);
         }
       }
+    } catch (TokenExpiredException e){
+      log.info("Provided token is expired: "+ e.getMessage());
+    } catch (SignatureVerificationException e) {
+      log.info("Provided signature is invalid: "+ e.getMessage());
     } catch (Exception e) {
       log.error("Something gone wrong ", e);
     }

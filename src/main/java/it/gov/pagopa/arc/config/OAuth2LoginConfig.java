@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.security.CustomEntryPoint;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.security.InMemoryOAuth2AuthorizationRequestRepository;
@@ -56,23 +57,19 @@ public class OAuth2LoginConfig {
                     .addLogoutHandler(customLogoutHandler)
                     .logoutSuccessHandler(customLogoutSuccessHandler)
         )
+        .exceptionHandling(exceptionHandling -> exceptionHandling
+            .authenticationEntryPoint(new CustomEntryPoint())
+        )
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
 
-            // endpoint must be protected
+            // Actuator endpoints
             .requestMatchers(
-                "/auth",
-                    "/auth/*",
-                    "/assistance"
-            ).authenticated()
+                "/actuator",
+                "/actuator/**"
+            ).permitAll()
 
-            .requestMatchers(
-                "/logout",
-                "/logout/*"
-            ).authenticated()
-
-            // Should be changed
-            .anyRequest().permitAll());
+            .anyRequest().authenticated());
     return http.build();
   }
 

@@ -6,33 +6,46 @@ import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentOptionDTO;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTO;
+import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentInstallmentDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentOptionDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
+import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
+import java.lang.reflect.Method;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.mockStatic;
+import static org.mockito.Mockito.times;
 
 @ExtendWith(MockitoExtension.class)
 class PullPaymentServiceImplTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;
-    private static final String DUMMY_FISCAL_CODE = "DUMMY_FISCAL_CODE";
+    private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final LocalDate DUE_DATE = LocalDate.now();
 
     @Autowired
@@ -47,7 +60,12 @@ class PullPaymentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        pullPaymentService = new PullPaymentServiceImpl(DUMMY_FISCAL_CODE, pullPaymentConnectorMock, paymentNoticeDTOMapperMock, paymentNoticesListDTOMapperMock);
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                IamUserInfoDTOFaker.mockInstance(), null, null);
+        authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
+        pullPaymentService = new PullPaymentServiceImpl(pullPaymentConnectorMock, paymentNoticeDTOMapperMock, paymentNoticesListDTOMapperMock);
     }
 
     @Test
@@ -197,6 +215,39 @@ class PullPaymentServiceImplTest {
 
         Mockito.verify(pullPaymentConnectorMock).getPaymentNotices(anyString(),any(),anyInt(),anyInt());
         Mockito.verify(paymentNoticesListDTOMapperMock).toPaymentNoticesListDTO(anyList());
+
+    }
+
+    @Test
+    void givenFiscalCodeWhenGetUserFiscalCodeThenNotCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
+
+            Field userFiscalCodeField = PullPaymentServiceImpl.class.getDeclaredField("userFiscalCode");
+            userFiscalCodeField.setAccessible(true);
+            userFiscalCodeField.set(pullPaymentService, "PRESET_FISCAL_CODE");
+
+            Method getUserFiscalCodeMethod = pullPaymentService.getClass().getDeclaredMethod("getUserFiscalCode");
+            getUserFiscalCodeMethod.setAccessible(true);
+            String result = (String) getUserFiscalCodeMethod.invoke(pullPaymentService);
+
+            assertEquals("PRESET_FISCAL_CODE", result);
+            mockedSecurityUtils.verify(SecurityUtils::getUserFiscalCode, times(0));
+        }
+    }
+
+    @Test
+    void givenNullWhenGetUserFiscalCodeThenCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
+
+        Field userFiscalCodeField = PullPaymentServiceImpl.class.getDeclaredField("userFiscalCode");
+        userFiscalCodeField.setAccessible(true);
+        userFiscalCodeField.set(pullPaymentService, null);
+
+        Method getUserFiscalCodeMethod = pullPaymentService.getClass().getDeclaredMethod("getUserFiscalCode");
+        getUserFiscalCodeMethod.setAccessible(true);
+        String result = (String) getUserFiscalCodeMethod.invoke(pullPaymentService);
+
+        assertEquals("FISCAL-CODE789456", result);
+
 
     }
 }

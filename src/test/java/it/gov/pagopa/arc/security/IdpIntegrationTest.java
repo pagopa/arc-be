@@ -13,7 +13,11 @@ import com.github.tomakehurst.wiremock.WireMockServer;
 import com.github.tomakehurst.wiremock.client.WireMock;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
+import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.service.TokenStoreService;
+import it.gov.pagopa.arc.utils.CertUtils;
+import it.gov.pagopa.arc.utils.TestUtils;
+import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.nio.charset.StandardCharsets;
 import java.security.KeyPair;
@@ -21,6 +25,7 @@ import java.security.KeyPairGenerator;
 import java.security.NoSuchAlgorithmException;
 import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
+import java.security.spec.InvalidKeySpecException;
 import java.time.Instant;
 import java.util.Base64;
 import java.util.UUID;
@@ -30,7 +35,6 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.core.env.Environment;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
@@ -73,28 +77,30 @@ class IdpIntegrationTest {
     private static final String TOKEN_URL = "/token/oneidentity";
     private static final String IDP_KEYS_URL = "/idp/oidc/keys";
     private static final String IDP_TOKEN_URL = "/idp/oidc/token";
+
+    private static final String USER_INFO_URL = "/auth/user";
     @Autowired
     private WireMockServer wireMockServer;
     @Autowired
     private Environment environment;
-    @MockBean
+    @Autowired
     private TokenStoreService tokenStoreService;
     @Autowired
     ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
 
-    private static RSAPublicKey RSA_PUBLIC_KEY = null;
-    private static RSAPrivateKey RSA_PRIVATE_KEY = null;
-    private static String MODULUS_BASE64 = null;
+    private static RSAPublicKey rsaPublicKey = null;
+    private static RSAPrivateKey rsaPrivateKey = null;
+    private static String modulusBase64 = null;
     @BeforeAll
     static void setup() throws NoSuchAlgorithmException {
         KeyPairGenerator keyGen = KeyPairGenerator.getInstance("RSA");
         keyGen.initialize(2048);
         KeyPair keyPair = keyGen.generateKeyPair();
-        RSA_PUBLIC_KEY = (RSAPublicKey) keyPair.getPublic();
-        RSA_PRIVATE_KEY = (RSAPrivateKey) keyPair.getPrivate();
-        MODULUS_BASE64 = Base64.getEncoder().encodeToString(RSA_PUBLIC_KEY.getModulus().toByteArray());
+        rsaPublicKey = (RSAPublicKey) keyPair.getPublic();
+        rsaPrivateKey = (RSAPrivateKey) keyPair.getPrivate();
+        modulusBase64 = Base64.getEncoder().encodeToString(rsaPublicKey.getModulus().toByteArray());
     }
     @Test
     void givenLoginActionThenGetNewState() throws Exception {
@@ -115,14 +121,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenValidStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -143,7 +149,7 @@ class IdpIntegrationTest {
 
     @Test
     void givenInvalidStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult firstTimeToken = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
@@ -151,7 +157,7 @@ class IdpIntegrationTest {
 
         MultiValueMap<String,String> queryParams = UriComponentsBuilder.newInstance().
             query(firstTimeToken.getResponse().getRedirectedUrl()).build().getQueryParams();
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -168,14 +174,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenAlreadyUsedStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -201,14 +207,14 @@ class IdpIntegrationTest {
 
     @Test
     void givenAnEmptyStateThenRequestAccessToken() throws Exception {
-        addStubKeys(MODULUS_BASE64);
+        addStubKeys(modulusBase64);
 
         MvcResult result = mockMvc.perform(get(LOGIN_URL))
             .andExpect(status().is3xxRedirection())
             .andReturn();
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
-        String idpIdToken = genIdpIdToken(queryParams,RSA_PUBLIC_KEY,RSA_PRIVATE_KEY);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
 
         addStubToken(idpIdToken);
 
@@ -217,6 +223,101 @@ class IdpIntegrationTest {
             .andExpect(status().is3xxRedirection())
             .andReturn();
         Assertions.assertNotNull(tokenResult);
+    }
+
+    @Test
+    void givenValidAccessTokenThenGetUserInfo() throws Exception {
+        addStubKeys(modulusBase64);
+
+        MvcResult result = mockMvc.perform(get(LOGIN_URL))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+        MultiValueMap<String,String> queryParams = extractQueryParams(result);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
+
+        addStubToken(idpIdToken);
+
+        MvcResult firstTimeToken = mockMvc.perform(get(TOKEN_URL)
+                .param("code","code")
+                .param("state", decodeState(queryParams.get("state").get(0)) ))
+            .andExpect(status().is2xxSuccessful())
+            .andReturn();
+
+        TokenResponse token = objectMapper.readValue(firstTimeToken.getResponse().getContentAsString(),TokenResponse.class);
+
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+token.getAccessToken()))
+            .andExpect(status().is2xxSuccessful())
+            .andReturn();
+
+        UserInfo user = objectMapper.readValue(userResp.getResponse().getContentAsString(),UserInfo.class);
+        Assertions.assertNotNull(userResp);
+        Assertions.assertNotNull(user);
+        Assertions.assertNotNull(user.getName());
+        Assertions.assertNotNull(user.getFamilyName());
+        Assertions.assertNotNull(user.getEmail());
+        Assertions.assertNotNull(user.getFiscalCode());
+        Assertions.assertNotNull(user.getUserId());
+    }
+
+    @Test
+    void givenInvalidAccessTokenThenGetUserInfo() throws Exception {
+        addStubKeys(modulusBase64);
+
+        MvcResult result = mockMvc.perform(get(LOGIN_URL))
+            .andExpect(status().is3xxRedirection())
+            .andReturn();
+
+        MultiValueMap<String,String> queryParams = extractQueryParams(result);
+        String idpIdToken = genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey);
+
+        addStubToken(idpIdToken);
+
+        mockMvc.perform(get(TOKEN_URL)
+                .param("code","code")
+                .param("state", decodeState(queryParams.get("state").get(0)) ))
+            .andExpect(status().is2xxSuccessful())
+            .andReturn();
+
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+genIdpIdToken(queryParams,rsaPublicKey,rsaPrivateKey)))
+            .andExpect(status().is(401))
+            .andReturn();
+
+        Assertions.assertNotNull(userResp);
+    }
+
+    @Test
+    void givenExpiredAccessTokenThenGetUserInfo() throws Exception {
+
+        String token = TestUtils.genToken(
+            decodePublicKey(environment.getProperty("jwt.access-token.public-key")),
+            decodePrivateKey(environment.getProperty("jwt.access-token.private-key")),
+            -1,
+            "application");
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+token))
+            .andExpect(status().is(401))
+            .andReturn();
+
+        Assertions.assertNotNull(userResp);
+    }
+
+    @Test
+    void givenInvalidSignatureThenGetUserInfo() throws Exception {
+        KeyPair kp = TestUtils.genKeyPair();
+        String token = TestUtils.genToken(
+            (RSAPublicKey) kp.getPublic(),
+            (RSAPrivateKey) kp.getPrivate(),
+            -1,
+            "application");
+        MvcResult userResp = mockMvc.perform(get(USER_INFO_URL)
+                .header("Authorization","Bearer "+token))
+            .andExpect(status().is(401))
+            .andReturn();
+
+        Assertions.assertNotNull(userResp);
     }
 
     private String genIdpIdToken(MultiValueMap<String,String> m,RSAPublicKey publicKey,RSAPrivateKey privateKey){
@@ -256,6 +357,16 @@ class IdpIntegrationTest {
 
     private String decodeState(String state) throws UnsupportedEncodingException {
         return java.net.URLDecoder.decode(state, StandardCharsets.UTF_8.name());
+    }
+
+    public static RSAPublicKey decodePublicKey(String publicKeyPEM)
+        throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        return CertUtils.pemPub2PublicKey(publicKeyPEM);
+    }
+
+    public static RSAPrivateKey decodePrivateKey(String privateKeyPEM)
+        throws NoSuchAlgorithmException, InvalidKeySpecException, IOException {
+        return CertUtils.pemKey2PrivateKey(privateKeyPEM);
     }
 
 }

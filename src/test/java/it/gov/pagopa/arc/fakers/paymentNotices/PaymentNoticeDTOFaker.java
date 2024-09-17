@@ -24,9 +24,9 @@ public class PaymentNoticeDTOFaker {
                 .debtorType("F")
                 .paTaxCode("99999000013")
                 .paFullName("EC Demo Pagamenti Pull Test")
-                .insertedDate(LocalDateTime.parse("2024-04-11T06:56:14.845126"))
-                .publishDate(LocalDateTime.parse("2024-04-11T06:56:14.845142"))
-                .validityDate(LocalDateTime.parse("2024-04-11T06:56:14.845142"))
+                .insertedDate(LocalDateTime.parse("2024-04-11T06:56:14"))
+                .publishDate(LocalDateTime.parse("2024-04-11T06:56:14"))
+                .validityDate(LocalDateTime.parse("2024-04-11T06:56:14"))
                 .status(PaymentNoticeStatus.VALID)
                 .lastUpdateDate(LocalDate.parse("2024-04-11"));
 

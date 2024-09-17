@@ -25,7 +25,7 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "enabled": true
     },
     {
-      "key": "Apim-Subscription-Key-bizevents-<ENV>",
+      "key": "Apim-Subscription-Key-bizevents",
       "value": "<!SubscriptionKeyBizEvents!>",
       "type": "secret",
       "enabled": true
@@ -41,6 +41,12 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "value": "https://api.<ENV>.cittadini.pagopa.it/arc/v1",
       "type": "default",
       "enabled": true
+    },
+    {
+          "key": "baseurlBizEvents",
+          "value": "https://api.<ENV>.platform.pagopa.it/bizevents/tx-service/v1",
+          "type": "default",
+          "enabled": true
     },
     {
        "key": "fakeUser1",

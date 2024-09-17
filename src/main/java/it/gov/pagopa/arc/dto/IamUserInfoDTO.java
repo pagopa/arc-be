@@ -31,7 +31,8 @@ public class IamUserInfoDTO {
   }
 
   private static String getStringFromMap(Map<String, Object> map, String key) {
-    return map.containsKey(key) ? map.get(key).toString() : null;
+    String value = map.containsKey(key) ? map.get(key).toString() : null;
+    return key.equals("fiscalNumber") && value != null ? value.replaceFirst("TINIT-", "") : value;
   }
 
 }

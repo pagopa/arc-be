@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "8ff73b4e-c848-45d2-910e-152d02ff954c",
+    "_postman_id": "58e915f0-2d45-4bd8-9a8c-cb79268762a8",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "9202061"
+    "_exporter_id": "26204012"
   },
   "item": [
     {
@@ -310,7 +310,7 @@
                       "apikey": [
                         {
                           "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "value": "{{Apim-Subscription-Key-bizevents}}",
                           "type": "string"
                         },
                         {
@@ -333,19 +333,11 @@
                       }
                     ],
                     "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
+                      "raw": "{{baseUrlBizEvents}}/transactions/{{transactionId}}/disable",
                       "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
+                        "{{baseUrlBizEvents}}"
                       ],
                       "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
                         "transactions",
                         "{{transactionId}}",
                         "disable"
@@ -654,7 +646,7 @@
                       "apikey": [
                         {
                           "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "value": "{{Apim-Subscription-Key-bizevents}}",
                           "type": "string"
                         },
                         {
@@ -677,19 +669,11 @@
                       }
                     ],
                     "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
+                      "raw": "{{baseUrlBizEvents}}/transactions/{{transactionId}}/disable",
                       "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
+                        "{{baseUrlBizEvents}}"
                       ],
                       "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
                         "transactions",
                         "{{transactionId}}",
                         "disable"
@@ -720,7 +704,7 @@
                       "apikey": [
                         {
                           "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "value": "{{Apim-Subscription-Key-bizevents}}",
                           "type": "string"
                         },
                         {
@@ -743,19 +727,11 @@
                       }
                     ],
                     "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
+                      "raw": "{{baseUrlBizEvents}}/transactions/{{transactionId}}/disable",
                       "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
+                        "{{baseUrlBizEvents}}"
                       ],
                       "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
                         "transactions",
                         "{{transactionId}}",
                         "disable"
@@ -1064,7 +1040,7 @@
                       "apikey": [
                         {
                           "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "value": "{{Apim-Subscription-Key-bizevents}}",
                           "type": "string"
                         },
                         {
@@ -1087,19 +1063,11 @@
                       }
                     ],
                     "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
+                      "raw": "{{baseUrlBizEvents}}/transactions/{{transactionId}}/disable",
                       "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
+                        "{{baseUrlBizEvents}}"
                       ],
                       "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
                         "transactions",
                         "{{transactionId}}",
                         "disable"
@@ -1130,7 +1098,7 @@
                       "apikey": [
                         {
                           "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-DEV}}",
+                          "value": "{{Apim-Subscription-Key-bizevents}}",
                           "type": "string"
                         },
                         {
@@ -1153,19 +1121,11 @@
                       }
                     ],
                     "url": {
-                      "raw": "https://api.dev.platform.pagopa.it/bizevents/tx-service/v1/transactions/{{transactionId}}/disable",
-                      "protocol": "https",
+                      "raw": "{{baseUrlBizEvents}}/transactions/{{transactionId}}/disable",
                       "host": [
-                        "api",
-                        "dev",
-                        "platform",
-                        "pagopa",
-                        "it"
+                        "{{baseUrlBizEvents}}"
                       ],
                       "path": [
-                        "bizevents",
-                        "tx-service",
-                        "v1",
                         "transactions",
                         "{{transactionId}}",
                         "disable"
@@ -1367,7 +1327,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"ACI\",\n    \"fullName\": \"ACI Automobile Club Italia\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - unica opzione\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"ACI\",\n    \"fullName\": \"JOHN DOE\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - unica opzione\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2024-10-30T23:59:59\",\n            \"retentionDate\": \"2024-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"ACI Automobile Club Italia\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull - unica opzione\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3563,6 +3523,11 @@
                       "    \r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.assistenza.pagopa.it/hc/it/requests/new\")\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
                       "})\r",
                       ""
                     ],

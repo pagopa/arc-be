@@ -7,6 +7,7 @@ import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
+import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.AuthService;
 import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.TokenStoreService;
@@ -33,7 +34,8 @@ class OAuth2LoginConfigTest {
 
     @MockBean
     private CustomLogoutHandler customLogoutHandler;
-
+    @MockBean
+    JWTConfiguration jwtConfiguration;
     @MockBean
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
     @MockBean
@@ -46,6 +48,8 @@ class OAuth2LoginConfigTest {
     private WebApplicationContext context;
     @MockBean
     private TokenStoreService tokenStoreService;
+    @MockBean
+    AccessTokenValidationService accessTokenValidationService;
 
     @Test
     void givenURLWithoutCodeAndStateWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {
@@ -62,10 +66,10 @@ class OAuth2LoginConfigTest {
     }
 
     @Test
-    void givenInsecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
+    void givenSecurityURLWhenCallEndpointThenNoRedirect() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/token/assistance")
                         .param("userEmail", "someone@email.com"))
-                .andExpect(status().isOk());
+                .andExpect(status().is4xxClientError());
     }
 
 }
