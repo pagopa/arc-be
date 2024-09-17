@@ -125,7 +125,7 @@ paths:
     get:
       tags:
         - arc auth
-      summary: "Provide information regarding sample user"
+      summary: "Provide access token for the sample user"
       operationId: getTestUserInfo
       responses:
         '200':
@@ -133,7 +133,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserInfo'
+                $ref: '#/components/schemas/TokenResponse'
         '400':
           description: "Request cannot be processed, required parameters are not present"
         '401':
