@@ -121,6 +121,27 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /auth/testuser:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide access token for the sample user"
+      operationId: getAuthTokenTestUser
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /transactions:
     get:
       tags:
