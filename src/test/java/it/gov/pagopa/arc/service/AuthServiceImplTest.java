@@ -29,9 +29,14 @@ class AuthServiceImplTest {
 
   private final IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
 
+  @Mock
+  private TokenStoreService tokenStoreService;
+  @Mock
+  private AccessTokenBuilderService accessTokenBuilderService;
+
   @BeforeEach
   void setUp() {
-    authService = new AuthServiceImpl(mapperMock);
+    authService = new AuthServiceImpl(mapperMock,tokenStoreService,accessTokenBuilderService);
     SecurityContextHolder.clearContext();
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
         iamUserInfoDTO, null, null);
