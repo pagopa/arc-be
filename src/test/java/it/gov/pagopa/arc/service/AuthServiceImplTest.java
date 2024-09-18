@@ -69,7 +69,7 @@ class AuthServiceImplTest {
   void verifyGetTestUserLoginInfo(){
     Mockito.when(accessTokenBuilderService.build()).thenReturn("token");
 
-    TokenResponse tokenResponse = authService.getTestUserLoginInfo();
+    TokenResponse tokenResponse = authService.generateAuthUser();
     assertNotNull(tokenResponse);
     assertEquals("Bearer", tokenResponse.getTokenType());
     assertNotNull(tokenResponse.getAccessToken());

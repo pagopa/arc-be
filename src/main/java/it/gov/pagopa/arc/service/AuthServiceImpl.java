@@ -32,7 +32,7 @@ public class AuthServiceImpl implements AuthService{
   }
 
   @Override
-  public TokenResponse getTestUserLoginInfo() {
+  public TokenResponse generateAuthUser() {
     final Map<String, Object> attributes = Map.of(
         "sub", "123456",
         "fiscalNumber", "TINIT-PPPPPP01P30P736P",

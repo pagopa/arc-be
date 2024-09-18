@@ -7,5 +7,5 @@ public interface AuthService {
 
   UserInfo getUserLoginInfo();
 
-  TokenResponse getTestUserLoginInfo();
+  TokenResponse generateAuthUser();
 }

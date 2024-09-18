@@ -78,7 +78,7 @@ class AuthControllerImplTest {
   @Test
   void getSampleToken() throws Exception {
 
-    Mockito.when(authService.getTestUserLoginInfo()).thenReturn(new TokenResponse());
+    Mockito.when(authService.generateAuthUser()).thenReturn(new TokenResponse());
 
     //When
     MvcResult result = mockMvc.perform(
