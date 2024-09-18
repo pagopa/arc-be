@@ -1,11 +1,48 @@
 {
   "info": {
-    "_postman_id": "58e915f0-2d45-4bd8-9a8c-cb79268762a8",
+    "_postman_id": "583cf8b0-b83e-49f9-a68f-8a78de698cb9",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "26204012"
+    "_exporter_id": "9202061"
   },
   "item": [
+    {
+      "name": "setup",
+      "item": [
+        {
+          "name": "getAccessToken",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonResponse = pm.response.json();\r",
+                  "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                  "console.log(jsonResponse.accessToken)"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurlArc}}/auth/testuser",
+              "host": [
+                "{{baseurlArc}}"
+              ],
+              "path": [
+                "auth",
+                "testuser"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
     {
       "name": "transactions",
       "item": [
@@ -1549,9 +1586,6 @@
                     }
                   ],
                   "request": {
-                    "auth": {
-                      "type": "noauth"
-                    },
                     "method": "GET",
                     "header": [],
                     "url": {
@@ -2846,6 +2880,145 @@
       ]
     },
     {
+      "name": "zendesk assistance",
+      "item": [
+        {
+          "name": "Happy Case",
+          "item": [
+            {
+              "name": "GET JWT token for zendesk assistance",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
+                      "    pm.response.to.have.status(200);\r",
+                      "});\r",
+                      "\r",
+                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
+                      "    let jsonResponse = pm.response.json();\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
+                      "    \r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.assistenza.pagopa.it/hc/it/requests/new\")\r",
+                      "\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
+                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
+                      "})\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "auth": {
+                  "type": "bearer",
+                  "bearer": [
+                    {
+                      "key": "token",
+                      "value": "",
+                      "type": "string"
+                    }
+                  ]
+                },
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
+                  "host": [
+                    "{{baseurlArc}}"
+                  ],
+                  "path": [
+                    "token",
+                    "assistance"
+                  ],
+                  "query": [
+                    {
+                      "key": "userEmail",
+                      "value": "someone@email.com"
+                    }
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Unhappy Case",
+          "item": [
+            {
+              "name": "INVALID USER EMAIL",
+              "item": [
+                {
+                  "name": "INVALID USER EMAIL ERROR",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})\r",
+                          "\r",
+                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"invalid_email\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"Invalid user email [someone]\");\r",
+                          "})\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "token",
+                        "assistance"
+                      ],
+                      "query": [
+                        {
+                          "key": "userEmail",
+                          "value": "someone"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            }
+          ]
+        }
+      ]
+    },
+    {
       "name": "auth",
       "item": [
         {
@@ -2928,126 +3101,6 @@
               "name": "Case 2",
               "item": [
                 {
-                  "name": "set state and nonce",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "var redirectUrl = pm.response.headers.get('Location');\r",
-                          "var parser = require('postman-collection').Url.parse;\r",
-                          "\r",
-                          "console.log(parser(redirectUrl));\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains state in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"state\").value).not.equal(null);\r",
-                          "    pm.environment.set(\"state\", parser(redirectUrl).query.find(a=>a.key===\"state\").value);\r",
-                          "});\r",
-                          "\r",
-                          "pm.test(\"Make sure that redirect contains nonce in query params, expected value to be not null\", ()=>{\r",
-                          "    pm.expect(parser(redirectUrl).query.find(a=>a.key===\"nonce\").value).not.equal(null);\r",
-                          "    pm.environment.set(\"nonce\", parser(redirectUrl).query.find(a=>a.key===\"nonce\").value);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "protocolProfileBehavior": {
-                    "followRedirects": false
-                  },
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/login/oneidentity",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "login",
-                        "oneidentity"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "token endpoint",
-                  "event": [
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "let jsonResponse = pm.response.json();\r",
-                          "\r",
-                          "pm.test(\"Get token response, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})\r",
-                          "\r",
-                          "pm.test(\"Verify that accessToken is present, expected accessToken is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('accessToken');\r",
-                          "    pm.expect(jsonResponse.accessToken).not.eq(null);\r",
-                          "})\r",
-                          "\r",
-                          "pm.test(\"Verify that tokenType is present, expected tokenType is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('tokenType');\r",
-                          "    pm.expect(jsonResponse.tokenType).not.eq(null);\r",
-                          "})\r",
-                          "\r",
-                          "pm.test(\"Verify that expiresIn is present, expected expiresIn is present\", () => {\r",
-                          "    pm.expect(jsonResponse).to.have.property('expiresIn');\r",
-                          "    pm.expect(jsonResponse.expiresIn).not.eq(null);\r",
-                          "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?code={{code}}&state={{state}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "oneidentity"
-                      ],
-                      "query": [
-                        {
-                          "key": "code",
-                          "value": "{{code}}"
-                        },
-                        {
-                          "key": "state",
-                          "value": "{{state}}"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
-              "name": "Case 3",
-              "item": [
-                {
                   "name": "user info",
                   "event": [
                     {
@@ -3056,17 +3109,48 @@
                         "exec": [
                           "let jsonResponse = pm.response.json();\r",
                           "\r",
-                          "pm.test(\"[Get User Info - Case 3], expected httpStatus: 200\", () => {\r",
+                          "pm.test(\"[Get User Info - Case 2], expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})\r",
                           "\r",
-                          "pm.test(\"[Get User Info - Case 3] - When you get user info\", () => {\r",
+                          "pm.test(\"[Get User Info - Case 2] - When you get user info\", () => {\r",
                           "    pm.expect(jsonResponse).to.have.property(\"userId\");\r",
                           "    pm.expect(jsonResponse).to.have.property(\"fiscalCode\");\r",
                           "    pm.expect(jsonResponse).to.have.property(\"familyName\");\r",
                           "    pm.expect(jsonResponse).to.have.property(\"name\");\r",
                           "    pm.expect(jsonResponse).to.have.property(\"email\");\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "var path = pm.environment.get(\"baseurlArc\");\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "        url:  path + '/auth/testuser',\r",
+                          "        method: 'GET',\r",
+                          "        header: {\r",
+                          "            'Accept': 'application/json',\r",
+                          "            'Content-Type': 'application/json'\r",
+                          "        }\r",
+                          "    }, function (err, res) {\r",
+                          "        if (res.code === 200) {\r",
+                          "            let response = res.json();\r",
+                          "            pm.environment.set('token', response.accessToken);\r",
+                          "\r",
+                          "            console.log('Token set: ' + response.accessToken);\r",
+                          "        }\r",
+                          "        else {\r",
+                          "            console.log(res);\r",
+                          "            throw new Error('Login failed with status: ' + res.status + ' (Code: ' + res.code + ')');\r",
+                          "        }\r",
+                          "});\r",
+                          ""
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3082,7 +3166,7 @@
                       "bearer": [
                         {
                           "key": "token",
-                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6ImFhZmUzMGRiLTVlNDktNDc2ZS04YzhjLWU3OWJmNDk5YzJlNiIsImlhdCI6MTcyMzIxNzM4NCwiZXhwIjoxNzIzMjIwOTg0fQ.LFI0YFjS7bjv3VYGDTR3GgdPFbbUKrza2H8eeh7g6OtzBhcor0U0B_M_8LI98s-eob3TpWM9wq8zTwnvZtz_tmI37FU83RJF513Mrhi5YBYR8MI78XMSmRH7xRPIzlIAruCYbcv6JVs5daf7UKLjWGZWr3cXH7-TzWoA2OAE2MhzzI23R8b8pXDXrRearR5blyhEM1Wk4TRz3RZSksajGRQQ_gwO0K_8pT3zpk-hsZfWZ2iGwjWdKsTBwSmhYL68Qns2ic5McvM_gC5_xW3hrzqTP27NQJnkRjdT03uIFXkZSrLRBbgzPs286k4DiFaWMrASWofv35AQvqalUIXwmQ",
+                          "value": "{{token}}",
                           "type": "string"
                         }
                       ]
@@ -3105,7 +3189,7 @@
               ]
             },
             {
-              "name": "case 4",
+              "name": "case 3",
               "item": [
                 {
                   "name": "logout",
@@ -3114,9 +3198,40 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"[Logout - Case 4], expected httpStatus: 200\", () => {\r",
+                          "pm.test(\"[Logout - Case 3], expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "var path = pm.environment.get(\"baseurlArc\");\r",
+                          "\r",
+                          "pm.sendRequest({\r",
+                          "        url:  path + '/auth/testuser',\r",
+                          "        method: 'GET',\r",
+                          "        header: {\r",
+                          "            'Accept': 'application/json',\r",
+                          "            'Content-Type': 'application/json'\r",
+                          "        }\r",
+                          "    }, function (err, res) {\r",
+                          "        if (res.code === 200) {\r",
+                          "            let response = res.json();\r",
+                          "            pm.environment.set('token', response.accessToken);\r",
+                          "\r",
+                          "            console.log('Token set: ' + response.accessToken);\r",
+                          "        }\r",
+                          "        else {\r",
+                          "            console.log(res);\r",
+                          "            throw new Error('Login failed with status: ' + res.status + ' (Code: ' + res.code + ')');\r",
+                          "        }\r",
+                          "});\r",
+                          ""
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3129,7 +3244,7 @@
                       "bearer": [
                         {
                           "key": "token",
-                          "value": "eyJhbGciOiJSUzUxMiIsInR5cCI6IkpXVCJ9.eyJ0eXAiOiJCZWFyZXIiLCJpc3MiOiJhcHBsaWNhdGlvbi1hdWRpZW5jZSIsImp0aSI6IjkzYTllMGY1LTYzZGQtNGYxMS1iZjQ4LTExNGYxMzQ3ZjZiZCIsImlhdCI6MTcyNTM3OTEzNCwiZXhwIjoxNzI1MzgyNzM0fQ.Qi6na6ansiLD1ng1SB4TUJ7egjTERWNmM567raeWCZb6IXBJvoXPFvC64fmasSlzSZloteMZSkgXAN7dFbnOlk9wrnelsTFDz6f3ew9VsypmwTNSpbvJb369T1EbMSDZqJ70HOv84spW0o6fvjs2N-tnOxAUxo-yj6shj-G-v6SIJ_mUEk98mw_oRR_S99TtlMsFvw9LaWV2LmeglZzqrfZb67Is0RHaQPnZLRyW_oqLfoTgUtIuVrZ-T_vcMiYKeHwcIxCqoVZhp4OHl5lDE5xwcq2WKSBLwzCcuo_crvkOat3e6PKpYM0e8tDdLZKBjeGMfEED8TAnLbRynkMs8w",
+                          "value": "{{token}}",
                           "type": "string"
                         }
                       ]
@@ -3143,6 +3258,63 @@
                       ],
                       "path": [
                         "logout"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "user info",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "let jsonResponse = pm.response.json();\r",
+                          "\r",
+                          "pm.test(\"[Get User Info - Case 3], expected httpStatus: 401\", () => {\r",
+                          "    pm.response.to.have.status(401);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "protocolProfileBehavior": {
+                    "followRedirects": true
+                  },
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{token}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/auth/user",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "auth",
+                        "user"
                       ]
                     }
                   },
@@ -3349,64 +3521,6 @@
               ]
             },
             {
-              "name": "Generic Error",
-              "item": [
-                {
-                  "name": "generic error",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 500\", () => {\r",
-                          "    pm.response.to.have.status(500);\r",
-                          "});"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    },
-                    {
-                      "listen": "prerequest",
-                      "script": {
-                        "exec": [
-                          "pm.environment.set(\"code\", \"123456789\");\r",
-                          "pm.environment.set(\"state\", \"123456789\");"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/token/oneidentity?testcode={{code}}&teststate={{state}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "token",
-                        "oneidentity"
-                      ],
-                      "query": [
-                        {
-                          "key": "testcode",
-                          "value": "{{code}}"
-                        },
-                        {
-                          "key": "teststate",
-                          "value": "{{state}}"
-                        }
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
-            {
               "name": "Unauthorized",
               "item": [
                 {
@@ -3493,106 +3607,31 @@
                   "response": []
                 }
               ]
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "name": "zendesk assistance",
-      "item": [
-        {
-          "name": "Happy Case",
-          "item": [
+            },
             {
-              "name": "GET JWT token for zendesk assistance",
-              "event": [
-                {
-                  "listen": "test",
-                  "script": {
-                    "exec": [
-                      "pm.test(\"[GET JWT token for zendesk assistance], expected httpStatus: 200\", () => {\r",
-                      "    pm.response.to.have.status(200);\r",
-                      "});\r",
-                      "\r",
-                      "pm.test(\"[GET JWT token for zendesk assistance], expected jwt token and return_to\", () =>{\r",
-                      "    let jsonResponse = pm.response.json();\r",
-                      "\r",
-                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.assistanceToken).to.not.eq(\"\")\r",
-                      "    \r",
-                      "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.assistenza.pagopa.it/hc/it/requests/new\")\r",
-                      "\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.actionUrl).to.eq(\"https://pagopa.zendesk.com/access/jwt\")\r",
-                      "})\r",
-                      ""
-                    ],
-                    "type": "text/javascript",
-                    "packages": {}
-                  }
-                }
-              ],
-              "request": {
-                "auth": {
-                  "type": "bearer",
-                  "bearer": [
-                    {
-                      "key": "token",
-                      "value": "",
-                      "type": "string"
-                    }
-                  ]
-                },
-                "method": "GET",
-                "header": [],
-                "url": {
-                  "raw": "{{baseurlArc}}/token/assistance?userEmail=someone@email.com",
-                  "host": [
-                    "{{baseurlArc}}"
-                  ],
-                  "path": [
-                    "token",
-                    "assistance"
-                  ],
-                  "query": [
-                    {
-                      "key": "userEmail",
-                      "value": "someone@email.com"
-                    }
-                  ]
-                }
-              },
-              "response": []
-            }
-          ]
-        },
-        {
-          "name": "Unhappy Case",
-          "item": [
-            {
-              "name": "INVALID USER EMAIL",
+              "name": "Generic Error",
               "item": [
                 {
-                  "name": "INVALID USER EMAIL ERROR",
+                  "name": "generic error",
                   "event": [
                     {
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] - When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception , expected httpStatus: 400\", () => {\r",
-                          "    pm.response.to.have.status(400);\r",
-                          "})\r",
-                          "\r",
-                          "pm.test(\"[GET JWT token for zendesk assistance - INVALID USER EMAIL] -When you retrieve the JWT token for zendesk assistance and pass to ARC invalid email, ARC returns a invalid email Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
-                          "    let response = pm.response.json();\r",
-                          "    pm.expect(response.error).to.eq(\"invalid_email\");\r",
-                          "    pm.expect(response.error_description).to.eq(\"Invalid user email [someone]\");\r",
-                          "})\r",
-                          ""
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 500\", () => {\r",
+                          "    pm.response.to.have.status(500);\r",
+                          "});"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "pm.environment.set(\"code\", \"123456789\");\r",
+                          "pm.environment.set(\"state\", \"123456789\");"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3600,31 +3639,25 @@
                     }
                   ],
                   "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "",
-                          "type": "string"
-                        }
-                      ]
-                    },
                     "method": "GET",
                     "header": [],
                     "url": {
-                      "raw": "{{baseurlArc}}/token/assistance?userEmail=someone",
+                      "raw": "{{baseurlArc}}/token/oneidentity?testcode={{code}}&teststate={{state}}",
                       "host": [
                         "{{baseurlArc}}"
                       ],
                       "path": [
                         "token",
-                        "assistance"
+                        "oneidentity"
                       ],
                       "query": [
                         {
-                          "key": "userEmail",
-                          "value": "someone"
+                          "key": "testcode",
+                          "value": "{{code}}"
+                        },
+                        {
+                          "key": "teststate",
+                          "value": "{{state}}"
                         }
                       ]
                     }
@@ -3638,6 +3671,16 @@
       ]
     }
   ],
+  "auth": {
+    "type": "bearer",
+    "bearer": [
+      {
+        "key": "token",
+        "value": "{{accessToken}}",
+        "type": "string"
+      }
+    ]
+  },
   "event": [
     {
       "listen": "prerequest",
@@ -3734,6 +3777,26 @@
     },
     {
       "key": "amountThirdInstallment",
+      "value": ""
+    },
+    {
+      "key": "token",
+      "value": ""
+    },
+    {
+      "key": "timestamp",
+      "value": ""
+    },
+    {
+      "key": "userid",
+      "value": ""
+    },
+    {
+      "key": "expires_in",
+      "value": ""
+    },
+    {
+      "key": "accessToken",
       "value": ""
     }
   ]
