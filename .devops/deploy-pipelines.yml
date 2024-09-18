@@ -62,6 +62,8 @@ variables:
     selfHostedAgentPool: $(DEV_AGENT_POOL)
     postmanEnvFile: arc_DEV.postman_environment.json
 
+  DOCKER_BUILDKIT: 1
+
 stages:
   - stage: 'stage_build'
     condition: eq(variables.canDeploy, true)
@@ -172,7 +174,7 @@ stages:
           - task: NodeTool@0
             inputs:
               versionSpec: '16.x'
-          - task: Npm@1
+          - task: Npm@1.238.1
             displayName: Install newman
             inputs:
               command: custom
