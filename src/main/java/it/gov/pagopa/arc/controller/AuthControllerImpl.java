@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
+import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.service.AuthService;
 import org.springframework.http.HttpStatus;
@@ -20,6 +21,11 @@ public class AuthControllerImpl implements ArcAuthApi {
   @Override
   public ResponseEntity<UserInfo> getUserInfo() {
     return new ResponseEntity<>(authService.getUserLoginInfo(), HttpStatus.OK);
+  }
+
+  @Override
+  public ResponseEntity<TokenResponse> getAuthTokenTestUser() {
+    return new ResponseEntity<>(authService.generateAuthUser(), HttpStatus.OK);
   }
 
 }

@@ -8,6 +8,7 @@ import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.exception.custom.InvalidTokenException;
 import it.gov.pagopa.arc.fakers.auth.UserInfoDTOFaker;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
+import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.AuthService;
@@ -72,6 +73,23 @@ class AuthControllerImplTest {
 
     //then
     Assertions.assertNotNull(error);
+  }
+
+  @Test
+  void getSampleToken() throws Exception {
+
+    Mockito.when(authService.generateAuthUser()).thenReturn(new TokenResponse());
+
+    //When
+    MvcResult result = mockMvc.perform(
+            get("/auth/testuser")
+        ).andExpect(status().is(200))
+        .andReturn();
+
+    TokenResponse tokenResponse = objectMapper.readValue(result.getResponse().getContentAsString(), TokenResponse.class);
+
+    //then
+    Assertions.assertNotNull(tokenResponse);
   }
 
 }
