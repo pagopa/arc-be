@@ -120,7 +120,7 @@ stages:
                 - template: templates/helm-microservice-chart-deploy/template.yaml@templates
                   parameters:
                     DO_DEPLOY: true
-                    ENV: ${{ parameters.ENV }}
+                    ENV: '$(environment)'
                     KUBERNETES_SERVICE_CONN: ${{ variables.kubernetesServiceConnection }}
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
