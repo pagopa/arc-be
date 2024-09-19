@@ -18,7 +18,6 @@ public class PullPaymentServiceImpl implements PullPaymentService{
     private final PullPaymentConnector pullPaymentConnector;
     private final PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper;
     private final PaymentNoticesListDTOMapper paymentNoticesListDTOMapper;
-    private String userFiscalCode;
 
     public PullPaymentServiceImpl(PullPaymentConnector pullPaymentConnector,
                                   PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper,
@@ -28,16 +27,9 @@ public class PullPaymentServiceImpl implements PullPaymentService{
         this.paymentNoticesListDTOMapper = paymentNoticesListDTOMapper;
     }
 
-    private String getUserFiscalCode() {
-        if (this.userFiscalCode == null) {
-            this.userFiscalCode = SecurityUtils.getUserFiscalCode();
-        }
-        return this.userFiscalCode;
-    }
-
     @Override
     public PaymentNoticesListDTO retrievePaymentNoticesListFromPullPayment(LocalDate dueDate, Integer size, Integer page) {
-        String retrievedUserFiscalCode = getUserFiscalCode();
+        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
         List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(retrievedUserFiscalCode, dueDate, size, page);
         List<PaymentNoticeDTO> paymentNoticeDTOFilteredList;
 

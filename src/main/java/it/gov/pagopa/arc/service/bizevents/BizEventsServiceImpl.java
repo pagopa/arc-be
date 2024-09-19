@@ -23,7 +23,6 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
     private final BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapper;
-    private String userFiscalCode;
 
     public BizEventsServiceImpl(BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTO transactionDTOMapper,
@@ -35,16 +34,9 @@ public class BizEventsServiceImpl implements BizEventsService{
         this.transactionDetailsDTOMapper = transactionDetailsDTOMapper;
     }
 
-    private String getUserFiscalCode() {
-        if (this.userFiscalCode == null) {
-            this.userFiscalCode = SecurityUtils.getUserFiscalCode();
-        }
-        return this.userFiscalCode;
-    }
-
     @Override
     public TransactionsListDTO retrieveTransactionsListFromBizEvents(Integer page, Integer size, String filter) {
-        String retrievedUserFiscalCode = getUserFiscalCode();
+        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
         List<TransactionDTO> transactions;
         BizEventsTransactionsListDTO bizEventsTransactionsList = bizEventsConnector.getTransactionsList(retrievedUserFiscalCode, size);
         if(!bizEventsTransactionsList.getTransactions().isEmpty()) {
@@ -61,14 +53,14 @@ public class BizEventsServiceImpl implements BizEventsService{
 
     @Override
     public TransactionDetailsDTO retrieveTransactionDetailsFromBizEvents(String transactionId) {
-        String retrievedUserFiscalCode = getUserFiscalCode();
+        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
         BizEventsTransactionDetailsDTO bizEventsTransactionDetails = bizEventsConnector.getTransactionDetails(retrievedUserFiscalCode, transactionId);
         return transactionDetailsDTOMapper.apply(bizEventsTransactionDetails);
     }
 
     @Override
     public Resource retrieveTransactionReceiptFromBizEvents(String transactionId) {
-        String retrievedUserFiscalCode = getUserFiscalCode();
+        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
         return bizEventsConnector.getTransactionReceipt(retrievedUserFiscalCode, transactionId);
     }
 }
