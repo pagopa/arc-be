@@ -151,7 +151,6 @@ stages:
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
                     VALUE_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
-                    DEPLOY_VERSION: "$(appVersion)"
                     ARGUMENTS: --timeout 5m0s --debug
   - stage: Test_e2e
     displayName: 'Test_e2e_on_${{ variables.environment }}'
