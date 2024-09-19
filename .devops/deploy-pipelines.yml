@@ -102,6 +102,13 @@ stages:
               targetType: 'inline'
               script: |
                 echo "##vso[task.setvariable variable=imageTag;isOutput=true]$(yq '.microservice-chart.image.tag' $(Build.Repository.LocalPath)/${{parameters.VALUE_FILE}} )"
+          - task: Bash@3
+            displayName: 'Print variables'
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "appVersion: $(vars.appVersion)"
+                echo "imageTag: $(vars.imageTag)"
 
   - stage: stage_deploy
     displayName: 'Deploy to ${{ variables.environment }} K8S'
@@ -151,16 +158,22 @@ stages:
                     script: |
                       helm template -f "$VALUES_FILE" .
                     failOnStderr: true
-                - template: templates/helm-microservice-chart-deploy/template.yaml@templates
-                  parameters:
-                    DO_DEPLOY: true
-                    ENV: '$(environment)'
-                    KUBERNETES_SERVICE_CONN: ${{ variables.kubernetesServiceConnection }}
-                    NAMESPACE: '$(deployNamespace)'
-                    APP_NAME: ${{ variables.helmReleaseName }}
-                    DEPLOY_VERSION: "$(imageTag)"
-                    VALUE_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
-                    ARGUMENTS: --timeout 5m0s --debug
+                - task: HelmDeploy@0
+                  displayName: Deploy on $(environment)
+                  condition: and(succeeded())
+                  inputs:
+                    kubernetesServiceEndpoint: ${{ variables.kubernetesServiceConnection }}
+                    namespace: '$(deployNamespace)'
+                    command: 'upgrade'
+                    chartType: "filepath"
+                    chartPath: "helm"
+                    chartName: ${{ variables.helmReleaseName }}
+                    releaseName: ${{ variables.helmReleaseName }}
+                    valueFile: "helm/values-${{ lower(variables.environment) }}.yaml"
+                    install: true
+                    waitForExecution: true
+                    arguments: --timeout 5m0s --debug
+
   - stage: Test_e2e
     displayName: 'Test_e2e_on_${{ variables.environment }}'
     condition: and(succeeded(), or(eq(variables.environment, 'DEV'), eq(variables.environment, 'UAT')))
