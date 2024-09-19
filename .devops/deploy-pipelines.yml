@@ -27,7 +27,6 @@ pr: none
 
 resources:
   repositories:
-    - repository: self
     - repository: templates
       type: github
       name: pagopa/azure-pipeline-templates
@@ -84,6 +83,7 @@ stages:
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
+          - checkout: self
           - task: Bash@3
             displayName: Get app version
             name: getAppVersion
@@ -105,6 +105,8 @@ stages:
     jobs:
       - deployment: job_deploy
         displayName: 'Deploy'
+        workspace:
+          clean: all
         pool:
           name: $(selfHostedAgentPool)
         environment: '$(environment)'
@@ -112,6 +114,7 @@ stages:
           runOnce:
             deploy:
               steps:
+                - checkout: self
                 - bash: |
                     echo 'microservice-chart:
                        podAnnotations:
