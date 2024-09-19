@@ -127,12 +127,12 @@ stages:
                     KUBERNETES_SERVICE_CONN: ${{ variables.kubernetesServiceConnection }}
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
-                    VALUE_FILE: "helm/values-lower(${{ variables.environment }}).yaml"
+                    VALUE_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
                     DEPLOY_VERSION: v1
                     ARGUMENTS: --timeout 5m0s --values buildMetadata.yaml
   - stage: Test_e2e
     displayName: 'Test_e2e_on_${{ variables.environment }}'
-    condition: or(eq(variables.environment, 'DEV'), eq(variables.environment, 'UAT'))
+    condition: and(succeeded(), or(eq(variables.environment, 'DEV'), eq(variables.environment, 'UAT')))
     jobs:
       - job: 'Run_Postman_collection_on_${{ variables.environment }}'
         displayName: 'Run Postman collection on ${{ variables.environment }}'
