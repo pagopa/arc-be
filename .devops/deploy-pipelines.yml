@@ -127,15 +127,18 @@ stages:
                     workingDirectory: 'helm'
                     targetType: 'inline'
                     script: |
-                      helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
+                      helm repo add microservice-chart https://pagopa.github.io/aks-microservice-chart-blueprint
                       helm dep build
+                    failOnStderr: true                
+                - task: Bash@3
+                  name: helm_template
+                  displayName: Helm template
+                  inputs:
+                    workingDirectory: 'helm'
+                    targetType: 'inline'
+                    script: |
+                      helm template -f "$VALUES_FILE" .
                     failOnStderr: true
-                - template: templates/helm-microservice-chart-setup/template.yaml@templates
-                  parameters:
-                    DEPLOY_VERSION: "$(appVersion)"
-                    HELM_DEPENDECIES_COMMAND: 'build'
-                    # CHART_FILE: ${{ parameters.CHART_PATH }}
-                    VALUES_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
                 - template: templates/helm-microservice-chart-deploy/template.yaml@templates
                   parameters:
                     DO_DEPLOY: true
