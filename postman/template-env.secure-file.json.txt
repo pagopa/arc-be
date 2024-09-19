@@ -43,6 +43,12 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "enabled": true
     },
     {
+          "key": "baseurlArcInternal",
+          "value": "https://citizen.internal.<ENV>.cittadini.pagopa.it/arcbe",
+          "type": "default",
+          "enabled": true
+    },
+    {
           "key": "baseurlBizEvents",
           "value": "https://api.<ENV>.platform.pagopa.it/bizevents/tx-service/v1",
           "type": "default",
