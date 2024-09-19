@@ -15,13 +15,11 @@ import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
-import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.MockedStatic;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,9 +31,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
@@ -43,7 +38,7 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.*;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BizEventsServiceImplTest {
@@ -206,37 +201,5 @@ class BizEventsServiceImplTest {
         Mockito.verify(bizEventsConnectorMock).getTransactionReceipt(anyString(),anyString());
     }
 
-    @Test
-    void givenFiscalCodeWhenGetUserFiscalCodeThenNotCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-        try (MockedStatic<SecurityUtils> mockedSecurityUtils = mockStatic(SecurityUtils.class)) {
-
-            Field userFiscalCodeField = BizEventsServiceImpl.class.getDeclaredField("userFiscalCode");
-            userFiscalCodeField.setAccessible(true);
-            userFiscalCodeField.set(bizEventsService, "PRESET_FISCAL_CODE");
-
-            Method getUserFiscalCodeMethod = bizEventsService.getClass().getDeclaredMethod("getUserFiscalCode");
-            getUserFiscalCodeMethod.setAccessible(true);
-            String result = (String) getUserFiscalCodeMethod.invoke(bizEventsService);
-
-            assertEquals("PRESET_FISCAL_CODE", result);
-            mockedSecurityUtils.verify(SecurityUtils::getUserFiscalCode, times(0));
-        }
-    }
-
-    @Test
-    void givenNullWhenGetUserFiscalCodeThenCallMethod() throws NoSuchMethodException, NoSuchFieldException, IllegalAccessException, InvocationTargetException {
-
-            Field userFiscalCodeField = BizEventsServiceImpl.class.getDeclaredField("userFiscalCode");
-            userFiscalCodeField.setAccessible(true);
-            userFiscalCodeField.set(bizEventsService, null);
-
-            Method getUserFiscalCodeMethod = bizEventsService.getClass().getDeclaredMethod("getUserFiscalCode");
-            getUserFiscalCodeMethod.setAccessible(true);
-            String result = (String) getUserFiscalCodeMethod.invoke(bizEventsService);
-
-            assertEquals("FISCAL-CODE789456", result);
-
-
-    }
 
 }
