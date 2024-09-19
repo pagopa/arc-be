@@ -69,6 +69,10 @@ public class OAuth2LoginConfig {
                 "/actuator/**"
             ).permitAll()
 
+            .requestMatchers(
+                "/auth/testuser"
+            ).permitAll()
+
             .anyRequest().authenticated());
     return http.build();
   }
