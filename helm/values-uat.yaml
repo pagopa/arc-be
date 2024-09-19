@@ -1,7 +1,7 @@
 microservice-chart:
   image:
-    repository: arcuitncorecommonacr.azurecr.io/arcbe
-    tag: latest
+    repository: ghcr.io/pagopa/arc-be
+    tag: snapshot-develop
     pullPolicy: Always
 
   ingress:
