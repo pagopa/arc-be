@@ -27,7 +27,7 @@ pr: none
 
 resources:
   repositories:
-    - repo: self
+    - repository: self
     - repository: templates
       type: github
       name: pagopa/azure-pipeline-templates
