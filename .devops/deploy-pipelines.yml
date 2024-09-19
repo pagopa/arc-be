@@ -119,6 +119,7 @@ stages:
                           "build/appVersion": "$(appVersion)"
                           "build/sourceVersion": "$(Build.SourceVersion)"' > buildMetadata.yaml
                     cat buildMetadata.yaml
+                    cat helm/values-${{ lower(variables.environment) }}.yaml
                   displayName: Writing build metadata
                 - task: Bash@3
                   name: helm_dependency_build
@@ -129,7 +130,7 @@ stages:
                     script: |
                       helm repo add microservice-chart https://pagopa.github.io/aks-microservice-chart-blueprint
                       helm dep build
-                    failOnStderr: true                
+                    failOnStderr: true
                 - task: Bash@3
                   name: helm_template
                   displayName: Helm template
