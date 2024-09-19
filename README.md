@@ -1,4 +1,4 @@
-# pagopa-arc-be
+# arc-be
 
 ## About The Project
 
