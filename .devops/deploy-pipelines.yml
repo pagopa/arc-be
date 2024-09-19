@@ -118,8 +118,11 @@ stages:
                           "build/buildNumber": "$(Build.BuildNumber)"
                           "build/appVersion": "$(appVersion)"
                           "build/sourceVersion": "$(Build.SourceVersion)"' > buildMetadata.yaml
+                    echo buildMetadata.yaml
                   displayName: Writing build metadata
-
+                - template: templates/helm-microservice-chart-setup/template.yaml@templates
+                  parameters:
+                    DEPLOY_VERSION: "$(appVersion)"
                 - template: templates/helm-microservice-chart-deploy/template.yaml@templates
                   parameters:
                     DO_DEPLOY: true
@@ -128,7 +131,7 @@ stages:
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
                     VALUE_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
-                    DEPLOY_VERSION: v1
+                    DEPLOY_VERSION: "$(appVersion)"
                     ARGUMENTS: --timeout 5m0s --values buildMetadata.yaml
   - stage: Test_e2e
     displayName: 'Test_e2e_on_${{ variables.environment }}'
