@@ -156,7 +156,7 @@ stages:
                     workingDirectory: 'helm'
                     targetType: 'inline'
                     script: |
-                      helm template -f "$VALUES_FILE" .
+                      helm template -f values-${{ lower(variables.environment) }}.yaml .
                     failOnStderr: true
                 - task: HelmDeploy@0
                   displayName: Deploy on $(environment)
