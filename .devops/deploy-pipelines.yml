@@ -78,6 +78,8 @@ stages:
     displayName: 'Get project app version'
     jobs:
       - job: job_info
+        workspace:
+          clean: all
         displayName: Get App Info
         pool:
           vmImage: $(vmImageNameDefault)
@@ -128,6 +130,12 @@ stages:
                       helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
                       helm dep build
                     failOnStderr: true
+                - template: ../helm-microservice-chart-setup/template.yaml
+                  parameters:
+                    DEPLOY_VERSION: "$(appVersion)"
+                    HELM_DEPENDECIES_COMMAND: 'build'
+                    # CHART_FILE: ${{ parameters.CHART_PATH }}
+                    VALUES_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
                 - template: templates/helm-microservice-chart-deploy/template.yaml@templates
                   parameters:
                     DO_DEPLOY: true
