@@ -95,20 +95,6 @@ stages:
                 echo "Building version: $version"
                 echo "##vso[task.setvariable variable=appVersion;isOutput=true]$version"
               failOnStderr: true
-          - task: Bash@3
-            displayName: 'Set variables'
-            name: helmValues
-            inputs:
-              targetType: 'inline'
-              script: |
-                echo "##vso[task.setvariable variable=imageTag;isOutput=true]$(yq '.microservice-chart.image.tag' helm/values-${{ lower(variables.environment) }}.yaml )"
-          - task: Bash@3
-            displayName: 'Print variables'
-            inputs:
-              targetType: 'inline'
-              script: |
-                echo "appVersion: $(vars.appVersion)"
-                echo "imageTag: $(vars.imageTag)"
 
   - stage: stage_deploy
     displayName: 'Deploy to ${{ variables.environment }} K8S'
@@ -130,6 +116,12 @@ stages:
             deploy:
               steps:
                 - checkout: self
+                - task: Bash@3
+                  displayName: 'Print variables'
+                  inputs:
+                    targetType: 'inline'
+                    script: |
+                      echo "appVersion: $(appVersion)"
                 - bash: |
                     echo 'microservice-chart:
                        podAnnotations:
