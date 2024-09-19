@@ -130,7 +130,7 @@ stages:
                       helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
                       helm dep build
                     failOnStderr: true
-                - template: ../helm-microservice-chart-setup/template.yaml
+                - template: templates/helm-microservice-chart-setup/template.yaml@templates
                   parameters:
                     DEPLOY_VERSION: "$(appVersion)"
                     HELM_DEPENDECIES_COMMAND: 'build'
