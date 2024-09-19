@@ -29,9 +29,9 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseurlArc}}/auth/testuser",
+              "raw": "{{baseurlArcInternal}}/auth/testuser",
               "host": [
-                "{{baseurlArc}}"
+                "{{baseurlArcInternal}}"
               ],
               "path": [
                 "auth",
@@ -3129,27 +3129,6 @@
                       "listen": "prerequest",
                       "script": {
                         "exec": [
-                          "var path = pm.environment.get(\"baseurlArc\");\r",
-                          "\r",
-                          "pm.sendRequest({\r",
-                          "        url:  path + '/auth/testuser',\r",
-                          "        method: 'GET',\r",
-                          "        header: {\r",
-                          "            'Accept': 'application/json',\r",
-                          "            'Content-Type': 'application/json'\r",
-                          "        }\r",
-                          "    }, function (err, res) {\r",
-                          "        if (res.code === 200) {\r",
-                          "            let response = res.json();\r",
-                          "            pm.environment.set('token', response.accessToken);\r",
-                          "\r",
-                          "            console.log('Token set: ' + response.accessToken);\r",
-                          "        }\r",
-                          "        else {\r",
-                          "            console.log(res);\r",
-                          "            throw new Error('Login failed with status: ' + res.status + ' (Code: ' + res.code + ')');\r",
-                          "        }\r",
-                          "});\r",
                           ""
                         ],
                         "type": "text/javascript",
@@ -3161,16 +3140,6 @@
                     "followRedirects": true
                   },
                   "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{token}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
                     "method": "GET",
                     "header": [],
                     "url": {
@@ -3210,7 +3179,7 @@
                       "listen": "prerequest",
                       "script": {
                         "exec": [
-                          "var path = pm.environment.get(\"baseurlArc\");\r",
+                          "var path = pm.environment.get(\"baseurlArcInternal\");\r",
                           "\r",
                           "pm.sendRequest({\r",
                           "        url:  path + '/auth/testuser',\r",
