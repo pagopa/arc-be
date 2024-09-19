@@ -107,6 +107,9 @@
                     }
                   ],
                   "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
                     "method": "POST",
                     "header": [
                       {
@@ -443,6 +446,9 @@
                     }
                   ],
                   "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
                     "method": "POST",
                     "header": [
                       {
@@ -837,6 +843,9 @@
                     }
                   ],
                   "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
                     "method": "POST",
                     "header": [
                       {
