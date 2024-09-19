@@ -95,12 +95,20 @@ stages:
                 echo "Building version: $version"
                 echo "##vso[task.setvariable variable=appVersion;isOutput=true]$version"
               failOnStderr: true
+          - task: Bash@3
+            displayName: 'Set namespace variables'
+            name: helmValues
+            inputs:
+              targetType: 'inline'
+              script: |
+                echo "##vso[task.setvariable variable=imageTag;isOutput=true]$(yq '.microservice-chart.image.tag' $(Build.Repository.LocalPath)/${{parameters.VALUE_FILE}} )"
 
   - stage: stage_deploy
     displayName: 'Deploy to ${{ variables.environment }} K8S'
     dependsOn: ['stage_info']
     variables:
       appVersion: $[ stageDependencies.stage_info.job_info.outputs['getAppVersion.appVersion'] ]
+      imageTag: $[ stageDependencies.stage_info.job_info.outputs['helmValues.imageTag'] ]
     condition: and(succeeded(), eq(variables.canDeploy, true))
     jobs:
       - deployment: job_deploy
@@ -150,6 +158,7 @@ stages:
                     KUBERNETES_SERVICE_CONN: ${{ variables.kubernetesServiceConnection }}
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
+                    DEPLOY_VERSION: "$(imageTag)"
                     VALUE_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
                     ARGUMENTS: --timeout 5m0s --debug
   - stage: Test_e2e
