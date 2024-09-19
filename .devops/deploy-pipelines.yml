@@ -101,7 +101,7 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                echo "##vso[task.setvariable variable=imageTag;isOutput=true]$(yq '.microservice-chart.image.tag' $(Build.Repository.LocalPath)/${{parameters.VALUE_FILE}} )"
+                echo "##vso[task.setvariable variable=imageTag;isOutput=true]$(yq '.microservice-chart.image.tag' helm/${{parameters.VALUE_FILE}} )"
           - task: Bash@3
             displayName: 'Print variables'
             inputs:
