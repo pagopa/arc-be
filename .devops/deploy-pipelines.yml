@@ -124,7 +124,7 @@ stages:
                     KUBERNETES_SERVICE_CONN: ${{ variables.kubernetesServiceConnection }}
                     NAMESPACE: '$(deployNamespace)'
                     APP_NAME: ${{ variables.helmReleaseName }}
-                    VALUE_FILE: "helm/values-${{parameters.ENV}}.yaml"
+                    VALUE_FILE: "helm/values-${{ variables.environment }}.yaml"
                     DEPLOY_VERSION: v1
                     ARGUMENTS: --timeout 5m0s --values buildMetadata.yaml
   - stage: Test_e2e
