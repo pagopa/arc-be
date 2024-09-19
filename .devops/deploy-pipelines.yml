@@ -123,6 +123,7 @@ stages:
                 - template: templates/helm-microservice-chart-setup/template.yaml@templates
                   parameters:
                     DEPLOY_VERSION: "$(appVersion)"
+                    VALUES_FILE: "helm/values-${{ lower(variables.environment) }}.yaml"
                 - template: templates/helm-microservice-chart-deploy/template.yaml@templates
                   parameters:
                     DO_DEPLOY: true
