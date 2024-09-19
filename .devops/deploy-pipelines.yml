@@ -160,7 +160,6 @@ stages:
                     failOnStderr: true
                 - task: HelmDeploy@0
                   displayName: Deploy on $(environment)
-                  condition: and(succeeded())
                   inputs:
                     kubernetesServiceEndpoint: ${{ variables.kubernetesServiceConnection }}
                     namespace: '$(deployNamespace)'
