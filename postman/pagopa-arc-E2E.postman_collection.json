@@ -7,45 +7,45 @@
   },
   "item": [
     {
-      "name": "setup",
-      "item": [
-        {
-          "name": "getAccessToken",
-          "event": [
-            {
-              "listen": "test",
-              "script": {
-                "exec": [
-                  "let jsonResponse = pm.response.json();\r",
-                  "pm.globals.set(\"accessToken\", jsonResponse.accessToken);\r",
-                  ""
-                ],
-                "type": "text/javascript",
-                "packages": {}
-              }
-            }
-          ],
-          "request": {
-            "method": "GET",
-            "header": [],
-            "url": {
-              "raw": "{{baseurlArcInternal}}/auth/testuser",
-              "host": [
-                "{{baseurlArcInternal}}"
-              ],
-              "path": [
-                "auth",
-                "testuser"
-              ]
-            }
-          },
-          "response": []
-        }
-      ]
-    },
-    {
       "name": "transactions",
       "item": [
+        {
+          "name": "setup",
+          "item": [
+            {
+              "name": "getAccessToken",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonResponse = pm.response.json();\r",
+                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArcInternal}}/auth/testuser",
+                  "host": [
+                    "{{baseurlArcInternal}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "testuser"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Happy Case",
           "item": [
@@ -1403,6 +1403,43 @@
     {
       "name": "payment-notices",
       "item": [
+        {
+          "name": "setup",
+          "item": [
+            {
+              "name": "getAccessToken",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonResponse = pm.response.json();\r",
+                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArcInternal}}/auth/testuser",
+                  "host": [
+                    "{{baseurlArcInternal}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "testuser"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Happy Case",
           "item": [
@@ -3039,6 +3076,43 @@
     {
       "name": "zendesk assistance",
       "item": [
+        {
+          "name": "setup",
+          "item": [
+            {
+              "name": "getAccessToken",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonResponse = pm.response.json();\r",
+                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArcInternal}}/auth/testuser",
+                  "host": [
+                    "{{baseurlArcInternal}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "testuser"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
         {
           "name": "Happy Case",
           "item": [
