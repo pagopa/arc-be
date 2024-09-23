@@ -167,7 +167,7 @@ class IdpIntegrationTest {
             .andReturn();
 
         Assertions.assertNotNull(secondTimeToken);
-        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
+        Assertions.assertEquals(400, secondTimeToken.getResponse().getStatus());
 
     }
 
@@ -202,7 +202,7 @@ class IdpIntegrationTest {
         Assertions.assertNotNull(token);
         Assertions.assertNotNull(firstTimeToken);
         Assertions.assertNotNull(secondTimeToken);
-        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
+        Assertions.assertEquals(400, secondTimeToken.getResponse().getStatus());
     }
 
     @Test
@@ -220,7 +220,7 @@ class IdpIntegrationTest {
 
         MvcResult tokenResult = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code"))
-            .andExpect(status().is3xxRedirection())
+            .andExpect(status().is(400))
             .andReturn();
         Assertions.assertNotNull(tokenResult);
     }
