@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.config;
 
+import it.gov.pagopa.arc.security.CustomAuthenticationFailureHandler;
 import it.gov.pagopa.arc.security.CustomEntryPoint;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
@@ -49,6 +50,7 @@ public class OAuth2LoginConfig {
                     .baseUri("/token/oneidentity*")
             )
             .successHandler(customAuthenticationSuccessHandler)
+            .failureHandler(new CustomAuthenticationFailureHandler())
         )
         .logout(
             logout ->
@@ -60,6 +62,7 @@ public class OAuth2LoginConfig {
         .exceptionHandling(exceptionHandling -> exceptionHandling
             .authenticationEntryPoint(new CustomEntryPoint())
         )
+
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
         .authorizeHttpRequests(authorize -> authorize
 
