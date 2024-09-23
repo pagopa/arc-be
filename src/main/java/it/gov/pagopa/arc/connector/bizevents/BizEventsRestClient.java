@@ -10,7 +10,7 @@ import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
         name = "biz-events",
-        url = "${rest-client.biz-events.baseUrl}")
+        url = "${rest-client.biz-events.transactions.baseUrl}")
 public interface BizEventsRestClient {
     @GetMapping(
             value = "/transactions",
