@@ -309,13 +309,13 @@ paths:
             type: integer
             format: int32
             default: 10
-        - name: is_payer
+        - name: paidByMe
           in: query
           description: "The field to filter notices by if is payer"
           required: false
           schema:
             type: boolean
-        - name: is_debtor
+        - name: registeredToMe
           in: query
           description: "The field to filter notices by if is debtor"
           required: false
