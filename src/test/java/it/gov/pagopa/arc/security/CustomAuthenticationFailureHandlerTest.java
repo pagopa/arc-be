@@ -15,38 +15,23 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.AuthenticationException;
 
 @ExtendWith(MockitoExtension.class)
-class CustomEntryPointTest {
-
+class CustomAuthenticationFailureHandlerTest {
   @Mock
   private HttpServletRequest request;
 
   @Mock
   private HttpServletResponse response;
-
   @Mock
   private AuthenticationException authException;
 
-  private CustomEntryPoint customEntryPoint;
-
+  private CustomAuthenticationFailureHandler customAuthenticationFailureHandler;
   @Test
-  void givenExceptionDuringRequestValidationThenReturn404() throws IOException {
-    PrintWriter writer = mock(PrintWriter.class);
-    when(response.getWriter()).thenReturn(writer);
-    when(response.getStatus()).thenReturn(404);
-
-    customEntryPoint = new CustomEntryPoint();
-    customEntryPoint.commence(request,response,authException);
-    verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
-  }
-
-  @Test
-  void givenExceptionDuringRequestValidationThenReturn401() throws IOException {
+  void onAuthenticationFailure() throws IOException {
     PrintWriter writer = mock(PrintWriter.class);
     when(response.getWriter()).thenReturn(writer);
 
-    customEntryPoint = new CustomEntryPoint();
-    customEntryPoint.commence(request,response,authException);
-    verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+    customAuthenticationFailureHandler = new CustomAuthenticationFailureHandler();
+    customAuthenticationFailureHandler.onAuthenticationFailure(request,response,authException);
+    verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
-
 }
