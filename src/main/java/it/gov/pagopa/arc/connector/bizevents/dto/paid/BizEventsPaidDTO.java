@@ -1,4 +1,4 @@
-package it.gov.pagopa.arc.connector.bizevents.dto.paids;
+package it.gov.pagopa.arc.connector.bizevents.dto.paid;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonInclude;
