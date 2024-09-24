@@ -286,6 +286,86 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /notices:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve the paged notices list from arc"
+      operationId: getNoticesList
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: x-continuation-token
+          in: header
+          description: "Continuation token"
+          required: false
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: "Number of items for page"
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: is_payer
+          in: query
+          description: "The field to filter notices by if is payer"
+          required: false
+          schema:
+            type: boolean
+        - name: is_debtor
+          in: query
+          description: "The field to filter notices by if is debtor"
+          required: false
+          schema:
+            type: boolean
+        - name: orderBy
+          in: query
+          description: "A value passed to sort by field (Default: TRANSACTION_DATE)"
+          required: false
+          schema:
+            type: string
+            enum: ["TRANSACTION_DATE"]
+            default: "TRANSACTION_DATE"
+        - name: ordering
+          in: query
+          description: "Direction of ordering (Default: DESC)"
+          required: false
+          schema:
+            type: string
+            enum: ["ASC", "DESC"]
+            default: "DESC"
+      responses:
+        '200':
+          description: "Obtained notices list"
+          headers:
+            x-continuation-token:
+              schema:
+                type: string
+              description: "Continuation token"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticesListDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_amount
+                error_description: "Invalid amount format"
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /payment-notices:
     get:
       tags:
@@ -471,6 +551,44 @@ components:
           type: integer
           format: int64
         transactionDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        isCart:
+          type: boolean
+        paidByMe:
+          type: boolean
+        registeredToMe:
+          type: boolean
+    NoticesListDTO:
+      type: object
+      properties:
+        notices:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoticeDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    NoticeDTO:
+      type: object
+      required:
+        - eventId
+        - payeeTaxCode
+        - amount
+        - noticeDate
+        - isCart
+        - paidByMe
+        - registeredToMe
+      properties:
+        eventId:
+          type: string
+        payeeName:
+          type: string
+        payeeTaxCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        noticeDate:
           type: string
           format: zoned-date-time
           example: "2024-05-31T13:07:25Z"
