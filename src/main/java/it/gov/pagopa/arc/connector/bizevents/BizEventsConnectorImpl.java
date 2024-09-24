@@ -22,7 +22,7 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
     private final String apikey;
     private final  BizEventsRestClient bizEventsRestClient;
 
-    public BizEventsConnectorImpl(@Value("${rest-client.biz-events.api-key}") String apikey,
+    public BizEventsConnectorImpl(@Value("${rest-client.biz-events.transactions.api-key}") String apikey,
                                   BizEventsRestClient bizEventsRestClient) {
         this.apikey = apikey;
         this.bizEventsRestClient = bizEventsRestClient;

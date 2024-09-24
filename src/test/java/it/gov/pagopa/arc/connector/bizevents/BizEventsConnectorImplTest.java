@@ -42,8 +42,8 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(
         properties = {
-                "rest-client.biz-events.api-key=x_api_key0",
-                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.baseUrl=bizEventsMock"
+                "rest-client.biz-events.transactions.api-key=x_api_key0",
+                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.transactions.baseUrl=bizEventsMock"
         })
 class BizEventsConnectorImplTest {
 

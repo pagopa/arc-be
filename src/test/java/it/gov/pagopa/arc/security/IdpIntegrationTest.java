@@ -69,7 +69,10 @@ import org.springframework.web.util.UriComponentsBuilder;
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
         "spring.application.name=app",
         "spring.application.version=1",
-        "rest-client.fake-fiscal-code=HSLZYB90L59D030S"
+        "rest-client.biz-events.transactions.api-key=x_api_key0",
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.transactions.baseUrl= bizEventsMock",
+        "rest-client.biz-events.paids.api-key=x_api_key0",
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paids.baseUrl= bizEventsMock"
     })
 @AutoConfigureMockMvc
 class IdpIntegrationTest {
