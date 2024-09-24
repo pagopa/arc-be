@@ -2,10 +2,12 @@
 # https://docs.microsoft.com/azure/devops/pipelines/languages/docker
 
 parameters:
-  - name: 'executeBuild'
-    displayName: 'Launch docker build'
-    type: boolean
-    default: true
+  - name: 'APP_NAME'
+    displayName: 'Application to deploy'
+    type: string
+    values:
+      - arc-be
+
 
 trigger:
   branches:
@@ -24,7 +26,12 @@ trigger:
 pr: none
 
 resources:
-  - repo: self
+  repositories:
+    - repository: templates
+      type: github
+      name: pagopa/azure-pipeline-templates
+      ref: refs/tags/v6.8.0
+      endpoint: 'azure-devops-github-ro'
 
 variables:
 
@@ -65,15 +72,18 @@ variables:
   DOCKER_BUILDKIT: 1
 
 stages:
-  - stage: 'stage_build'
+  - stage: 'stage_info'
     condition: eq(variables.canDeploy, true)
-    displayName: 'Build and publish image to ${{ variables.environment }} registry'
+    displayName: 'Get project app version'
     jobs:
-      - job: job_build
-        displayName: Build
+      - job: job_info
+        workspace:
+          clean: all
+        displayName: Get App Info
         pool:
           vmImage: $(vmImageNameDefault)
         steps:
+          - checkout: self
           - task: Bash@3
             displayName: Get app version
             name: getAppVersion
@@ -81,40 +91,23 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                version=$(cat build.gradle.kts | grep "version = '.*'" | cut -d"'" -f2)
-                echo "Building $version version"
+                version=$(cat build.gradle.kts | grep "version = .*" | cut -d"\"" -f2)
+                echo "Building version: $version"
                 echo "##vso[task.setvariable variable=appVersion;isOutput=true]$version"
               failOnStderr: true
 
-          - task: Docker@2
-            condition: and(succeeded(), ${{ parameters.executeBuild }})
-            displayName: 'Build and publish $(imageRepository) image'
-            inputs:
-              containerRegistry: '$(dockerRegistryServiceConnection)'
-              repository: '$(imageRepository)'
-              command: 'buildAndPush'
-              tags: |
-                latest
-                $(Build.SourceVersion)
-                $(getAppVersion.appVersion)
-
-          - task: PublishPipelineArtifact@1
-            displayName: 'Publish manifests into pipeline artifacts'
-            condition: succeeded()
-            inputs:
-              targetPath: '$(Build.Repository.LocalPath)/helm'
-              artifact: 'helm'
-              publishLocation: 'pipeline'
-
   - stage: stage_deploy
     displayName: 'Deploy to ${{ variables.environment }} K8S'
-    dependsOn: ['stage_build']
+    dependsOn: ['stage_info']
     variables:
-      appVersion: $[ stageDependencies.stage_build.job_build.outputs['getAppVersion.appVersion'] ]
+      appVersion: $[ stageDependencies.stage_info.job_info.outputs['getAppVersion.appVersion'] ]
+      imageTag: $[ stageDependencies.stage_info.job_info.outputs['helmValues.imageTag'] ]
     condition: and(succeeded(), eq(variables.canDeploy, true))
     jobs:
       - deployment: job_deploy
         displayName: 'Deploy'
+        workspace:
+          clean: all
         pool:
           name: $(selfHostedAgentPool)
         environment: '$(environment)'
@@ -122,49 +115,59 @@ stages:
           runOnce:
             deploy:
               steps:
-                - download: none
-                - task: DownloadPipelineArtifact@2
-                  inputs:
-                    buildType: 'current'
-                    artifactName: 'helm'
-                    targetPath: '$(Pipeline.Workspace)/helm'
-                - task: KubectlInstaller@0
+                - checkout: self
                 - task: Bash@3
-                  name: helm_dependency_build
-                  displayName: Helm dependency build
+                  displayName: 'Print variables'
                   inputs:
-                    workingDirectory: '$(Pipeline.Workspace)/helm'
                     targetType: 'inline'
                     script: |
-                      helm repo add pagopa-microservice https://pagopa.github.io/aks-microservice-chart-blueprint
-                      helm dep build
-                    failOnStderr: true
+                      echo "appVersion: $(appVersion)"
                 - bash: |
                     echo 'microservice-chart:
                        podAnnotations:
                           "build/buildNumber": "$(Build.BuildNumber)"
                           "build/appVersion": "$(appVersion)"
                           "build/sourceVersion": "$(Build.SourceVersion)"' > buildMetadata.yaml
+                    cat buildMetadata.yaml
+                    cat helm/values-${{ lower(variables.environment) }}.yaml
                   displayName: Writing build metadata
-
+                - task: Bash@3
+                  name: helm_dependency_build
+                  displayName: Helm dependency build
+                  inputs:
+                    workingDirectory: 'helm'
+                    targetType: 'inline'
+                    script: |
+                      helm repo add microservice-chart https://pagopa.github.io/aks-microservice-chart-blueprint
+                      helm dep build
+                    failOnStderr: true
+                - task: Bash@3
+                  name: helm_template
+                  displayName: Helm template
+                  inputs:
+                    workingDirectory: 'helm'
+                    targetType: 'inline'
+                    script: |
+                      helm template -f values-${{ lower(variables.environment) }}.yaml .
+                    failOnStderr: true
                 - task: HelmDeploy@0
-                  displayName: Helm upgrade
+                  displayName: Deploy on $(environment)
                   inputs:
                     kubernetesServiceEndpoint: ${{ variables.kubernetesServiceConnection }}
                     namespace: '$(deployNamespace)'
-                    command: upgrade
-                    chartType: filepath
-                    chartPath: $(Pipeline.Workspace)/helm
+                    command: 'upgrade'
+                    chartType: "filepath"
+                    chartPath: "helm"
                     chartName: ${{ variables.helmReleaseName }}
                     releaseName: ${{ variables.helmReleaseName }}
-                    valueFile: "$(Pipeline.Workspace)/helm/values-${{ lower(variables.environment) }}.yaml"
+                    valueFile: "helm/values-${{ lower(variables.environment) }}.yaml"
                     install: true
                     waitForExecution: true
-                    arguments: --timeout 5m0s
-                      --values buildMetadata.yaml
+                    arguments: --timeout 5m0s --debug
+
   - stage: Test_e2e
     displayName: 'Test_e2e_on_${{ variables.environment }}'
-    condition: or(eq(variables.environment, 'DEV'), eq(variables.environment, 'UAT'))
+    condition: and(succeeded(), or(eq(variables.environment, 'DEV'), eq(variables.environment, 'UAT')))
     jobs:
       - job: 'Run_Postman_collection_on_${{ variables.environment }}'
         displayName: 'Run Postman collection on ${{ variables.environment }}'
