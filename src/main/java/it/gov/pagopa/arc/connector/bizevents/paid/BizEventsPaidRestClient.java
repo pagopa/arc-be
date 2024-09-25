@@ -7,7 +7,7 @@ import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
 
 @FeignClient(
-        name = "biz-events-paid-notice",
+        name = "biz-events-paid",
         url = "${rest-client.biz-events.paids.baseUrl}")
 public interface BizEventsPaidRestClient {
 
