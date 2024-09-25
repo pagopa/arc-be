@@ -1,6 +1,6 @@
 {
   "info": {
-    "_postman_id": "7b5b3c40-d73a-469f-aaf5-9761133b5559",
+    "_postman_id": "518b0f8e-7507-45e0-abf0-a7c78e1b0f49",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
     "_exporter_id": "9202061"
@@ -3348,7 +3348,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 401\", () => {\r",
+                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 400\", () => {\r",
                           "    pm.response.to.have.status(400);\r",
                           "});"
                         ],
@@ -3457,7 +3457,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 400\", () => {\r",
                           "    pm.response.to.have.status(400);\r",
                           "});"
                         ],
@@ -3867,6 +3867,40 @@
                       "path": [
                         "auth",
                         "user"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "logout bad request",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Logout - Case 3], expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "noauth"
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/logout",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "logout"
                       ]
                     }
                   },
