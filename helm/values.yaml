@@ -31,10 +31,14 @@ microservice-chart:
     create: true
     path: /arcbe/(.*)
 
+  azure:
+    # -- Azure Workload Identity Client ID
+    workloadIdentityClientId: WORK_IDENTITY_CLIENT_ID
+
   serviceAccount:
     create: false
     annotations: {}
-    name: ""
+    name: "cittadini-workload-identity"
 
   podAnnotations: {}
 
