@@ -11,7 +11,12 @@ public class CustomLogoutSuccessHandler implements LogoutSuccessHandler {
 
   @Override
   public void onLogoutSuccess(HttpServletRequest request, HttpServletResponse response, Authentication authentication) {
-    response.setStatus(HttpServletResponse.SC_OK);
+    if( response.getStatus() >= 400 ){
+      response.setStatus( response.getStatus() );
+    } else {
+      response.setStatus(HttpServletResponse.SC_OK);
+    }
+
   }
 
 }
