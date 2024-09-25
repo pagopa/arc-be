@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.security;
 
 import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -31,5 +32,15 @@ class CustomLogoutSuccessHandlerTest {
     logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
 
     verify(response).setStatus(HttpServletResponse.SC_OK);
+  }
+
+  @Test
+  void testOnLogoutBadRequest() {
+    when(response.getStatus()).thenReturn(400);
+
+    logoutSuccessHandler = new CustomLogoutSuccessHandler();
+    logoutSuccessHandler.onLogoutSuccess(request, response, authentication);
+
+    verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 }
