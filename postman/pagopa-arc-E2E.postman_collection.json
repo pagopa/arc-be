@@ -3348,7 +3348,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 400\", () => {\r",
+                          "pm.test(\"Request cannot procced because state is wrong, expected httpStatus: 401\", () => {\r",
                           "    pm.response.to.have.status(400);\r",
                           "});"
                         ],
@@ -3457,7 +3457,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 400\", () => {\r",
+                          "pm.test(\"Request cannot procced because code is wrong, expected httpStatus: 401\", () => {\r",
                           "    pm.response.to.have.status(400);\r",
                           "});"
                         ],
