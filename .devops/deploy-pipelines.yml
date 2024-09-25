@@ -44,7 +44,7 @@ variables:
     containerRegistry: '$(UAT_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(UAT_AGENT_POOL)
     postmanEnvFile: arc_UAT.postman_environment.json
-    clientId: 'UAT_WORK_IDENTITY_CLIENT_ID'
+    clientId: '$(UAT_WORK_IDENTITY_CLIENT_ID)'
 
   ${{ elseif eq(variables['Build.SourceBranch'], 'refs/heads/main') }}:
     environment: 'PROD'
@@ -53,7 +53,7 @@ variables:
     kubernetesServiceConnection: '$(PROD_KUBERNETES_SERVICE_CONN)'
     containerRegistry: '$(PROD_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(PROD_AGENT_POOL)
-    clientId: 'PROD_WORK_IDENTITY_CLIENT_ID'
+    clientId: '$(PROD_WORK_IDENTITY_CLIENT_ID)'
 
   ${{ else }}:
     environment: 'DEV'
@@ -63,7 +63,7 @@ variables:
     containerRegistry: '$(DEV_CONTAINER_REGISTRY_NAME)'
     selfHostedAgentPool: $(DEV_AGENT_POOL)
     postmanEnvFile: arc_DEV.postman_environment.json
-    clientId: 'DEV_WORK_IDENTITY_CLIENT_ID'
+    clientId: '$(DEV_WORK_IDENTITY_CLIENT_ID)'
 
   DOCKER_BUILDKIT: 1
 
