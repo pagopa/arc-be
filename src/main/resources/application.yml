@@ -44,9 +44,9 @@ rest-client:
     transactions:
       baseUrl: \${BIZ_EVENTS_BASE_URL:}
       api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
-    paids:
-      baseUrl: \${BIZ_EVENTS_PAIDS_BASE_URL:}
-      api-key: \${BIZ_EVENTS_PAIDS_SERVICE_API_KEY:}
+    paid-notice:
+      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
+      api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
   pull-payment:
     baseUrl: \${PULL_PAYMENT_BASE_URL:}
     api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}

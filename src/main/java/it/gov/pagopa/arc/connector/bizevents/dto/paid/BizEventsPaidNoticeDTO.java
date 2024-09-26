@@ -7,7 +7,7 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.time.ZonedDateTime;
 
 @Data
 @AllArgsConstructor
@@ -15,6 +15,14 @@ import java.util.List;
 @NoArgsConstructor
 @JsonInclude(JsonInclude.Include.NON_NULL)
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class BizEventsPaidListDTO {
-    private List<BizEventsPaidDTO> paidList;
+public class BizEventsPaidNoticeDTO {
+
+    private String eventId;
+    private String payeeName;
+    private String payeeTaxCode;
+    private Long amount;
+    private ZonedDateTime noticeDate;
+    private Boolean isCart;
+    private Boolean isPayer;
+    private Boolean isDebtor;
 }
