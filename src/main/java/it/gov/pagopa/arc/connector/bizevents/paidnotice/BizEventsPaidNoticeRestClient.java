@@ -1,6 +1,6 @@
-package it.gov.pagopa.arc.connector.bizevents.paid;
+package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
-import it.gov.pagopa.arc.connector.bizevents.dto.paid.BizEventsPaidNoticeListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -19,7 +19,7 @@ public interface BizEventsPaidNoticeRestClient {
     BizEventsPaidNoticeListDTO paidNoticeList(
                                      @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
                                      @RequestHeader(value = "x-fiscal-code") String fiscalCode,
-                                     @RequestHeader(value = "x-continuation-token") String continuationToken,
+                                     @RequestHeader(value = "x-continuation-token", required = false) String continuationToken,
                                      @RequestParam(value = "size", required = false) Integer size,
                                      @RequestParam(value = "is_payer", required = false) Boolean isPayer,
                                      @RequestParam(value = "is_debtor", required = false) Boolean isDebtor,
