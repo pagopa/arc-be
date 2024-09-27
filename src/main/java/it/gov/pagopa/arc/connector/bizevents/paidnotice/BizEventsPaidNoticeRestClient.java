@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
-import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
+import feign.Response;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,7 +16,7 @@ public interface BizEventsPaidNoticeRestClient {
             produces = MediaType.APPLICATION_JSON_VALUE)
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
-    BizEventsPaidNoticeListDTO paidNoticeList(
+    Response paidNoticeList(
                                      @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
                                      @RequestHeader(value = "x-fiscal-code") String fiscalCode,
                                      @RequestHeader(value = "x-continuation-token", required = false) String continuationToken,

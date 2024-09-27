@@ -2,10 +2,15 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Response;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
+import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.utils.MemoryAppender;
+import it.gov.pagopa.arc.utils.TestUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.slf4j.LoggerFactory;
@@ -16,6 +21,9 @@ import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
+import java.io.IOException;
+import java.util.Optional;
+
 import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -24,6 +32,7 @@ import static org.junit.jupiter.api.Assertions.*;
         initializers = WireMockConfig.WireMockInitializer.class,
         classes = {
                 BizEventsPaidNoticeConnectorImpl.class,
+                ObjectMapper.class,
                 FeignConfig.class,
                 BizEventsPaidNoticeRestClient.class,
                 FeignAutoConfiguration.class,
@@ -37,6 +46,8 @@ class BizEventsPaidNoticeConnectorImplTest {
     @Autowired
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
     private MemoryAppender memoryAppender;
+    private ObjectMapper objectMapper;
+    private String continuationToken;
 
     @BeforeEach
     void setUp() {
@@ -46,23 +57,62 @@ class BizEventsPaidNoticeConnectorImplTest {
         logger.setLevel(ch.qos.logback.classic.Level.INFO);
         logger.addAppender(memoryAppender);
         memoryAppender.start();
+        objectMapper =  TestUtils.objectMapper;
     }
 
     @Test
-    void givenHeaderAndParameterWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeList() {
+    void givenHeaderAndParameterWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeList() throws IOException {
+        //given
+
+        //when
+        Response response = bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_OK", "CONTINUATION_TOKEN", 1, true, true, "TRANSACTION_DATE", "DESC");
+
+        Optional<String> optionalContinuationToken = response.headers().get("x-continuation-token").stream().findFirst();
+
+        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
+
+
+        //then
+
+        assertEquals(1, bizEventsPaidNoticeListDTO.getNotices().size());
+        assertEquals("1", bizEventsPaidNoticeListDTO.getNotices().get(0).getEventId());
+        assertEquals("Comune di Milano", bizEventsPaidNoticeListDTO.getNotices().get(0).getPayeeName());
+        assertEquals("MI_XXX", bizEventsPaidNoticeListDTO.getNotices().get(0).getPayeeTaxCode());
+        assertEquals("180,00", bizEventsPaidNoticeListDTO.getNotices().get(0).getAmount());
+        assertEquals("2024-03-27T13:07:25Z", bizEventsPaidNoticeListDTO.getNotices().get(0).getNoticeDate());
+        assertFalse(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsCart());
+        assertTrue(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsPayer());
+        assertTrue(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsDebtor());
+
+        optionalContinuationToken.ifPresent(token -> {
+            continuationToken = token;
+            assertEquals("continuation-token", continuationToken);
+        });
+
+
+    }
+
+    @Test
+    void givenHeaderAndParameterWhenNotFoundThenReturnEmptyPaidNoticeList() throws IOException {
         //given
         //when
-        BizEventsPaidNoticeListDTO paidNoticeList = bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_OK", "CONTINUATION_TOKEN", 1,null,null,"TRANSACTION_DATE","DESC");
-        //then
-        assertEquals(1, paidNoticeList.getPaidNoticeList().size());
-        assertEquals("1", paidNoticeList.getPaidNoticeList().get(0).getEventId());
-        assertEquals("Comune di Milano", paidNoticeList.getPaidNoticeList().get(0).getPayeeName());
-        assertEquals("MI_XXX", paidNoticeList.getPaidNoticeList().get(0).getPayeeTaxCode());
-        assertEquals("180,00", paidNoticeList.getPaidNoticeList().get(0).getAmount());
-        assertEquals("2024-03-27T13:07:25Z", paidNoticeList.getPaidNoticeList().get(0).getNoticeDate());
-        assertFalse(paidNoticeList.getPaidNoticeList().get(0).getIsCart());
-        assertTrue(paidNoticeList.getPaidNoticeList().get(0).getIsPayer());
-        assertTrue(paidNoticeList.getPaidNoticeList().get(0).getIsDebtor());
+        Response response =  bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_NOT_FOUND", "CONTINUATION_TOKEN", 2, true, true, "TRANSACTION_DATE", "DESC");
+        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
 
+        //then
+        Assertions.assertEquals(0, bizEventsPaidNoticeListDTO.getNotices().size());
+        System.out.println(memoryAppender.getLoggedEvents().get(0).getFormattedMessage());
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
+                .contains(("A class feign.FeignException$NotFound occurred while handling request getPaidNoticeList from biz-Events: HttpStatus 404"))
+        );
+    }
+
+    @Test
+    void givenHeaderAndParameterWhenErrorThenThrowBizEventsInvocationException() {
+        //When
+        //Then
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_ERROR", "CONTINUATION_TOKEN", 2, true, true, "TRANSACTION_DATE", "DESC"));
+        Assertions.assertEquals("An error occurred handling request from biz-Events",exception.getMessage());
     }
 }
