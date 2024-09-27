@@ -29,6 +29,17 @@ class CustomEntryPointTest {
   private CustomEntryPoint customEntryPoint;
 
   @Test
+  void givenExceptionDuringRequestValidationThenReturn404() throws IOException {
+    PrintWriter writer = mock(PrintWriter.class);
+    when(response.getWriter()).thenReturn(writer);
+    when(response.getStatus()).thenReturn(404);
+
+    customEntryPoint = new CustomEntryPoint();
+    customEntryPoint.commence(request,response,authException);
+    verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
+  }
+
+  @Test
   void givenExceptionDuringRequestValidationThenReturn401() throws IOException {
     PrintWriter writer = mock(PrintWriter.class);
     when(response.getWriter()).thenReturn(writer);
@@ -36,6 +47,17 @@ class CustomEntryPointTest {
     customEntryPoint = new CustomEntryPoint();
     customEntryPoint.commence(request,response,authException);
     verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+  }
+
+  @Test
+  void givenExceptionDuringRequestValidationThenReturn400() throws IOException {
+    PrintWriter writer = mock(PrintWriter.class);
+    when(response.getWriter()).thenReturn(writer);
+    when(response.getStatus()).thenReturn(400);
+
+    customEntryPoint = new CustomEntryPoint();
+    customEntryPoint.commence(request,response,authException);
+    verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 
 }

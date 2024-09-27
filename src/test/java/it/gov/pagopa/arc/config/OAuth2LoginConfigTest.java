@@ -1,6 +1,5 @@
 package it.gov.pagopa.arc.config;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.redirectedUrl;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
@@ -54,15 +53,13 @@ class OAuth2LoginConfigTest {
     @Test
     void givenURLWithoutCodeAndStateWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/token/oneidentity"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login?error"));
+                .andExpect(status().is(400));
     }
 
     @Test
     void givenURLWhenWithoutAccessTokenThenRedirectToLogin() throws Exception {
         mockMvc.perform(MockMvcRequestBuilders.get("/token/oneidentity?code=fakeCode&state=fakeState"))
-                .andExpect(status().is3xxRedirection())
-                .andExpect(redirectedUrl("/login?error"));
+                .andExpect(status().is(400));
     }
 
     @Test

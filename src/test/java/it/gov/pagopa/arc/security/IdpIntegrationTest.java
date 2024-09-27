@@ -69,7 +69,10 @@ import org.springframework.web.util.UriComponentsBuilder;
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
         "spring.application.name=app",
         "spring.application.version=1",
-        "rest-client.fake-fiscal-code=HSLZYB90L59D030S"
+        "rest-client.biz-events.transactions.api-key=x_api_key0",
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.transactions.baseUrl= bizEventsMock",
+        "rest-client.biz-events.paids.api-key=x_api_key0",
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paids.baseUrl= bizEventsMock"
     })
 @AutoConfigureMockMvc
 class IdpIntegrationTest {
@@ -167,7 +170,7 @@ class IdpIntegrationTest {
             .andReturn();
 
         Assertions.assertNotNull(secondTimeToken);
-        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
+        Assertions.assertEquals(400, secondTimeToken.getResponse().getStatus());
 
     }
 
@@ -202,7 +205,7 @@ class IdpIntegrationTest {
         Assertions.assertNotNull(token);
         Assertions.assertNotNull(firstTimeToken);
         Assertions.assertNotNull(secondTimeToken);
-        Assertions.assertEquals(302, secondTimeToken.getResponse().getStatus());
+        Assertions.assertEquals(400, secondTimeToken.getResponse().getStatus());
     }
 
     @Test
@@ -220,7 +223,7 @@ class IdpIntegrationTest {
 
         MvcResult tokenResult = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code"))
-            .andExpect(status().is3xxRedirection())
+            .andExpect(status().is(400))
             .andReturn();
         Assertions.assertNotNull(tokenResult);
     }

@@ -27,6 +27,8 @@ public class CustomLogoutHandler implements LogoutHandler {
       String token = authorization.replace("Bearer ", "");
       tokenStoreService.delete(token);
       SecurityContextHolder.clearContext();
+    } else {
+      response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
     }
 
   }
