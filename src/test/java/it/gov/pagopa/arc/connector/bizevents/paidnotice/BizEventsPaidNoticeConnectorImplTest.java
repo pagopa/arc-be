@@ -2,13 +2,13 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.Request;
 import feign.Response;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import it.gov.pagopa.arc.utils.TestUtils;
@@ -25,11 +25,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.Collections;
-import java.util.Optional;
 
 import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
@@ -52,7 +53,7 @@ class BizEventsPaidNoticeConnectorImplTest {
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
     private MemoryAppender memoryAppender;
     private ObjectMapper objectMapper;
-    private String continuationToken;
+
 
     @BeforeEach
     void setUp() {
@@ -66,69 +67,112 @@ class BizEventsPaidNoticeConnectorImplTest {
     }
 
     @Test
-    void givenHeaderAndParameterWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeList() throws IOException {
+    void givenHeaderAndParameterWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeList() {
         //given
-
         //when
-        Response response = bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_OK", "CONTINUATION_TOKEN", 1, true, true, "TRANSACTION_DATE", "DESC");
-
-        Optional<String> optionalContinuationToken = response.headers().get("x-continuation-token").stream().findFirst();
-
-        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
-
+        BizEventsPaidResponseDTO paidResponseDTO = bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_OK", "CONTINUATION_TOKEN", 1, true, true, "TRANSACTION_DATE", "DESC");
 
         //then
 
-        assertEquals(1, bizEventsPaidNoticeListDTO.getNotices().size());
-        assertEquals("1", bizEventsPaidNoticeListDTO.getNotices().get(0).getEventId());
-        assertEquals("Comune di Milano", bizEventsPaidNoticeListDTO.getNotices().get(0).getPayeeName());
-        assertEquals("MI_XXX", bizEventsPaidNoticeListDTO.getNotices().get(0).getPayeeTaxCode());
-        assertEquals("180,00", bizEventsPaidNoticeListDTO.getNotices().get(0).getAmount());
-        assertEquals("2024-03-27T13:07:25Z", bizEventsPaidNoticeListDTO.getNotices().get(0).getNoticeDate());
-        assertFalse(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsCart());
-        assertTrue(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsPayer());
-        assertTrue(bizEventsPaidNoticeListDTO.getNotices().get(0).getIsDebtor());
-
-        optionalContinuationToken.ifPresent(token -> {
-            continuationToken = token;
-            assertEquals("continuation-token", continuationToken);
-        });
-
+        assertEquals(1, paidResponseDTO.getNotices().size());
+        assertEquals("1", paidResponseDTO.getNotices().get(0).getEventId());
+        assertEquals("Comune di Milano", paidResponseDTO.getNotices().get(0).getPayeeName());
+        assertEquals("MI_XXX", paidResponseDTO.getNotices().get(0).getPayeeTaxCode());
+        assertEquals("180,00", paidResponseDTO.getNotices().get(0).getAmount());
+        assertEquals("2024-03-27T13:07:25Z", paidResponseDTO.getNotices().get(0).getNoticeDate());
+        assertFalse(paidResponseDTO.getNotices().get(0).getIsCart());
+        assertTrue(paidResponseDTO.getNotices().get(0).getIsPayer());
+        assertTrue(paidResponseDTO.getNotices().get(0).getIsDebtor());
+        assertEquals("continuation-token", paidResponseDTO.getContinuationToken());
 
     }
 
     @Test
-    void givenHeaderAndParameterWhenNotFoundThenReturnEmptyPaidNoticeList() throws IOException {
+    void givenHeaderAndParameterWhenNotFoundThenReturnEmptyPaidNoticeList() {
         //given
         //when
-        Response response =  bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_NOT_FOUND", "CONTINUATION_TOKEN", 2, true, true, "TRANSACTION_DATE", "DESC");
-        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
+        BizEventsPaidResponseDTO paidResponseDTO = bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_NOT_FOUND", "CONTINUATION_TOKEN", 2, true, true, "TRANSACTION_DATE", "DESC");
 
         //then
-        Assertions.assertEquals(0, bizEventsPaidNoticeListDTO.getNotices().size());
+        Assertions.assertEquals(0, paidResponseDTO.getNotices().size());
         System.out.println(memoryAppender.getLoggedEvents().get(0).getFormattedMessage());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
                 .contains(("A class feign.FeignException$NotFound occurred while handling request getPaidNoticeList from biz-Events: HttpStatus 404"))
         );
+        assertNull(paidResponseDTO.getContinuationToken());
     }
 
     @Test
-    void givenHeaderAndParameterWhenSerializeThenThrow() throws IOException {
-        //given
-        objectMapper = Mockito.mock(ObjectMapper.class);
+    void givenHeaderAndParameterWhenResponseBodyNullThenThrow() {
+        // given
         BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient = Mockito.mock(BizEventsPaidNoticeRestClient.class);
-        Request originalRequest = Request.create(Request.HttpMethod.valueOf("GET"), "http://dummy-url", Collections.emptyMap(), null, null, null);
-        doThrow(new JsonProcessingException("Serialization error") {}).when(objectMapper).writeValueAsBytes(Mockito.any());
+        Request originalRequest = Request.create(Request.HttpMethod.GET, "http://dummy-url", Collections.emptyMap(), null, null, null);
 
-        Mockito.when(bizEventsPaidNoticeRestClient.paidNoticeList("","fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering")).thenReturn(Response.builder().request(originalRequest).status(404).build());
-        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("",bizEventsPaidNoticeRestClient,objectMapper);
-        //when
-        //then
-        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class, () ->  bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering"));
+        Response mockResponse = Response.builder().status(200).request(originalRequest).build();
+        Mockito.when(bizEventsPaidNoticeRestClient.paidNoticeList(   anyString(),
+                anyString(),
+                anyString(),
+                anyInt(),
+                anyBoolean(),
+                anyBoolean(),
+                anyString(),
+                anyString()))
+                .thenReturn(mockResponse);
 
-        assertEquals("Error during response serialization", exception.getMessage());
+        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, objectMapper);
 
+        // when & then
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class, () ->
+                bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering")
+        );
+
+        assertEquals("Error during processing: response body is null", exception.getMessage());
+        Mockito.verify(bizEventsPaidNoticeRestClient).paidNoticeList("", "fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering");
     }
+
+    @Test
+    void givenHeaderAndParameterWhenThrowIOExceptionThenThrow() throws IOException {
+        // given
+        BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient = Mockito.mock(BizEventsPaidNoticeRestClient.class);
+        Request originalRequest = Request.create(Request.HttpMethod.GET, "http://dummy-url", Collections.emptyMap(), null, null, null);
+
+        ObjectMapper mockObjectMapper = Mockito.mock(ObjectMapper.class);
+        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("", bizEventsPaidNoticeRestClient, mockObjectMapper);
+
+        doThrow(new IOException("Deserialization error"))
+                .when(mockObjectMapper)
+                .readValue(any(InputStream.class), eq(BizEventsPaidNoticeListDTO.class));
+
+        Response.Body mockBody = Mockito.mock(Response.Body.class);
+        InputStream mockInputStream = Mockito.mock(InputStream.class);
+
+        Mockito.when(mockBody.asInputStream()).thenReturn(mockInputStream);
+
+        Response mockResponse = Response.builder()
+                .status(200)
+                .request(originalRequest)
+                .body(mockBody)
+                .build();
+
+        Mockito.when(bizEventsPaidNoticeRestClient.paidNoticeList(
+                        anyString(),
+                        anyString(),
+                        anyString(),
+                        anyInt(),
+                        anyBoolean(),
+                        anyBoolean(),
+                        anyString(),
+                        anyString()))
+                .thenReturn(mockResponse);
+
+        // when & then
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class, () ->
+                bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering")
+        );
+
+        assertEquals("Error reading or deserializing the response body", exception.getMessage());
+    }
+
 
 
     @Test
