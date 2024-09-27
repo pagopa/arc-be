@@ -6,7 +6,6 @@ import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
 import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
-import it.gov.pagopa.arc.utils.Utilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -46,7 +45,6 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
                         e.status(),
                         e.getMessage());
             }else {
-                Utilities.logExceptionDetails(e);
                 throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
             }
         }
@@ -62,7 +60,6 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             if(e.status() == HttpStatus.NOT_FOUND.value()){
                 throw new BizEventsTransactionNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
             }
-            Utilities.logExceptionDetails(e);
             throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
         return bizEventsTransactionDetailsDTO;
@@ -77,7 +74,6 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             if (e.status() == HttpStatus.NOT_FOUND.value()){
                 throw  new BizEventsReceiptNotFoundException("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [%s] for the current user".formatted(transactionId));
             }
-            Utilities.logExceptionDetails(e);
             throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
         return transactionReceipt;
