@@ -67,6 +67,8 @@ variables:
 
   DOCKER_BUILDKIT: 1
 
+  DOCKER_BUILDKIT: 1
+
 stages:
   - stage: 'stage_build'
     condition: eq(variables.canDeploy, true)
