@@ -2,7 +2,9 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
 import ch.qos.logback.classic.Logger;
 import ch.qos.logback.classic.LoggerContext;
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import feign.Request;
 import feign.Response;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
@@ -13,6 +15,7 @@ import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mockito;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
@@ -22,10 +25,12 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
+import java.util.Collections;
 import java.util.Optional;
 
 import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
+import static org.mockito.Mockito.doThrow;
 
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.NONE)
 @ContextConfiguration(
@@ -106,6 +111,25 @@ class BizEventsPaidNoticeConnectorImplTest {
                 .contains(("A class feign.FeignException$NotFound occurred while handling request getPaidNoticeList from biz-Events: HttpStatus 404"))
         );
     }
+
+    @Test
+    void givenHeaderAndParameterWhenSerializeThenThrow() throws IOException {
+        //given
+        objectMapper = Mockito.mock(ObjectMapper.class);
+        BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient = Mockito.mock(BizEventsPaidNoticeRestClient.class);
+        Request originalRequest = Request.create(Request.HttpMethod.valueOf("GET"), "http://dummy-url", Collections.emptyMap(), null, null, null);
+        doThrow(new JsonProcessingException("Serialization error") {}).when(objectMapper).writeValueAsBytes(Mockito.any());
+
+        Mockito.when(bizEventsPaidNoticeRestClient.paidNoticeList("","fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering")).thenReturn(Response.builder().request(originalRequest).status(404).build());
+        bizEventsPaidNoticeConnector = new BizEventsPaidNoticeConnectorImpl("",bizEventsPaidNoticeRestClient,objectMapper);
+        //when
+        //then
+        BizEventsInvocationException exception = assertThrows(BizEventsInvocationException.class, () ->  bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", "continuationToken", 1, false, false, "orderBy", "ordering"));
+
+        assertEquals("Error during response serialization", exception.getMessage());
+
+    }
+
 
     @Test
     void givenHeaderAndParameterWhenErrorThenThrowBizEventsInvocationException() {
