@@ -46,15 +46,6 @@ public class Utilities {
     }
 
     /**
-     * To log the full error stack
-     *
-     * @param ex exception to log
-     */
-    public static void logExceptionDetails(RuntimeException ex){
-        log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
-    }
-
-    /**
      * To extract name value from email
      */
     public static String extractNameFromEmailAssistanceToken(String userMail){
