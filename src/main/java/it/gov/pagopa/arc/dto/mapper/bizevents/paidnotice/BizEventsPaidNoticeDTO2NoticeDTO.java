@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
-import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
 import it.gov.pagopa.arc.dto.mapper.MapperUtilities;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import org.mapstruct.Mapper;
@@ -19,8 +18,8 @@ public interface BizEventsPaidNoticeDTO2NoticeDTO {
     @Mapping(source = "isDebtor", target = "registeredToMe")
     NoticeDTO toNoticeDTO(BizEventsPaidNoticeDTO bizEventsPaidNoticeDTO);
 
-    default List<NoticeDTO> toNoticeDTOList(BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO){
-        return bizEventsPaidNoticeListDTO.getNotices().stream().map(this::toNoticeDTO).toList();
+    default List<NoticeDTO> toNoticeDTOList(List<BizEventsPaidNoticeDTO> bizEventsPaidNoticeDTOList){
+        return bizEventsPaidNoticeDTOList.stream().map(this::toNoticeDTO).toList();
     }
 
 }

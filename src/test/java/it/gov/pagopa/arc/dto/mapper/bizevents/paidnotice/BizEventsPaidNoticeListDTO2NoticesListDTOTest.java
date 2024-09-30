@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
@@ -27,7 +28,7 @@ class BizEventsPaidNoticeListDTO2NoticesListDTOTest {
         commonAssert(noticeDTO, noticesListDTO.getNotices().get(0));
         commonAssert(noticeDTO2, noticesListDTO.getNotices().get(1));
 
-
+        TestUtils.assertAllFieldsPopulated(noticesListDTO, List.of());
     }
 
     private static void commonAssert(NoticeDTO noticeDTO, NoticeDTO mappedDTO) {

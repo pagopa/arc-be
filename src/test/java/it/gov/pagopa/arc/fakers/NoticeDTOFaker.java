@@ -1,8 +1,10 @@
 package it.gov.pagopa.arc.fakers;
 
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 
 import java.time.ZonedDateTime;
+import java.util.List;
 
 public class NoticeDTOFaker {
     public static NoticeDTO mockInstance(Integer bias, boolean isCart){
@@ -10,26 +12,32 @@ public class NoticeDTOFaker {
     }
     public static NoticeDTO.NoticeDTOBuilder mockInstanceBuilder(Integer bias, boolean isCart) {
         if (!isCart) {
-            return NoticeDTO
+            NoticeDTO.NoticeDTOBuilder noticeDTOBuilder = NoticeDTO
                     .builder()
-                    .eventId("EVENT_ID%d" .formatted(bias))
-                    .payeeName("PAYEE_NAME%d" .formatted(bias))
-                    .payeeTaxCode("PAYEE_TAX_CODE%d" .formatted(bias))
+                    .eventId("EVENT_ID%d".formatted(bias))
+                    .payeeName("PAYEE_NAME%d".formatted(bias))
+                    .payeeTaxCode("PAYEE_TAX_CODE%d".formatted(bias))
                     .amount(268152L)
                     .noticeDate(ZonedDateTime.parse("2024-05-31T13:07:25Z"))
                     .isCart(false)
                     .paidByMe(true)
                     .registeredToMe(true);
+
+            TestUtils.assertAllFieldsPopulated(noticeDTOBuilder,List.of());
+            return noticeDTOBuilder;
         } else {
-            return NoticeDTO
+            NoticeDTO.NoticeDTOBuilder noticeDTOBuilder = NoticeDTO
                     .builder()
-                    .eventId("EVENT_ID%d" .formatted(bias))
+                    .eventId("EVENT_ID%d".formatted(bias))
                     .payeeName("Pagamento Multiplo")
                     .payeeTaxCode("")
                     .noticeDate(ZonedDateTime.parse("2024-05-31T13:07:25Z"))
                     .isCart(true)
                     .paidByMe(true)
                     .registeredToMe(true);
+
+            TestUtils.assertAllFieldsPopulated(noticeDTOBuilder, List.of("amount"));
+            return noticeDTOBuilder;
         }
     }
 }

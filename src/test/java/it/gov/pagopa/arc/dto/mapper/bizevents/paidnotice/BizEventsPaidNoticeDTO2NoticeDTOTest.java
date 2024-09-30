@@ -1,7 +1,6 @@
 package it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
-import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
 import it.gov.pagopa.arc.dto.mapper.MapperUtilities;
 import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
@@ -10,7 +9,8 @@ import org.mapstruct.factory.Mappers;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
 
 class BizEventsPaidNoticeDTO2NoticeDTOTest {
     private final BizEventsPaidNoticeDTO2NoticeDTO mapper = Mappers.getMapper(BizEventsPaidNoticeDTO2NoticeDTO.class);
@@ -61,9 +61,8 @@ class BizEventsPaidNoticeDTO2NoticeDTOTest {
         //given
         BizEventsPaidNoticeDTO bizEventsPaidNoticeDTO = BizEventsPaidNoticeDTOFaker.mockInstance(1, false);
         BizEventsPaidNoticeDTO bizEventsPaidNoticeDTO2 = BizEventsPaidNoticeDTOFaker.mockInstance(2, false);
-        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = BizEventsPaidNoticeListDTO.builder().notices(List.of(bizEventsPaidNoticeDTO, bizEventsPaidNoticeDTO2)).build();
         //when
-        List<NoticeDTO> noticeDTOList = mapper.toNoticeDTOList(bizEventsPaidNoticeListDTO);
+        List<NoticeDTO> noticeDTOList = mapper.toNoticeDTOList(List.of(bizEventsPaidNoticeDTO, bizEventsPaidNoticeDTO2));
         //then
         commonAssert(bizEventsPaidNoticeDTO, noticeDTOList.get(0));
         commonAssert(bizEventsPaidNoticeDTO2, noticeDTOList.get(1));
@@ -73,7 +72,6 @@ class BizEventsPaidNoticeDTO2NoticeDTOTest {
     }
 
     private static void commonAssert(BizEventsPaidNoticeDTO bizEventsPaidNoticeDTO, NoticeDTO dtoMapped) {
-        assertAll( () -> {
             assertEquals(bizEventsPaidNoticeDTO.getEventId(), dtoMapped.getEventId());
             assertEquals(bizEventsPaidNoticeDTO.getPayeeName(), dtoMapped.getPayeeName());
             assertEquals(bizEventsPaidNoticeDTO.getPayeeTaxCode(), dtoMapped.getPayeeTaxCode());
@@ -81,6 +79,5 @@ class BizEventsPaidNoticeDTO2NoticeDTOTest {
             assertEquals(bizEventsPaidNoticeDTO.getIsCart(), dtoMapped.getIsCart());
             assertEquals(bizEventsPaidNoticeDTO.getIsPayer(), dtoMapped.getPaidByMe());
             assertEquals(bizEventsPaidNoticeDTO.getIsDebtor(), dtoMapped.getRegisteredToMe());
-        });
     }
 }
