@@ -11,7 +11,8 @@ import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.time.Instant;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.UUID;
 import org.awaitility.Awaitility;
 import org.awaitility.core.ConditionTimeoutException;
@@ -62,21 +63,21 @@ public class TestUtils {
         return keyGen.generateKeyPair();
     }
 
-    public static void assertAllFieldsPopulated(Object dto, List<String> excludedFieldList) {
+    public static void assertNotNullFields(Object dto, String... excludedFields) {
         Class<?> clazz = dto.getClass();
+        Set<String> excludedFieldsSet = new HashSet<>(Arrays.asList(excludedFields));
 
         Arrays.stream(clazz.getDeclaredFields())
                 .forEach(field -> {
                     try {
-
-                        if (!excludedFieldList.contains(field.getName())) {
+                        if (!excludedFieldsSet.contains(field.getName())) {
                             field.setAccessible(true);
                             Object value = field.get(dto);
 
-                            Assertions.assertNotNull(value, "Il campo " + field.getName() + " non dovrebbe essere null");
+                            Assertions.assertNotNull(value, "The field " + field.getName() + " must not be null");
                         }
                     } catch (IllegalAccessException e) {
-                        throw new RuntimeException("Errore di accesso al campo: " + field.getName(), e);
+                        throw new RuntimeException("Field access error: " + field.getName(), e);
                     }
                 });
     }

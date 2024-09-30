@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class BizEventsTransactionDTO2TransactionDTOTest {
+class BizEventsTransactionDTO2TransactionDTOMapperTest {
 
-    private BizEventsTransactionDTO2TransactionDTO transactionDTOMapper;
+    private BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapper;
 
     @BeforeEach
     void setUp() {
-        transactionDTOMapper = new BizEventsTransactionDTO2TransactionDTO();
+        transactionDTOMapper = new BizEventsTransactionDTO2TransactionDTOMapper();
     }
 
     @Test

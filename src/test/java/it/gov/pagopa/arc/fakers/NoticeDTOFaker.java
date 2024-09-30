@@ -4,7 +4,6 @@ import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 
 import java.time.ZonedDateTime;
-import java.util.List;
 
 public class NoticeDTOFaker {
     public static NoticeDTO mockInstance(Integer bias, boolean isCart){
@@ -23,7 +22,7 @@ public class NoticeDTOFaker {
                     .paidByMe(true)
                     .registeredToMe(true);
 
-            TestUtils.assertAllFieldsPopulated(noticeDTOBuilder,List.of());
+            TestUtils.assertNotNullFields(noticeDTOBuilder);
             return noticeDTOBuilder;
         } else {
             NoticeDTO.NoticeDTOBuilder noticeDTOBuilder = NoticeDTO
@@ -36,7 +35,7 @@ public class NoticeDTOFaker {
                     .paidByMe(true)
                     .registeredToMe(true);
 
-            TestUtils.assertAllFieldsPopulated(noticeDTOBuilder, List.of("amount"));
+            TestUtils.assertNotNullFields(noticeDTOBuilder);
             return noticeDTOBuilder;
         }
     }

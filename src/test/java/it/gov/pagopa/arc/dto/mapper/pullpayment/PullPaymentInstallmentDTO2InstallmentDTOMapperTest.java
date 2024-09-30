@@ -19,13 +19,13 @@ import java.time.LocalDateTime;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class PullPaymentInstallmentDTO2InstallmentDTOTest {
+class PullPaymentInstallmentDTO2InstallmentDTOMapperTest {
 
     @Mock
-    private PullPaymentOptionStatus2PaymentOptionStatus pullPaymentOptionStatus2PaymentOptionStatusMock;
+    private PullPaymentOptionStatus2PaymentOptionStatusMapper pullPaymentOptionStatus2PaymentOptionStatusMapperMock;
 
     @InjectMocks
-    private final PullPaymentInstallmentDTO2InstallmentDTO mapper = Mappers.getMapper(PullPaymentInstallmentDTO2InstallmentDTO.class);
+    private final PullPaymentInstallmentDTO2InstallmentDTOMapper mapper = Mappers.getMapper(PullPaymentInstallmentDTO2InstallmentDTOMapper.class);
 
     @Test
     void givenPullPaymentInstallmentDTOWhenCallMapperThenReturnInstallmentDTO() {
@@ -33,7 +33,7 @@ class PullPaymentInstallmentDTO2InstallmentDTOTest {
         PullPaymentOptionStatus poUnpaid = PullPaymentOptionStatus.PO_UNPAID;
         PaymentOptionStatus unpaid = PaymentOptionStatus.UNPAID;
 
-        Mockito.when(pullPaymentOptionStatus2PaymentOptionStatusMock.toPaymentOptionStatus(poUnpaid)).thenReturn(unpaid);
+        Mockito.when(pullPaymentOptionStatus2PaymentOptionStatusMapperMock.toPaymentOptionStatus(poUnpaid)).thenReturn(unpaid);
 
         PullPaymentInstallmentDTO pullPaymentInstallmentDTO = PullPaymentInstallmentDTOFaker.mockInstance();
 
@@ -56,7 +56,7 @@ class PullPaymentInstallmentDTO2InstallmentDTOTest {
             Assertions.assertEquals(unpaid, result.getStatus());
             Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14"), result.getLastUpdatedDate());
 
-            Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMock).toPaymentOptionStatus(any());
+            Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMapperMock).toPaymentOptionStatus(any());
         });
     }
 }

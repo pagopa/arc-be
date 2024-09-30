@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.model.generated.UserDetailDTO;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizEventsUserDetail2UserDetailDTO {
+public class BizEventsUserDetail2UserDetailDTOMapper {
 
     public UserDetailDTO mapUserDetail(BizEventsUserDetailDTO bizEventsUserDetailDTO){
         return UserDetailDTO.builder()

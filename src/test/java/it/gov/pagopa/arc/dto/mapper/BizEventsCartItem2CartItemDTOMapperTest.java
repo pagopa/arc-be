@@ -18,16 +18,16 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class BizEventsCartItem2CartItemDTOTest {
+class BizEventsCartItem2CartItemDTOMapperTest {
 
-    private BizEventsCartItem2CartItemDTO cartItemMapper;
+    private BizEventsCartItem2CartItemDTOMapper cartItemMapper;
 
     @Mock
-    private BizEventsUserDetail2UserDetailDTO userDetailsMapperMock;
+    private BizEventsUserDetail2UserDetailDTOMapper userDetailsMapperMock;
 
     @BeforeEach
     void setUp() {
-        cartItemMapper = new BizEventsCartItem2CartItemDTO(userDetailsMapperMock);
+        cartItemMapper = new BizEventsCartItem2CartItemDTOMapper(userDetailsMapperMock);
     }
 
     @Test

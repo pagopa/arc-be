@@ -12,9 +12,9 @@ import org.mapstruct.factory.Mappers;
 import java.util.List;
 
 
-class BizEventsPaidResponseDTO2NoticesListResponseDTOTest {
+class BizEventsPaidResponseDTO2NoticesListResponseDTOMapperTest {
 
-    BizEventsPaidResponseDTO2NoticesListResponseDTO mapper = Mappers.getMapper(BizEventsPaidResponseDTO2NoticesListResponseDTO.class);
+    BizEventsPaidResponseDTO2NoticesListResponseDTOMapper mapper = Mappers.getMapper(BizEventsPaidResponseDTO2NoticesListResponseDTOMapper.class);
 
     @Test
     void givenToNoticesListResponseDTOWhenThen() {
@@ -27,7 +27,7 @@ class BizEventsPaidResponseDTO2NoticesListResponseDTOTest {
         //when
         NoticesListResponseDTO noticesListResponseDTO = mapper.toNoticesListResponseDTO(noticesListDTO, "continuationToken");
         //then
-        TestUtils.assertAllFieldsPopulated(noticesListResponseDTO, List.of());
+        TestUtils.assertNotNullFields(noticesListResponseDTO);
         NoticeDTO noticeDTOResponse = noticesListResponseDTO.getNoticesListDTO().getNotices().get(0);
         NoticeDTO noticeDTOResponse2 = noticesListResponseDTO.getNoticesListDTO().getNotices().get(1);
 

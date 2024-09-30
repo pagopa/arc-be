@@ -11,13 +11,13 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertAll;
 
-class BizEventsTransactionsListDTO2TransactionsListDTOTest {
-    private BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapper;
+class BizEventsTransactionsListDTO2TransactionsListDTOMapperTest {
+    private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper;
 
 
     @BeforeEach
     void setUp() {
-        transactionsListDTOMapper = new BizEventsTransactionsListDTO2TransactionsListDTO();
+        transactionsListDTOMapper = new BizEventsTransactionsListDTO2TransactionsListDTOMapper();
     }
     @Test
     void givenApplyWhenBizEventsTransactionsListDTOThenReturnMappedDTO() {

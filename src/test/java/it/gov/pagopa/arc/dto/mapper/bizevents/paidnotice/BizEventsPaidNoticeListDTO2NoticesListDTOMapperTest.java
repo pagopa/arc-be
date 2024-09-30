@@ -11,9 +11,9 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
-class BizEventsPaidNoticeListDTO2NoticesListDTOTest {
+class BizEventsPaidNoticeListDTO2NoticesListDTOMapperTest {
 
-    BizEventsPaidNoticeListDTO2NoticesListDTO mapper = Mappers.getMapper(BizEventsPaidNoticeListDTO2NoticesListDTO.class);
+    BizEventsPaidNoticeListDTO2NoticesListDTOMapper mapper = Mappers.getMapper(BizEventsPaidNoticeListDTO2NoticesListDTOMapper.class);
     @Test
     void givenListOfNoticeDTOWhenCallMapperThenReturnNoticesListDTO() {
         //given
@@ -28,7 +28,7 @@ class BizEventsPaidNoticeListDTO2NoticesListDTOTest {
         commonAssert(noticeDTO, noticesListDTO.getNotices().get(0));
         commonAssert(noticeDTO2, noticesListDTO.getNotices().get(1));
 
-        TestUtils.assertAllFieldsPopulated(noticesListDTO, List.of());
+        TestUtils.assertNotNullFields(noticesListDTO);
     }
 
     private static void commonAssert(NoticeDTO noticeDTO, NoticeDTO mappedDTO) {

@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface BizEventsPaidResponseDTO2NoticesListResponseDTO {
+public interface BizEventsPaidResponseDTO2NoticesListResponseDTOMapper {
     default NoticesListResponseDTO toNoticesListResponseDTO(NoticesListDTO noticesListDTO, String continuationToken){
         return NoticesListResponseDTO.builder()
                 .noticesListDTO(noticesListDTO)

@@ -5,7 +5,7 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfo;
+import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfoMapper;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.UserInfoDTOFaker;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
@@ -25,7 +25,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 @ExtendWith(MockitoExtension.class)
 class AuthServiceImplTest {
   @Mock
-  IamUserInfoDTO2UserInfo mapperMock;
+  IamUserInfoDTO2UserInfoMapper mapperMock;
   @Autowired
   private AuthService authService;
 

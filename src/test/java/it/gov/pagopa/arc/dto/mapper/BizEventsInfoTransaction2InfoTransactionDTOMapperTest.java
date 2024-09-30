@@ -22,16 +22,16 @@ import java.time.ZonedDateTime;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
-class BizEventsInfoTransaction2InfoTransactionDTOTest {
-    private BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapper;
+class BizEventsInfoTransaction2InfoTransactionDTOMapperTest {
+    private BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapper;
     @Mock
-    private BizEventsWalletInfo2WalletInfoDTO walletInfoMapperMock;
+    private BizEventsWalletInfo2WalletInfoDTOMapper walletInfoMapperMock;
     @Mock
-    private BizEventsUserDetail2UserDetailDTO userDetailsMapperMock;
+    private BizEventsUserDetail2UserDetailDTOMapper userDetailsMapperMock;
 
     @BeforeEach
     void setUp() {
-        transactionInfoMapper = new BizEventsInfoTransaction2InfoTransactionDTO(walletInfoMapperMock, userDetailsMapperMock);
+        transactionInfoMapper = new BizEventsInfoTransaction2InfoTransactionDTOMapper(walletInfoMapperMock, userDetailsMapperMock);
     }
 
     @Test

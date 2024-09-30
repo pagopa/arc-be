@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.utils.Utilities;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizEventsTransactionDTO2TransactionDTO {
+public class BizEventsTransactionDTO2TransactionDTOMapper {
     public TransactionDTO apply(BizEventsTransactionDTO transaction){
         return TransactionDTO.builder()
                     .transactionId(transaction.getTransactionId())

@@ -7,7 +7,7 @@ import org.mapstruct.Mapper;
 import java.util.List;
 
 @Mapper(componentModel = "spring")
-public interface BizEventsPaidNoticeListDTO2NoticesListDTO {
+public interface BizEventsPaidNoticeListDTO2NoticesListDTOMapper {
 
     default NoticesListDTO toNoticesListDTO(List<NoticeDTO> noticeDTOList){
         return  NoticesListDTO.builder().notices(noticeDTOList).build();

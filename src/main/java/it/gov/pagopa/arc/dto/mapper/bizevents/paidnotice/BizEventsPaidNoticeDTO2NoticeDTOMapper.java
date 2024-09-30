@@ -10,7 +10,7 @@ import org.mapstruct.NullValueCheckStrategy;
 import java.util.List;
 
 @Mapper(componentModel = "spring", uses = MapperUtilities.class)
-public interface BizEventsPaidNoticeDTO2NoticeDTO {
+public interface BizEventsPaidNoticeDTO2NoticeDTOMapper {
 
     @Mapping(source = "amount", target = "amount", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "euroToCents")
     @Mapping(source = "noticeDate", target = "noticeDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "dateStringToZonedDateTime")

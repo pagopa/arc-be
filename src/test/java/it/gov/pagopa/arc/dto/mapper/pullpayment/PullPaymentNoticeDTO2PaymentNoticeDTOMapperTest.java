@@ -17,15 +17,15 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class PullPaymentNoticeDTO2PaymentNoticeDTOTest {
+class PullPaymentNoticeDTO2PaymentNoticeDTOMapperTest {
 
     @Mock
-    PullPaymentNoticeStatus2PaymentNoticeStatus pullPaymentNoticeStatus2PaymentNoticeStatusMock;
+    PullPaymentNoticeStatus2PaymentNoticeStatusMapper pullPaymentNoticeStatus2PaymentNoticeStatusMapperMock;
     @Mock
-    PullPaymentOptionDTO2PaymentOptionDTO pullPaymentOptionDTO2PaymentOptionDTOMock;
+    PullPaymentOptionDTO2PaymentOptionDTOMapper pullPaymentOptionDTO2PaymentOptionDTOMapperMock;
 
     @InjectMocks
-    PullPaymentNoticeDTO2PaymentNoticeDTO mapper = Mappers.getMapper(PullPaymentNoticeDTO2PaymentNoticeDTO.class);
+    PullPaymentNoticeDTO2PaymentNoticeDTOMapper mapper = Mappers.getMapper(PullPaymentNoticeDTO2PaymentNoticeDTOMapper.class);
 
     @Test
     void givenPullPaymentNoticeDTOWhenCallMapperThenReturnPaymentNoticeDTO() {
@@ -33,14 +33,14 @@ class PullPaymentNoticeDTO2PaymentNoticeDTOTest {
         PullPaymentNoticeDTO pullPaymentNoticeDTO = PullPaymentNoticeDTOFaker.mockInstance(true);
         PaymentNoticeDTO paymentNoticeDTO = PaymentNoticeDTOFaker.mockInstance(true);
 
-        Mockito.when(pullPaymentNoticeStatus2PaymentNoticeStatusMock.toPaymentNoticeStatus(pullPaymentNoticeDTO.getStatus())).thenReturn(PaymentNoticeStatus.VALID);
-        Mockito.when(pullPaymentOptionDTO2PaymentOptionDTOMock.toPaymentOptionDTO(pullPaymentNoticeDTO.getPaymentOptions().get(0))).thenReturn(paymentNoticeDTO.getPaymentOptions().get(0));
+        Mockito.when(pullPaymentNoticeStatus2PaymentNoticeStatusMapperMock.toPaymentNoticeStatus(pullPaymentNoticeDTO.getStatus())).thenReturn(PaymentNoticeStatus.VALID);
+        Mockito.when(pullPaymentOptionDTO2PaymentOptionDTOMapperMock.toPaymentOptionDTO(pullPaymentNoticeDTO.getPaymentOptions().get(0))).thenReturn(paymentNoticeDTO.getPaymentOptions().get(0));
         //when
         PaymentNoticeDTO result = mapper.toPaymentNoticeDTO(pullPaymentNoticeDTO);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(paymentNoticeDTO, result);
-        Mockito.verify(pullPaymentNoticeStatus2PaymentNoticeStatusMock).toPaymentNoticeStatus(any());
-        Mockito.verify(pullPaymentOptionDTO2PaymentOptionDTOMock).toPaymentOptionDTO(any());
+        Mockito.verify(pullPaymentNoticeStatus2PaymentNoticeStatusMapperMock).toPaymentNoticeStatus(any());
+        Mockito.verify(pullPaymentOptionDTO2PaymentOptionDTOMapperMock).toPaymentOptionDTO(any());
     }
 }

@@ -9,13 +9,13 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class BizEventsUserDetail2UserDetailDTOTest {
+class BizEventsUserDetail2UserDetailDTOMapperTest {
 
-    private BizEventsUserDetail2UserDetailDTO userDetailMapper;
+    private BizEventsUserDetail2UserDetailDTOMapper userDetailMapper;
 
     @BeforeEach
     void setUp() {
-        userDetailMapper = new BizEventsUserDetail2UserDetailDTO();
+        userDetailMapper = new BizEventsUserDetail2UserDetailDTOMapper();
     }
 
     @Test

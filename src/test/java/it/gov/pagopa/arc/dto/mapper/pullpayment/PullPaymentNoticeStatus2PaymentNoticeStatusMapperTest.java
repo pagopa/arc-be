@@ -6,8 +6,8 @@ import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 
-class PullPaymentNoticeStatus2PaymentNoticeStatusTest {
-    private final PullPaymentNoticeStatus2PaymentNoticeStatus mapper = Mappers.getMapper(PullPaymentNoticeStatus2PaymentNoticeStatus.class);
+class PullPaymentNoticeStatus2PaymentNoticeStatusMapperTest {
+    private final PullPaymentNoticeStatus2PaymentNoticeStatusMapper mapper = Mappers.getMapper(PullPaymentNoticeStatus2PaymentNoticeStatusMapper.class);
 
     @Test
     void givenPullPaymentNoticeStatusWhenCallMapperThenReturnPaymentNoticeStatus() {

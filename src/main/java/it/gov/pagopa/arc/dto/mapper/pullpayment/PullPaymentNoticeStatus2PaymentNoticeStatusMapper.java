@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.model.generated.PaymentNoticeStatus;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface PullPaymentNoticeStatus2PaymentNoticeStatus {
+public interface PullPaymentNoticeStatus2PaymentNoticeStatusMapper {
 
     PaymentNoticeStatus toPaymentNoticeStatus(PullPaymentNoticeStatus paymentNoticeStatusSource);
 }

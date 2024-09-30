@@ -12,8 +12,8 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNull;
 
-class BizEventsPaidNoticeDTO2NoticeDTOTest {
-    private final BizEventsPaidNoticeDTO2NoticeDTO mapper = Mappers.getMapper(BizEventsPaidNoticeDTO2NoticeDTO.class);
+class BizEventsPaidNoticeDTO2NoticeDTOMapperTest {
+    private final BizEventsPaidNoticeDTO2NoticeDTOMapper mapper = Mappers.getMapper(BizEventsPaidNoticeDTO2NoticeDTOMapper.class);
     @Test
     void givenBizEventsPaidNoticeWhenCallMapperThenReturnNoticeDTO() {
         //given

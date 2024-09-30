@@ -9,12 +9,12 @@ import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 
-class BizEventsWalletInfo2WalletInfoDTOTest {
-    private BizEventsWalletInfo2WalletInfoDTO walletInfoMapper;
+class BizEventsWalletInfo2WalletInfoDTOMapperTest {
+    private BizEventsWalletInfo2WalletInfoDTOMapper walletInfoMapper;
 
     @BeforeEach
     void setUp() {
-        walletInfoMapper = new BizEventsWalletInfo2WalletInfoDTO();
+        walletInfoMapper = new BizEventsWalletInfo2WalletInfoDTOMapper();
     }
 
     @Test

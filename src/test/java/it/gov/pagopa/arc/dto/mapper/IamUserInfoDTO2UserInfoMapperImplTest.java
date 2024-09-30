@@ -7,10 +7,10 @@ import org.junit.jupiter.api.Test;
 import org.mapstruct.factory.Mappers;
 import org.mockito.InjectMocks;
 
-class IamUserInfoDTO2UserInfoImplTest {
+class IamUserInfoDTO2UserInfoMapperImplTest {
 
   @InjectMocks
-  IamUserInfoDTO2UserInfo mapper = Mappers.getMapper(IamUserInfoDTO2UserInfo.class);
+  IamUserInfoDTO2UserInfoMapper mapper = Mappers.getMapper(IamUserInfoDTO2UserInfoMapper.class);
 
   @Test
   void givenIamUserInfoDTOThenMapIt2UserInfo(){

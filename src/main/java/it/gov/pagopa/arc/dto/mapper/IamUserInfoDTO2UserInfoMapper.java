@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.model.generated.UserInfo;
 import org.mapstruct.Mapper;
 
 @Mapper(componentModel = "spring")
-public interface IamUserInfoDTO2UserInfo {
+public interface IamUserInfoDTO2UserInfoMapper {
 
   UserInfo mapIamUserToUserInfo(IamUserInfoDTO userInfoDTO);
 

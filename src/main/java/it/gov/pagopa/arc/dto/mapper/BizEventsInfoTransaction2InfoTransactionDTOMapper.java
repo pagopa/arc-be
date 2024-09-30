@@ -7,10 +7,10 @@ import it.gov.pagopa.arc.utils.Utilities;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizEventsInfoTransaction2InfoTransactionDTO {
-    private final BizEventsWalletInfo2WalletInfoDTO walletInfoMapper;
-    private final BizEventsUserDetail2UserDetailDTO userDetailsMapper;
-    public BizEventsInfoTransaction2InfoTransactionDTO(BizEventsWalletInfo2WalletInfoDTO walletInfoMapper, BizEventsUserDetail2UserDetailDTO userDetailsMapper) {
+public class BizEventsInfoTransaction2InfoTransactionDTOMapper {
+    private final BizEventsWalletInfo2WalletInfoDTOMapper walletInfoMapper;
+    private final BizEventsUserDetail2UserDetailDTOMapper userDetailsMapper;
+    public BizEventsInfoTransaction2InfoTransactionDTOMapper(BizEventsWalletInfo2WalletInfoDTOMapper walletInfoMapper, BizEventsUserDetail2UserDetailDTOMapper userDetailsMapper) {
         this.walletInfoMapper = walletInfoMapper;
         this.userDetailsMapper = userDetailsMapper;
     }

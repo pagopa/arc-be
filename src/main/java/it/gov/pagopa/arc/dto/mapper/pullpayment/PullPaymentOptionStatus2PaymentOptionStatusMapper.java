@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.ValueMapping;
 
 @Mapper(componentModel = "spring")
-public interface PullPaymentOptionStatus2PaymentOptionStatus {
+public interface PullPaymentOptionStatus2PaymentOptionStatusMapper {
     @ValueMapping(target = "UNPAID", source = "PO_UNPAID")
     @ValueMapping(target = "PAID", source = "PO_PAID")
     @ValueMapping(target = "PARTIALLY_REPORTED", source = "PO_PARTIALLY_REPORTED")

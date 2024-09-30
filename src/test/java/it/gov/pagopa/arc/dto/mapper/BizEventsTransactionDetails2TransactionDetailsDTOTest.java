@@ -21,9 +21,9 @@ class BizEventsTransactionDetails2TransactionDetailsDTOTest {
     private BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsMapper;
 
     @Mock
-    private BizEventsInfoTransaction2InfoTransactionDTO transactionInfoMapperMock;
+    private BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapperMock;
     @Mock
-    private BizEventsCartItem2CartItemDTO cartItemDTOMapperMock;
+    private BizEventsCartItem2CartItemDTOMapper cartItemDTOMapperMock;
 
     @BeforeEach
     void setUp() {

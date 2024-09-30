@@ -7,7 +7,7 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class BizEventsTransactionsListDTO2TransactionsListDTO {
+public class BizEventsTransactionsListDTO2TransactionsListDTOMapper {
     public TransactionsListDTO apply(List<TransactionDTO> transactionsList, Integer size){
         return TransactionsListDTO.builder()
                 .transactions(transactionsList)

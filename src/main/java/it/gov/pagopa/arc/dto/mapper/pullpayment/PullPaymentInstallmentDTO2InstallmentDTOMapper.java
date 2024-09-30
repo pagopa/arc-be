@@ -7,8 +7,8 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 import org.mapstruct.NullValueCheckStrategy;
 
-@Mapper(componentModel = "spring", uses = {PullPaymentOptionStatus2PaymentOptionStatus.class, MapperUtilities.class})
-public interface PullPaymentInstallmentDTO2InstallmentDTO {
+@Mapper(componentModel = "spring", uses = {PullPaymentOptionStatus2PaymentOptionStatusMapper.class, MapperUtilities.class})
+public interface PullPaymentInstallmentDTO2InstallmentDTOMapper {
 
     @Mapping(source = "insertedDate", target = "insertedDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "truncateToSeconds")
     @Mapping(source = "lastUpdatedDate", target = "lastUpdatedDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "truncateToSeconds")

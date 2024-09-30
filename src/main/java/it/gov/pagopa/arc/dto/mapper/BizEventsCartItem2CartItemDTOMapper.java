@@ -6,10 +6,10 @@ import it.gov.pagopa.arc.utils.Utilities;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BizEventsCartItem2CartItemDTO {
-    private final BizEventsUserDetail2UserDetailDTO userDetailsMapper;
+public class BizEventsCartItem2CartItemDTOMapper {
+    private final BizEventsUserDetail2UserDetailDTOMapper userDetailsMapper;
 
-    public BizEventsCartItem2CartItemDTO(BizEventsUserDetail2UserDetailDTO userDetailsMapper) {
+    public BizEventsCartItem2CartItemDTOMapper(BizEventsUserDetail2UserDetailDTOMapper userDetailsMapper) {
         this.userDetailsMapper = userDetailsMapper;
     }
 

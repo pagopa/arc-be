@@ -21,12 +21,12 @@ import java.util.List;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class PullPaymentOptionDTO2PaymentOptionDTOTest {
+class PullPaymentOptionDTO2PaymentOptionDTOMapperTest {
     @Mock
-    private PullPaymentInstallmentDTO2InstallmentDTO pullPaymentInstallmentDTO2InstallmentDTOMock;
+    private PullPaymentInstallmentDTO2InstallmentDTOMapper pullPaymentInstallmentDTO2InstallmentDTOMapperMock;
 
     @InjectMocks
-    private PullPaymentOptionDTO2PaymentOptionDTOImpl mapper;
+    private PullPaymentOptionDTO2PaymentOptionDTOMapperImpl mapper;
     @Test
     void givenPullPaymentOptionDTOWhenCallMapperThenReturnPaymentOptionDTO() {
         //given
@@ -34,7 +34,7 @@ class PullPaymentOptionDTO2PaymentOptionDTOTest {
         PullPaymentOptionDTO pullPaymentOptionDTO = PullPaymentOptionDTOFaker.mockInstance(pullPaymentInstallmentDTO, false);
         InstallmentDTO installmentDTO = InstallmentDTOFaker.mockInstance();
 
-        Mockito.when(pullPaymentInstallmentDTO2InstallmentDTOMock.toInstallmentDTO(pullPaymentInstallmentDTO)).thenReturn(installmentDTO);
+        Mockito.when(pullPaymentInstallmentDTO2InstallmentDTOMapperMock.toInstallmentDTO(pullPaymentInstallmentDTO)).thenReturn(installmentDTO);
         //when
         PaymentOptionDTO result = mapper.toPaymentOptionDTO(pullPaymentOptionDTO);
         //then
@@ -48,7 +48,7 @@ class PullPaymentOptionDTO2PaymentOptionDTOTest {
             Assertions.assertFalse(result.getSwitchToExpired());
             Assertions.assertEquals(List.of(installmentDTO), result.getInstallments());
 
-            Mockito.verify(pullPaymentInstallmentDTO2InstallmentDTOMock).toInstallmentDTO(any());
+            Mockito.verify(pullPaymentInstallmentDTO2InstallmentDTOMapperMock).toInstallmentDTO(any());
         });
 
     }
