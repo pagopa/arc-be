@@ -3,13 +3,18 @@ package it.gov.pagopa.arc.service.bizevents;
 import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
+import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
+import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
+import it.gov.pagopa.arc.dto.mapper.BizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
-import it.gov.pagopa.arc.model.generated.TransactionDTO;
-import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
-import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticeDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeListDTO2NoticesListDTOMapper;
+import it.gov.pagopa.arc.model.generated.*;
 import it.gov.pagopa.arc.utils.SecurityUtils;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +28,24 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapper;
     private final BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper;
-
+    private final BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
+    private final BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapper;
+    private final BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapper;
+    private final BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
     public BizEventsServiceImpl(BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapper,
                                 BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper,
-                                BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper) {
+                                BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper,
+                                BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector, BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapper,
+                                BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapper, BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapper) {
         this.bizEventsConnector = bizEventsConnector;
         this.transactionDTOMapper = transactionDTOMapper;
         this.transactionsListDTOMapper = transactionsListDTOMapper;
         this.transactionDetailsDTOMapper = transactionDetailsDTOMapper;
+        this.bizEventsPaidNoticeConnector = bizEventsPaidNoticeConnector;
+        this.bizEventsPaidNoticeDTO2NoticeDTOMapper = bizEventsPaidNoticeDTO2NoticeDTOMapper;
+        this.bizEventsPaidNoticeListDTO2NoticesListDTOMapper = bizEventsPaidNoticeListDTO2NoticesListDTOMapper;
+        this.bizEventsPaidResponseDTO2NoticesListResponseDTOMapper = bizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
     }
 
     @Override
@@ -62,5 +76,32 @@ public class BizEventsServiceImpl implements BizEventsService{
     public Resource retrieveTransactionReceiptFromBizEvents(String transactionId) {
         String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
         return bizEventsConnector.getTransactionReceipt(retrievedUserFiscalCode, transactionId);
+    }
+
+    @Override
+    public NoticesListResponseDTO retrievePaidListFromBizEvents(String continuationToken, Integer size, Boolean isPayer, Boolean isDebtor, String orderBy, String ordering) {
+        NoticesListDTO noticesListDTO = NoticesListDTO.builder().build();
+        NoticesListResponseDTO noticesListResponseDTO =  NoticesListResponseDTO.builder().noticesListDTO(noticesListDTO).build();
+        String retrievedContinuationToken = null;
+
+        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
+
+        BizEventsPaidResponseDTO paidResponseDTO = bizEventsPaidNoticeConnector.getPaidNoticeList(retrievedUserFiscalCode, continuationToken, size, isPayer, isDebtor, orderBy, ordering);
+
+        if(paidResponseDTO != null){
+            if (StringUtils.isNotBlank(paidResponseDTO.getContinuationToken())){
+                retrievedContinuationToken = paidResponseDTO.getContinuationToken();
+            }
+
+            if(!paidResponseDTO.getNotices().isEmpty()){
+                List<NoticeDTO> noticeDTOList = bizEventsPaidNoticeDTO2NoticeDTOMapper.toNoticeDTOList(paidResponseDTO.getNotices());
+                noticesListDTO = bizEventsPaidNoticeListDTO2NoticesListDTOMapper.toNoticesListDTO(noticeDTOList);
+
+                noticesListResponseDTO= bizEventsPaidResponseDTO2NoticesListResponseDTOMapper.toNoticesListResponseDTO(noticesListDTO, retrievedContinuationToken);
+            }
+
+        }
+
+        return noticesListResponseDTO;
     }
 }
