@@ -5,7 +5,7 @@ import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentInstallmentDTO;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentOptionDTO;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
-import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTO;
+import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTOMapper;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentInstallmentDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
@@ -46,7 +46,7 @@ class PullPaymentServiceImplTest {
     @Mock
     private PullPaymentConnector pullPaymentConnectorMock;
     @Mock
-    private PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapperMock;
+    private PullPaymentNoticeDTO2PaymentNoticeDTOMapper paymentNoticeDTOMapperMock;
     @Mock
     private PaymentNoticesListDTOMapper paymentNoticesListDTOMapperMock;
 

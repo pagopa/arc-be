@@ -8,11 +8,11 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-public class BizEventsTransactionDetails2TransactionDetailsDTO {
+public class BizEventsTransactionDetails2TransactionDetailsDTOMapper {
     private final BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapper;
     private final BizEventsCartItem2CartItemDTOMapper cartItemDTOMapper;
 
-    public BizEventsTransactionDetails2TransactionDetailsDTO(BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapper, BizEventsCartItem2CartItemDTOMapper cartItemDTOMapper) {
+    public BizEventsTransactionDetails2TransactionDetailsDTOMapper(BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapper, BizEventsCartItem2CartItemDTOMapper cartItemDTOMapper) {
         this.transactionInfoMapper = transactionInfoMapper;
         this.cartItemDTOMapper = cartItemDTOMapper;
     }

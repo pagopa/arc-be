@@ -3,7 +3,7 @@ package it.gov.pagopa.arc.service.pullpayment;
 import it.gov.pagopa.arc.connector.pullpayment.PullPaymentConnector;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
-import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTO;
+import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTOMapper;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
 import it.gov.pagopa.arc.utils.SecurityUtils;
@@ -16,11 +16,11 @@ import java.util.List;
 @Service
 public class PullPaymentServiceImpl implements PullPaymentService{
     private final PullPaymentConnector pullPaymentConnector;
-    private final PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper;
+    private final PullPaymentNoticeDTO2PaymentNoticeDTOMapper paymentNoticeDTOMapper;
     private final PaymentNoticesListDTOMapper paymentNoticesListDTOMapper;
 
     public PullPaymentServiceImpl(PullPaymentConnector pullPaymentConnector,
-                                  PullPaymentNoticeDTO2PaymentNoticeDTO paymentNoticeDTOMapper,
+                                  PullPaymentNoticeDTO2PaymentNoticeDTOMapper paymentNoticeDTOMapper,
                                   PaymentNoticesListDTOMapper paymentNoticesListDTOMapper) {
         this.pullPaymentConnector = pullPaymentConnector;
         this.paymentNoticeDTOMapper = paymentNoticeDTOMapper;

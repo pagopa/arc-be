@@ -16,9 +16,9 @@ import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
-class BizEventsTransactionDetails2TransactionDetailsDTOTest {
+class BizEventsTransactionDetails2TransactionDetailsDTOMapperTest {
 
-    private BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsMapper;
+    private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsMapper;
 
     @Mock
     private BizEventsInfoTransaction2InfoTransactionDTOMapper transactionInfoMapperMock;
@@ -27,7 +27,7 @@ class BizEventsTransactionDetails2TransactionDetailsDTOTest {
 
     @BeforeEach
     void setUp() {
-        transactionDetailsMapper = new BizEventsTransactionDetails2TransactionDetailsDTO(transactionInfoMapperMock, cartItemDTOMapperMock);
+        transactionDetailsMapper = new BizEventsTransactionDetails2TransactionDetailsDTOMapper(transactionInfoMapperMock, cartItemDTOMapperMock);
     }
 
     @Test
