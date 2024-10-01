@@ -4,17 +4,24 @@ import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
+import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
+import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
+import it.gov.pagopa.arc.dto.mapper.BizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticeDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeListDTO2NoticesListDTOMapper;
+import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
-import it.gov.pagopa.arc.model.generated.TransactionDTO;
-import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
-import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
+import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDTOFaker;
+import it.gov.pagopa.arc.model.generated.*;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -34,10 +41,12 @@ import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
+import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -47,6 +56,9 @@ class BizEventsServiceImplTest {
     private static final String FILTER = "DUMMY_FILTER";
     private static final String TRANSACTION_ID = "TRANSACTION_ID";
     private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
+    private static final String CONTINUATION_TOKEN = "continuation-token";
+    private static final String ORDER_BY = "TRANSACTION_DATE";
+    private static final String ORDERING = "DESC";
 
     @Autowired
     private BizEventsService bizEventsService;
@@ -59,7 +71,14 @@ class BizEventsServiceImplTest {
     private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
     @Mock
     private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
-
+    @Mock
+    private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
+    @Mock
+    private BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapperMock;
+    @Mock
+    private BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock;
+    @Mock
+    private BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock;
 
     @BeforeEach
     void setUp() {
@@ -72,7 +91,11 @@ class BizEventsServiceImplTest {
                 bizEventsConnectorMock ,
                 transactionDTOMapperMock,
                 transactionsListDTOMapperMock,
-                transactionDetailsDTOMapperMock);
+                transactionDetailsDTOMapperMock,
+                bizEventsPaidNoticeConnectorMock,
+                bizEventsPaidNoticeDTO2NoticeDTOMapperMock,
+                bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock,
+                bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock);
     }
 
     @Test
@@ -206,5 +229,58 @@ class BizEventsServiceImplTest {
         Mockito.verify(bizEventsConnectorMock).getTransactionReceipt(anyString(),anyString());
     }
 
+    @Test
+    void givenParametersWhenCalRetrievePaidListFromBizEventsThenReturnPaidList() {
+        //given
+        BizEventsPaidNoticeDTO bizEventsPaidNoticeDTO = BizEventsPaidNoticeDTOFaker.mockInstance(1, false);
+        List<BizEventsPaidNoticeDTO> listOfbizEventsPaidNoticeDTO = List.of(bizEventsPaidNoticeDTO);
+
+        BizEventsPaidResponseDTO bizEventsPaidResponseDTO = BizEventsPaidResponseDTO.builder().notices(listOfbizEventsPaidNoticeDTO).continuationToken(CONTINUATION_TOKEN).build();
+
+        NoticeDTO noticeDTO = NoticeDTOFaker.mockInstance(1, false);
+        List<NoticeDTO> listOfNoticeDTO = List.of(noticeDTO);
+
+        NoticesListDTO noticesListDTO = NoticesListDTO.builder().notices(listOfNoticeDTO).build();
+
+        NoticesListResponseDTO noticesListResponseDTO = NoticesListResponseDTO.builder().noticesListDTO(noticesListDTO).continuationToken(CONTINUATION_TOKEN).build();
+
+        when(bizEventsPaidNoticeConnectorMock.getPaidNoticeList(DUMMY_FISCAL_CODE,CONTINUATION_TOKEN,SIZE, true, true, ORDER_BY, ORDERING)).thenReturn(bizEventsPaidResponseDTO);
+        when(bizEventsPaidNoticeDTO2NoticeDTOMapperMock.toNoticeDTOList(listOfbizEventsPaidNoticeDTO)).thenReturn(listOfNoticeDTO);
+        when(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock.toNoticesListDTO(listOfNoticeDTO)).thenReturn(noticesListDTO);
+        when(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock.toNoticesListResponseDTO(noticesListDTO, CONTINUATION_TOKEN)).thenReturn(noticesListResponseDTO);
+        //when
+        NoticesListResponseDTO result = bizEventsService.retrievePaidListFromBizEvents(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING);
+
+        //then
+        Assertions.assertNotNull(result);
+        assertEquals(1, result.getNoticesListDTO().getNotices().size());
+        assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices().get(0), result.getNoticesListDTO().getNotices().get(0));
+        assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
+
+
+        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
+        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock).toNoticeDTOList(any());
+        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock).toNoticesListDTO(anyList());
+        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock).toNoticesListResponseDTO(any(), anyString());
+
+    }
+
+    @Test
+    void givenParametersWhenCalRetrievePaidListFromBizEventsThenReturnNull() {
+        //given
+        when(bizEventsPaidNoticeConnectorMock.getPaidNoticeList(DUMMY_FISCAL_CODE,CONTINUATION_TOKEN,SIZE, true, true, ORDER_BY, ORDERING)).thenReturn(null);
+        //when
+        NoticesListResponseDTO result = bizEventsService.retrievePaidListFromBizEvents(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING);
+
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(Collections.emptyList(), result.getNoticesListDTO().getNotices());
+        Assertions.assertNull(result.getContinuationToken());
+
+        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
+        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock, never()).toNoticeDTOList(any());
+        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock, never()).toNoticesListDTO(anyList());
+        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock, never()).toNoticesListResponseDTO(any(), anyString());
+    }
 
 }
