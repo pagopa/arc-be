@@ -283,4 +283,24 @@ class BizEventsServiceImplTest {
         Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock, never()).toNoticesListResponseDTO(any(), anyString());
     }
 
+    @Test
+    void givenParametersWhenCalRetrievePaidListFromBizEventsThenReturnEmptyResult() {
+        //given
+        BizEventsPaidResponseDTO bizEventsPaidResponseDTO = BizEventsPaidResponseDTO.builder().notices(new ArrayList<>()).continuationToken("").build();
+
+        when(bizEventsPaidNoticeConnectorMock.getPaidNoticeList(DUMMY_FISCAL_CODE,CONTINUATION_TOKEN,SIZE, true, true, ORDER_BY, ORDERING)).thenReturn(bizEventsPaidResponseDTO);
+        //when
+        NoticesListResponseDTO result = bizEventsService.retrievePaidListFromBizEvents(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING);
+
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(Collections.emptyList(), result.getNoticesListDTO().getNotices());
+        Assertions.assertNull(result.getContinuationToken());
+
+        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
+        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock, never()).toNoticeDTOList(any());
+        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock, never()).toNoticesListDTO(anyList());
+        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock, never()).toNoticesListResponseDTO(any(), anyString());
+    }
+
 }
