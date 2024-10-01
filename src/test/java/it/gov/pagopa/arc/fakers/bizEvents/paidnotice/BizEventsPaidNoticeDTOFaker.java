@@ -3,8 +3,6 @@ package it.gov.pagopa.arc.fakers.bizEvents.paidnotice;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 
-import java.util.List;
-
 public class BizEventsPaidNoticeDTOFaker {
     public static BizEventsPaidNoticeDTO mockInstance(Integer bias, boolean isCart){
         return mockInstanceBuilder(bias, isCart).build();
@@ -21,7 +19,7 @@ public class BizEventsPaidNoticeDTOFaker {
                     .isCart(false)
                     .isPayer(true)
                     .isDebtor(true);
-            TestUtils.assertAllFieldsPopulated(bizEventsPaidNoticeDTOBuilder,List.of());
+            TestUtils.assertNotNullFields(bizEventsPaidNoticeDTOBuilder);
             return bizEventsPaidNoticeDTOBuilder;
         } else {
             BizEventsPaidNoticeDTO.BizEventsPaidNoticeDTOBuilder bizEventsPaidNoticeDTOBuilder =  BizEventsPaidNoticeDTO
@@ -33,7 +31,7 @@ public class BizEventsPaidNoticeDTOFaker {
                     .isCart(true)
                     .isPayer(false)
                     .isDebtor(true);
-            TestUtils.assertAllFieldsPopulated(bizEventsPaidNoticeDTOBuilder, List.of("amount"));
+            TestUtils.assertNotNullFields(bizEventsPaidNoticeDTOBuilder, "amount");
             return bizEventsPaidNoticeDTOBuilder;
         }
     }
