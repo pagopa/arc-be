@@ -6,7 +6,7 @@ import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Mapper(componentModel = "spring", uses= PullPaymentNoticeDTO2PaymentNoticeDTO.class)
+@Mapper(componentModel = "spring", uses= PullPaymentNoticeDTO2PaymentNoticeDTOMapper.class)
 public interface PaymentNoticesListDTOMapper {
 
     default PaymentNoticesListDTO toPaymentNoticesListDTO(List<PaymentNoticeDTO> paymentNotices) {

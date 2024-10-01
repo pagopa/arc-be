@@ -4,9 +4,9 @@ import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTO;
+import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
@@ -54,11 +54,12 @@ class BizEventsServiceImplTest {
     @Mock
     private BizEventsConnector bizEventsConnectorMock;
     @Mock
-    private BizEventsTransactionDTO2TransactionDTO transactionDTOMapperMock;
+    private BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapperMock;
     @Mock
-    private BizEventsTransactionsListDTO2TransactionsListDTO transactionsListDTOMapperMock;
+    private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
     @Mock
-    private BizEventsTransactionDetails2TransactionDetailsDTO transactionDetailsDTOMapperMock;
+    private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
+
 
     @BeforeEach
     void setUp() {
@@ -67,7 +68,11 @@ class BizEventsServiceImplTest {
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
 
-        bizEventsService = new BizEventsServiceImpl(bizEventsConnectorMock , transactionDTOMapperMock, transactionsListDTOMapperMock, transactionDetailsDTOMapperMock);
+        bizEventsService = new BizEventsServiceImpl(
+                bizEventsConnectorMock ,
+                transactionDTOMapperMock,
+                transactionsListDTOMapperMock,
+                transactionDetailsDTOMapperMock);
     }
 
     @Test
