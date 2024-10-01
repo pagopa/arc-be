@@ -63,23 +63,15 @@ public class TestUtils {
         return keyGen.generateKeyPair();
     }
 
-    public static void assertNotNullFields(Object dto, String... excludedFields) {
-        Class<?> clazz = dto.getClass();
+    public static void assertNotNullFields(Object o, String... excludedFields) {
         Set<String> excludedFieldsSet = new HashSet<>(Arrays.asList(excludedFields));
 
-        Arrays.stream(clazz.getDeclaredFields())
-                .forEach(field -> {
-                    try {
-                        if (!excludedFieldsSet.contains(field.getName())) {
-                            field.setAccessible(true);
-                            Object value = field.get(dto);
-
-                            Assertions.assertNotNull(value, "The field " + field.getName() + " must not be null");
-                        }
-                    } catch (IllegalAccessException e) {
-                        throw new RuntimeException("Field access error: " + field.getName(), e);
-                    }
-                });
+        org.springframework.util.ReflectionUtils.doWithFields(o.getClass(),
+                f -> {
+                    f.setAccessible(true);
+                    Assertions.assertNotNull(f.get(o), "The field %s of the input object of type %s is null!".formatted(f.getName(), o.getClass()));
+                },
+                f -> !excludedFieldsSet.contains(f.getName()));
     }
 
 
