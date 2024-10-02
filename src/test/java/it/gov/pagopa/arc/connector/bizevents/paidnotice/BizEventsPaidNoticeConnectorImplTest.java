@@ -113,7 +113,6 @@ class BizEventsPaidNoticeConnectorImplTest {
                 .paidByMe(true)
                 .registeredToMe(true)
                 .orderBy("TRANSACTION_DATE")
-                .orderBy(null)
                 .ordering("DESC")
                 .build();
 
