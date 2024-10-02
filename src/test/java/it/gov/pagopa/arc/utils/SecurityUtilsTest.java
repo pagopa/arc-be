@@ -65,4 +65,30 @@ class SecurityUtilsTest {
     Assertions.assertEquals("Fiscal code is missing for the authenticated user", ex.getMessage());
   }
 
+  @Test
+  void givenConfiguredSecurityContextWhenGetUserIdeThenReturnAuthenticatedUserId(){
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            IamUserInfoDTOFaker.mockInstance(), null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    String userId = SecurityUtils.getUserId();
+    Assertions.assertNotNull(userId);
+    Assertions.assertEquals("user_id",  userId);
+  }
+
+  @Test
+  void givenPrincipalNullUserIdWhenGetUserIdThenThrowException(){
+    IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
+    iamUserInfoDTO.setUserId(null);
+
+    UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+            iamUserInfoDTO , null, null);
+    authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+    SecurityContextHolder.getContext().setAuthentication(authentication);
+
+    IllegalArgumentException ex = Assertions.assertThrows(IllegalArgumentException.class, SecurityUtils::getUserId);
+    Assertions.assertEquals("User id is missing for the authenticated user", ex.getMessage());
+  }
+
 }
