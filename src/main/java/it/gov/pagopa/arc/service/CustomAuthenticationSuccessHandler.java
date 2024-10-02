@@ -21,27 +21,53 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
 
+  private final AuthService authService;
+
   CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
       ObjectMapper objectMapper,
       JWTConfiguration jwtConfiguration,
-      TokenStoreService tokenStoreService){
+      TokenStoreService tokenStoreService,
+      AuthService authService){
     this.accessTokenBuilderService = accessTokenBuilderService;
     this.objectMapper = objectMapper;
     this.jwtConfiguration = jwtConfiguration;
     this.tokenStoreService = tokenStoreService;
+    this.authService = authService;
   }
 
   @Override
   public void onAuthenticationSuccess(HttpServletRequest request, HttpServletResponse response,
       Authentication authentication) throws IOException {
-    OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
 
-    TokenResponse accessToken = new TokenResponse(accessTokenBuilderService.build(),jwtConfiguration.getTokenType(),jwtConfiguration.getAccessToken().getExpireIn(),null,null);
-    tokenStoreService.save(accessToken.getAccessToken(), IamUserInfoDTO.map2IamUserInfoDTO(oauth2Token.getPrincipal().getAttributes()));
-    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-    response.getWriter().write( objectMapper.writeValueAsString(accessToken) );
-    response.getWriter().flush();
+    OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
+    IamUserInfoDTO userInfoDTO = IamUserInfoDTO.map2IamUserInfoDTO( oauth2Token.getPrincipal().getAttributes());
+
+    if( isInWhiteList(userInfoDTO.getFiscalCode()) ){
+      TokenResponse accessToken = new TokenResponse(
+          accessTokenBuilderService.build(),
+          jwtConfiguration.getTokenType(),
+          jwtConfiguration.getAccessToken().getExpireIn(),
+          null,
+          null);
+
+      tokenStoreService.save( accessToken.getAccessToken() , userInfoDTO );
+
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      response.getWriter().write( objectMapper.writeValueAsString(accessToken) );
+      response.getWriter().flush();
+    } else {
+      authentication.setAuthenticated(false);
+      response.setStatus(403);
+      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+      response.getWriter().write("{\"error\": \"User not allowed to access this application\"}");
+      response.getWriter().flush();
+    }
+
+  }
+
+  boolean isInWhiteList(String fiscalCode){
+    return authService.getWhiteListUsers().stream().anyMatch(str -> str.equals(fiscalCode));
   }
 
 }

@@ -5,6 +5,9 @@ import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfo;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.utils.SecurityUtils;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -45,6 +48,11 @@ public class AuthServiceImpl implements AuthService{
     IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
     tokenStoreService.save(accessToken.getAccessToken(), iamUserInfoDTO);
     return accessToken;
+  }
+
+  @Override
+  public List<String> getWhiteListUsers() {
+    return new ArrayList<>(Arrays.asList("PLOMRC01P30L736Y"));
   }
 
 

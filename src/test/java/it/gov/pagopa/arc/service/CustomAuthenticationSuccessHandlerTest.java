@@ -15,6 +15,7 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -30,14 +31,19 @@ public class CustomAuthenticationSuccessHandlerTest {
   @Mock
   private TokenStoreService tokenStoreService;
 
+  @Mock
+  private AuthService authService;
+
   @BeforeEach
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
     JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
-    customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(new AccessTokenBuilderService(jwtConfiguration),new ObjectMapper(),jwtConfiguration,tokenStoreService);
+    customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(new AccessTokenBuilderService(jwtConfiguration),new ObjectMapper(),jwtConfiguration,tokenStoreService,authService);
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
+
+
     String sampleIdToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6Ik1hcmNvIiwiaWF0IjoxNTE2MjM5MDIyLCJmaXNjYWxOdW1iZXIiOiI3ODkwMTIiLCJmYW1pbHlOYW1lIjoiUG9sbyIsImVtYWlsIjoibWFyY28ucG9sb0BleGFtcGxlLmNvbSIsImlzcyI6Imlzc3VlciJ9.AErwXpbHrT_0WvN86QuQ0nvnZndVxt8jnmiD1lfj1_A";
     Consumer<Map<String, Object>> attributesConsumer = attributes -> {
       attributes.putAll(Map.of(
@@ -49,6 +55,7 @@ public class CustomAuthenticationSuccessHandlerTest {
           "iss", "issuer"
       ));
     };
+    Mockito.when(customAuthenticationSuccessHandler.isInWhiteList("789012")).thenReturn(true);
     Instant issuedAt = Instant.now();
     Instant expiresAt = issuedAt.plusSeconds(3600);
 
