@@ -4,8 +4,11 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import feign.Response;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
-import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
+import it.gov.pagopa.arc.dto.NoticeRequestDTO;
+import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -22,58 +25,62 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
     private static final String ERROR_MESSAGE_INVOCATION_EXCEPTION = "An error occurred handling request from biz-Events";
     private final String apikey;
     private final BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient;
+    private final BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
     private final ObjectMapper objectMapper;
 
     public BizEventsPaidNoticeConnectorImpl(@Value("${rest-client.biz-events.paid-notice.api-key}") String apikey,
-                                            BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient, ObjectMapper objectMapper) {
+                                            BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient, BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper, ObjectMapper objectMapper) {
         this.apikey = apikey;
         this.bizEventsPaidNoticeRestClient = bizEventsPaidNoticeRestClient;
+        this.bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper = bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
         this.objectMapper = objectMapper;
     }
 
     @Override
-    public BizEventsPaidResponseDTO getPaidNoticeList(String fiscalCode, String continuationToken, Integer size, Boolean isPayer, Boolean isDebtor, String orderBy, String ordering) {
-        Response response;
-        BizEventsPaidResponseDTO bizEventsPaidResponseDTO;
+    public NoticesListResponseDTO getPaidNoticeList(String fiscalCode, NoticeRequestDTO noticeRequestDTO) {
+        String continuationToken = noticeRequestDTO.getContinuationToken();
+        Integer size = noticeRequestDTO.getSize();
+        Boolean isPayer = noticeRequestDTO.getPaidByMe();
+        Boolean isDebtor = noticeRequestDTO.getRegisteredToMe();
+        String orderBy = noticeRequestDTO.getOrderBy();
+        String ordering = noticeRequestDTO.getOrdering();
 
         try {
-            response = bizEventsPaidNoticeRestClient.paidNoticeList(apikey, fiscalCode, continuationToken, size, isPayer, isDebtor, orderBy, ordering);
+            Response response = bizEventsPaidNoticeRestClient.paidNoticeList(apikey, fiscalCode, continuationToken , size , isPayer, isDebtor, orderBy, ordering);
             if (response.status() != HttpStatus.OK.value()){
                 throw FeignException.errorStatus("getPaidNoticeList", response);
             }
-            bizEventsPaidResponseDTO = extractBizEventsPaidNoticeListDTOAndHeaderFromFeignResponse(response);
+            return extractBizEventsPaidNoticeListDTOAndHeaderFromFeignResponse(response);
         } catch (FeignException e) {
             if (e.status() == HttpStatus.NOT_FOUND.value()){
-              bizEventsPaidResponseDTO = handleNotFound();
-
               log.info("A {} occurred while handling request getPaidNoticeList from biz-Events: HttpStatus {} - {}",
                         e.getClass(),
                         e.status(),
                         e.getMessage());
 
-                return bizEventsPaidResponseDTO;
+                return  handleNotFound();
             }else {
                 throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
             }
         }
 
-        return bizEventsPaidResponseDTO;
     }
 
-    private BizEventsPaidResponseDTO handleNotFound(){
-        BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO = BizEventsPaidNoticeListDTO.builder()
-                .notices(new ArrayList<>())
-                .build();
+    private NoticesListResponseDTO handleNotFound(){
+        NoticesListDTO noticesListDTO = NoticesListDTO.builder()
+                        .notices(new ArrayList<>())
+                        .build();
 
-        return BizEventsPaidResponseDTO.builder()
+        return NoticesListResponseDTO.builder()
                 .continuationToken(null)
-                .notices(bizEventsPaidNoticeListDTO.getNotices())
+                .noticesListDTO(noticesListDTO)
                 .build();
     }
 
-    private BizEventsPaidResponseDTO extractBizEventsPaidNoticeListDTOAndHeaderFromFeignResponse(Response response){
+    private NoticesListResponseDTO extractBizEventsPaidNoticeListDTOAndHeaderFromFeignResponse(Response response){
         String continuationTokenHeader = null;
         BizEventsPaidNoticeListDTO bizEventsPaidNoticeListDTO;
+        NoticesListDTO noticeListDTO;
 
         if(response.body() == null){
             throw new BizEventsInvocationException("Error during processing: response body is null");
@@ -81,6 +88,7 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
 
         try {
             bizEventsPaidNoticeListDTO = objectMapper.readValue(response.body().asInputStream(), BizEventsPaidNoticeListDTO.class);
+            noticeListDTO = bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper.toNoticeListDTO(bizEventsPaidNoticeListDTO);
         } catch (IOException e) {
             throw new BizEventsInvocationException("Error reading or deserializing the response body");
         }
@@ -92,7 +100,8 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
                     .findFirst()
                     .orElse(null);
         }
-        return BizEventsPaidResponseDTO.builder().notices(bizEventsPaidNoticeListDTO.getNotices()).continuationToken(continuationTokenHeader).build();
+
+        return NoticesListResponseDTO.builder().noticesListDTO(noticeListDTO).continuationToken(continuationTokenHeader).build();
     }
 
 }
