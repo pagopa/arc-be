@@ -234,4 +234,13 @@ class BizEventsPaidNoticeConnectorImplTest {
                 () -> bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_ERROR", noticeRequestDTO));
         Assertions.assertEquals("An error occurred handling request from biz-Events",exception.getMessage());
     }
+
+    @Test
+    void givenNoticeRequestDTONullWhenCallNoticeRequestDTOThenReturn() {
+        // given
+        //when
+        NoticesListResponseDTO result = bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", null);
+        //then
+        Assertions.assertNotNull(result);
+    }
 }
