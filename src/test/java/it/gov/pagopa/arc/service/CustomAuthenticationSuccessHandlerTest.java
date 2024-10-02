@@ -28,7 +28,7 @@ import org.springframework.security.oauth2.core.user.OAuth2User;
 import wiremock.org.apache.hc.core5.http.ContentType;
 
 @ExtendWith(MockitoExtension.class)
-public class CustomAuthenticationSuccessHandlerTest {
+class CustomAuthenticationSuccessHandlerTest {
 
   private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
 
