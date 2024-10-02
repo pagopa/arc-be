@@ -8,10 +8,10 @@ import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeD
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
 import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticeDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeListDTO2NoticesListDTOMapper;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
@@ -22,6 +22,7 @@ import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.*;
+import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -29,7 +30,6 @@ import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
@@ -46,7 +46,6 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.ArgumentMatchers.*;
-import static org.mockito.Mockito.never;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -60,25 +59,24 @@ class BizEventsServiceImplTest {
     private static final String ORDER_BY = "TRANSACTION_DATE";
     private static final String ORDERING = "DESC";
 
-    @Autowired
     private BizEventsService bizEventsService;
 
     @Mock
-    private BizEventsConnector bizEventsConnectorMock;
+    private static BizEventsConnector bizEventsConnectorMock;
     @Mock
-    private BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapperMock;
+    private static BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapperMock;
     @Mock
-    private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
+    private static BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
     @Mock
-    private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
+    private static BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
     @Mock
-    private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
+    private static BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
     @Mock
-    private BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapperMock;
+    private static BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapperMock;
     @Mock
-    private BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock;
+    private static BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock;
     @Mock
-    private BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock;
+    private static NoticesListResponseDTOMapper noticesListResponseDTOMapperMock;
 
     @BeforeEach
     void setUp() {
@@ -95,7 +93,21 @@ class BizEventsServiceImplTest {
                 bizEventsPaidNoticeConnectorMock,
                 bizEventsPaidNoticeDTO2NoticeDTOMapperMock,
                 bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock,
-                bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock);
+                noticesListResponseDTOMapperMock);
+    }
+
+    @AfterEach
+    void afterMethod() {
+        Mockito.verifyNoMoreInteractions(
+                bizEventsConnectorMock,
+                transactionDTOMapperMock,
+                transactionsListDTOMapperMock,
+                transactionDetailsDTOMapperMock,
+                bizEventsPaidNoticeConnectorMock,
+                bizEventsPaidNoticeDTO2NoticeDTOMapperMock,
+                bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock,
+                noticesListResponseDTOMapperMock
+        );
     }
 
     @Test
@@ -147,10 +159,8 @@ class BizEventsServiceImplTest {
         assertEquals(2, result.getItemsForPage());
         assertEquals(1, result.getTotalPages());
         assertEquals(10, result.getTotalItems());
-        Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
-        Mockito.verify(transactionDTOMapperMock,Mockito.times(2)).apply(any());
-        Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
 
+        Mockito.verify(transactionDTOMapperMock,Mockito.times(2)).apply(any());
     }
 
     @Test
@@ -183,10 +193,6 @@ class BizEventsServiceImplTest {
         assertEquals(2, result.getItemsForPage());
         assertEquals(1, result.getTotalPages());
         assertEquals(10, result.getTotalItems());
-        Mockito.verify(bizEventsConnectorMock).getTransactionsList(anyString(),anyInt());
-        Mockito.verifyNoInteractions(transactionDTOMapperMock);
-        Mockito.verify(transactionsListDTOMapperMock).apply(any(),anyInt());
-
     }
 
     @Test
@@ -207,8 +213,6 @@ class BizEventsServiceImplTest {
         assertEquals(expectedResult.getCarts(), result.getCarts());
         assertEquals(expectedResult, result);
 
-        Mockito.verify(bizEventsConnectorMock).getTransactionDetails(anyString(),anyString());
-        Mockito.verify(transactionDetailsDTOMapperMock).apply(any());
     }
 
     @Test
@@ -226,7 +230,6 @@ class BizEventsServiceImplTest {
 
         Assertions.assertNotNull(result);
         Assertions.assertArrayEquals(resultAsByteArray, expectedContent);
-        Mockito.verify(bizEventsConnectorMock).getTransactionReceipt(anyString(),anyString());
     }
 
     @Test
@@ -245,9 +248,7 @@ class BizEventsServiceImplTest {
         NoticesListResponseDTO noticesListResponseDTO = NoticesListResponseDTO.builder().noticesListDTO(noticesListDTO).continuationToken(CONTINUATION_TOKEN).build();
 
         when(bizEventsPaidNoticeConnectorMock.getPaidNoticeList(DUMMY_FISCAL_CODE,CONTINUATION_TOKEN,SIZE, true, true, ORDER_BY, ORDERING)).thenReturn(bizEventsPaidResponseDTO);
-        when(bizEventsPaidNoticeDTO2NoticeDTOMapperMock.toNoticeDTOList(listOfbizEventsPaidNoticeDTO)).thenReturn(listOfNoticeDTO);
-        when(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock.toNoticesListDTO(listOfNoticeDTO)).thenReturn(noticesListDTO);
-        when(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock.toNoticesListResponseDTO(noticesListDTO, CONTINUATION_TOKEN)).thenReturn(noticesListResponseDTO);
+        when(noticesListResponseDTOMapperMock.mapToFullResponse(bizEventsPaidNoticeDTO2NoticeDTOMapperMock, bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock, listOfbizEventsPaidNoticeDTO, CONTINUATION_TOKEN)).thenReturn(noticesListResponseDTO);
         //when
         NoticesListResponseDTO result = bizEventsService.retrievePaidListFromBizEvents(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING);
 
@@ -256,12 +257,6 @@ class BizEventsServiceImplTest {
         assertEquals(1, result.getNoticesListDTO().getNotices().size());
         assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices().get(0), result.getNoticesListDTO().getNotices().get(0));
         assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
-
-
-        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
-        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock).toNoticeDTOList(any());
-        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock).toNoticesListDTO(anyList());
-        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock).toNoticesListResponseDTO(any(), anyString());
 
     }
 
@@ -276,11 +271,6 @@ class BizEventsServiceImplTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(Collections.emptyList(), result.getNoticesListDTO().getNotices());
         Assertions.assertNull(result.getContinuationToken());
-
-        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
-        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock, never()).toNoticeDTOList(any());
-        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock, never()).toNoticesListDTO(anyList());
-        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock, never()).toNoticesListResponseDTO(any(), anyString());
     }
 
     @Test
@@ -296,11 +286,6 @@ class BizEventsServiceImplTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(Collections.emptyList(), result.getNoticesListDTO().getNotices());
         Assertions.assertNull(result.getContinuationToken());
-
-        Mockito.verify(bizEventsPaidNoticeConnectorMock).getPaidNoticeList(anyString(),anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
-        Mockito.verify(bizEventsPaidNoticeDTO2NoticeDTOMapperMock, never()).toNoticeDTOList(any());
-        Mockito.verify(bizEventsPaidNoticeListDTO2NoticesListDTOMapperMock, never()).toNoticesListDTO(anyList());
-        Mockito.verify(bizEventsPaidResponseDTO2NoticesListResponseDTOMapperMock, never()).toNoticesListResponseDTO(any(), anyString());
     }
 
 }

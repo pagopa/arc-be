@@ -28,5 +28,15 @@ public final class SecurityUtils {
     return principal.getFiscalCode();
   }
 
+  public static String getUserId() {
+    IamUserInfoDTO principal = getPrincipal();
+
+    if (principal.getUserId() == null) {
+      throw new IllegalArgumentException("User id is missing for the authenticated user");
+    }
+
+    return principal.getUserId();
+  }
+
 
 }

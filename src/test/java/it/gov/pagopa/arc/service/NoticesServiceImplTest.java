@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.service;
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
@@ -15,6 +16,10 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import org.springframework.mock.web.MockHttpServletRequest;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.util.List;
 
@@ -37,6 +42,11 @@ class NoticesServiceImplTest {
 
     @BeforeEach
     void setUp() {
+        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                IamUserInfoDTOFaker.mockInstance(), null, null);
+        authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
+        SecurityContextHolder.getContext().setAuthentication(authentication);
+
         noticesService = new NoticesServiceImpl(bizEventsServiceMock);
         ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("it.gov.pagopa.arc.service.NoticesServiceImpl");
         memoryAppender = new MemoryAppender();
@@ -63,7 +73,7 @@ class NoticesServiceImplTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices(), result.getNoticesListDTO().getNotices());
         Assertions.assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_NOTICES_LIST] The current user has requested to retrieve his list of paid notices, with the current parameters: size 2, paidByMe true, registeredToMe true, orderBy TRANSACTION_DATE and ordering DESC"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_NOTICES_LIST] The current user with id : user_id, has requested to retrieve his list of paid notices, with the current parameters: size 2, paidByMe true, registeredToMe true, orderBy TRANSACTION_DATE and ordering DESC"));
         Mockito.verify(bizEventsServiceMock).retrievePaidListFromBizEvents(anyString(),anyInt(),anyBoolean(),anyBoolean(),anyString(),anyString());
     }
 }

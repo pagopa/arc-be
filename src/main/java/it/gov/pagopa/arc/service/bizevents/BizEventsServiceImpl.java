@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
 import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
-import it.gov.pagopa.arc.dto.mapper.BizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
@@ -31,13 +31,13 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
     private final BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapper;
     private final BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapper;
-    private final BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
+    private final NoticesListResponseDTOMapper noticesListResponseDTOMapper;
     public BizEventsServiceImpl(BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapper,
                                 BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper,
                                 BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper,
                                 BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector, BizEventsPaidNoticeDTO2NoticeDTOMapper bizEventsPaidNoticeDTO2NoticeDTOMapper,
-                                BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapper, BizEventsPaidResponseDTO2NoticesListResponseDTOMapper bizEventsPaidResponseDTO2NoticesListResponseDTOMapper) {
+                                BizEventsPaidNoticeListDTO2NoticesListDTOMapper bizEventsPaidNoticeListDTO2NoticesListDTOMapper, NoticesListResponseDTOMapper noticesListResponseDTOMapper) {
         this.bizEventsConnector = bizEventsConnector;
         this.transactionDTOMapper = transactionDTOMapper;
         this.transactionsListDTOMapper = transactionsListDTOMapper;
@@ -45,7 +45,7 @@ public class BizEventsServiceImpl implements BizEventsService{
         this.bizEventsPaidNoticeConnector = bizEventsPaidNoticeConnector;
         this.bizEventsPaidNoticeDTO2NoticeDTOMapper = bizEventsPaidNoticeDTO2NoticeDTOMapper;
         this.bizEventsPaidNoticeListDTO2NoticesListDTOMapper = bizEventsPaidNoticeListDTO2NoticesListDTOMapper;
-        this.bizEventsPaidResponseDTO2NoticesListResponseDTOMapper = bizEventsPaidResponseDTO2NoticesListResponseDTOMapper;
+        this.noticesListResponseDTOMapper = noticesListResponseDTOMapper;
     }
 
     @Override
@@ -80,8 +80,7 @@ public class BizEventsServiceImpl implements BizEventsService{
 
     @Override
     public NoticesListResponseDTO retrievePaidListFromBizEvents(String continuationToken, Integer size, Boolean isPayer, Boolean isDebtor, String orderBy, String ordering) {
-        NoticesListDTO noticesListDTO = NoticesListDTO.builder().build();
-        NoticesListResponseDTO noticesListResponseDTO =  NoticesListResponseDTO.builder().noticesListDTO(noticesListDTO).build();
+        NoticesListResponseDTO noticesListResponseDTO;
         String retrievedContinuationToken = null;
 
         String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
@@ -94,12 +93,17 @@ public class BizEventsServiceImpl implements BizEventsService{
             }
 
             if(!paidResponseDTO.getNotices().isEmpty()){
-                List<NoticeDTO> noticeDTOList = bizEventsPaidNoticeDTO2NoticeDTOMapper.toNoticeDTOList(paidResponseDTO.getNotices());
-                noticesListDTO = bizEventsPaidNoticeListDTO2NoticesListDTOMapper.toNoticesListDTO(noticeDTOList);
-
-                noticesListResponseDTO= bizEventsPaidResponseDTO2NoticesListResponseDTOMapper.toNoticesListResponseDTO(noticesListDTO, retrievedContinuationToken);
+                noticesListResponseDTO= noticesListResponseDTOMapper.mapToFullResponse(bizEventsPaidNoticeDTO2NoticeDTOMapper, bizEventsPaidNoticeListDTO2NoticesListDTOMapper, paidResponseDTO.getNotices(), retrievedContinuationToken);
+            }else {
+                noticesListResponseDTO = NoticesListResponseDTO.builder()
+                        .noticesListDTO(new NoticesListDTO())
+                        .build();
             }
 
+        }else {
+            noticesListResponseDTO = NoticesListResponseDTO.builder()
+                    .noticesListDTO(new NoticesListDTO())
+                    .build();
         }
 
         return noticesListResponseDTO;
