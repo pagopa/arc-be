@@ -1,7 +1,8 @@
 package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
-import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidResponseDTO;
+import it.gov.pagopa.arc.dto.NoticeRequestDTO;
+import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 
 public interface BizEventsPaidNoticeConnector {
-    BizEventsPaidResponseDTO getPaidNoticeList(String fiscalCode, String continuationToken, Integer size, Boolean isPayer, Boolean isDebtor, String orderBy, String ordering);
+    NoticesListResponseDTO getPaidNoticeList(String fiscalCode, NoticeRequestDTO noticeRequestDTO);
 }
