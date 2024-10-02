@@ -38,21 +38,12 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
 
     @Override
     public NoticesListResponseDTO getPaidNoticeList(String fiscalCode, NoticeRequestDTO noticeRequestDTO) {
-        String continuationToken = null;
-        Integer size = null;
-        Boolean isPayer = null;
-        Boolean isDebtor = null;
-        String orderBy = null;
-        String ordering = null;
-
-        if(noticeRequestDTO != null){
-            continuationToken = noticeRequestDTO.getContinuationToken();
-            size = noticeRequestDTO.getSize();
-            isPayer = noticeRequestDTO.getPaidByMe();
-            isDebtor = noticeRequestDTO.getRegisteredToMe();
-            orderBy = noticeRequestDTO.getOrderBy();
-            ordering = noticeRequestDTO.getOrdering();
-        }
+        String continuationToken = noticeRequestDTO.getContinuationToken();
+        Integer size = noticeRequestDTO.getSize();
+        Boolean isPayer = noticeRequestDTO.getPaidByMe();
+        Boolean isDebtor = noticeRequestDTO.getRegisteredToMe();
+        String orderBy = noticeRequestDTO.getOrderBy();
+        String ordering = noticeRequestDTO.getOrdering();
 
         try {
             Response response = bizEventsPaidNoticeRestClient.paidNoticeList(apikey, fiscalCode, continuationToken , size , isPayer, isDebtor, orderBy, ordering);

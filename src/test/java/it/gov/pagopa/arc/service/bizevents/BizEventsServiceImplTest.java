@@ -55,15 +55,15 @@ class BizEventsServiceImplTest {
     private BizEventsService bizEventsService;
 
     @Mock
-    private static BizEventsConnector bizEventsConnectorMock;
+    private BizEventsConnector bizEventsConnectorMock;
     @Mock
-    private static BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapperMock;
+    private BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapperMock;
     @Mock
-    private static BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
+    private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
     @Mock
-    private static BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
+    private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
     @Mock
-    private static BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
+    private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
 
     @BeforeEach
     void setUp() {

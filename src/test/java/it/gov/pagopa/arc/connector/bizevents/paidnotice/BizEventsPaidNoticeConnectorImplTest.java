@@ -18,7 +18,6 @@ import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import it.gov.pagopa.arc.utils.TestUtils;
-import jakarta.validation.Valid;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -113,7 +112,8 @@ class BizEventsPaidNoticeConnectorImplTest {
                 .size(1)
                 .paidByMe(true)
                 .registeredToMe(true)
-                .orderBy("TRANSACTION_DATE")
+//                .orderBy("TRANSACTION_DATE")
+                .orderBy(null)
                 .ordering("DESC")
                 .build();
 
@@ -122,7 +122,7 @@ class BizEventsPaidNoticeConnectorImplTest {
 
         //then
 
-        List<@Valid NoticeDTO> notices = result.getNoticesListDTO().getNotices();
+        List<NoticeDTO> notices = result.getNoticesListDTO().getNotices();
         assertEquals(1, notices.size());
         assertEquals("1", notices.get(0).getEventId());
         assertEquals("Comune di Milano", notices.get(0).getPayeeName());
@@ -235,12 +235,4 @@ class BizEventsPaidNoticeConnectorImplTest {
         Assertions.assertEquals("An error occurred handling request from biz-Events",exception.getMessage());
     }
 
-    @Test
-    void givenNoticeRequestDTONullWhenCallNoticeRequestDTOThenReturn() {
-        // given
-        //when
-        NoticesListResponseDTO result = bizEventsPaidNoticeConnector.getPaidNoticeList("fiscalCode", null);
-        //then
-        Assertions.assertNotNull(result);
-    }
 }

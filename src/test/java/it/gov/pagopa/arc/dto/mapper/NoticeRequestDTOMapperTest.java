@@ -2,6 +2,7 @@ package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 
 class NoticeRequestDTOMapperTest {
@@ -16,6 +17,13 @@ class NoticeRequestDTOMapperTest {
         //when
         NoticeRequestDTO requestDTO = noticeRequestDTOMapper.apply(CONTINUATION_TOKEN, SIZE, true, true, ORDER_BY, ORDERING);
         //then
+        Assertions.assertEquals(CONTINUATION_TOKEN, requestDTO.getContinuationToken());
+        Assertions.assertEquals(SIZE, requestDTO.getSize());
+        Assertions.assertEquals(true, requestDTO.getPaidByMe());
+        Assertions.assertEquals(true, requestDTO.getRegisteredToMe());
+        Assertions.assertEquals(ORDER_BY, requestDTO.getOrderBy());
+        Assertions.assertEquals(ORDERING, requestDTO.getOrdering());
+
         TestUtils.assertNotNullFields(requestDTO);
     }
 
