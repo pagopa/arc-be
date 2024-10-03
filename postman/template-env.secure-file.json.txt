@@ -84,7 +84,18 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "type": "secret",
       "enabled": true
     },
-
+    {
+      "key": "Apim-Subscription-Key-bizevents-Notices",
+      "value": "<!SubscriptionKeyBizEventsNotices!>",
+      "type": "secret",
+      "enabled": true
+    },
+    {
+      "key": "baseUrlBizEventsNotices",
+      "value": "https://api.<ENV>.platform.pagopa.it/bizevents/notices-service/v1",
+      "type": "default",
+      "enabled": true
+    }
   ],
   "_postman_variable_scope": "environment",
 }
