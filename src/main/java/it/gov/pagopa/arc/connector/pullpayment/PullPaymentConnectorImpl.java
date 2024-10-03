@@ -4,7 +4,6 @@ import feign.FeignException;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException;
-import it.gov.pagopa.arc.utils.Utilities;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -41,7 +40,6 @@ public class PullPaymentConnectorImpl implements PullPaymentConnector {
             } else if(e.status() == HttpStatus.BAD_REQUEST.value()) {
                 throw new PullPaymentInvalidRequestException("One or more inputs provided during the request from pull payment are invalid");
             }else{
-                Utilities.logExceptionDetails(e);
                 throw new PullPaymentInvocationException("An error occurred handling request from pull payment service");
             }
 

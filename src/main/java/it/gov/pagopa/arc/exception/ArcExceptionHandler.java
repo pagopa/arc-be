@@ -71,6 +71,8 @@ public class ArcExceptionHandler {
                 httpStatus.value(),
                 message);
 
+        log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+
         return ResponseEntity
                 .status(httpStatus)
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
