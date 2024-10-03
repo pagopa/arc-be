@@ -2049,6 +2049,16 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "setTimeout(() => {}, 1000)"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
