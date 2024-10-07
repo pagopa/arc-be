@@ -46,7 +46,7 @@ rest-client:
       baseUrl: \${BIZ_EVENTS_BASE_URL:}
       api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
     paid-notice:
-      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:google.com}
+      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
       api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
   pull-payment:
     baseUrl: \${PULL_PAYMENT_BASE_URL:}
