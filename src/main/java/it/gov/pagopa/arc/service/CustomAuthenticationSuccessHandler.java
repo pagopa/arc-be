@@ -23,7 +23,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
 
-  @Value("${white-list}")
+  @Value("${white-list-users}")
   private Set<String> cfWhitelist;
 
   CustomAuthenticationSuccessHandler(
@@ -67,14 +67,8 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
   }
 
-  boolean isInWhiteList(String fiscalCode){
-    Set<String> whiteListUsers = cfWhitelist;
-
-    if (whiteListUsers == null) {
-      return false; // or handle the null case as needed
-    }
-
-    return whiteListUsers.stream().anyMatch(str -> str.equals(fiscalCode));
+  private boolean isInWhiteList(String fiscalCode){
+    return cfWhitelist.contains(fiscalCode);
   }
 
 }

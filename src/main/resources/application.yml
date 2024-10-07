@@ -21,7 +21,7 @@ spring:
             token-uri: \${AUTH_CLIENT_TOKEN_URI:}
             user-name-attribute: sub
             jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
-white-list: \${WHITE_LIST_USERS:}
+white-list-users: \${WHITE_LIST_USERS:}
 
 jwt:
   audience: "\${JWT_TOKEN_AUDIENCE:application-audience}"
