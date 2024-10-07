@@ -4,6 +4,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 
+import it.gov.pagopa.arc.config.WhiteListUsers;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfo;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
@@ -36,9 +37,12 @@ class AuthServiceImplTest {
   @Mock
   private AccessTokenBuilderService accessTokenBuilderService;
 
+  @Mock
+  WhiteListUsers whiteListUsers;
+
   @BeforeEach
   void setUp() {
-    authService = new AuthServiceImpl(mapperMock,tokenStoreService,accessTokenBuilderService);
+    authService = new AuthServiceImpl(mapperMock,tokenStoreService,accessTokenBuilderService,whiteListUsers);
     SecurityContextHolder.clearContext();
     UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
         iamUserInfoDTO, null, null);
