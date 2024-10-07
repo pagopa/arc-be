@@ -21,7 +21,6 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   private final ObjectMapper objectMapper;
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
-
   private final AuthService authService;
 
   CustomAuthenticationSuccessHandler(
