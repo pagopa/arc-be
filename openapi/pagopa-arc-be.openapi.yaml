@@ -366,6 +366,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /notices/{eventId}:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve notice details from arc"
+      operationId: getNoticeDetails
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: eventId
+          in: path
+          description: "A unique id that identifies a paid notice"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained notice details"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeDetailsDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Notice details not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "notice_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /payment-notices:
     get:
       tags:
@@ -689,6 +734,63 @@ components:
           type: string
         maskedEmail:
           type: string
+    NoticeDetailsDTO:
+      type: object
+      properties:
+        infoNotice:
+          $ref: "#/components/schemas/InfoNoticeDTO"
+        carts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemDTO"
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    InfoNoticeDTO:
+      type: object
+      properties:
+        eventId:
+          type: string
+        authCode:
+          type: string
+        rrn:
+          type: string
+        noticeDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        pspName:
+          type: string
+        walletInfo:
+          $ref: "#/components/schemas/WalletInfoDTO"
+        paymentMethod:
+          type: string
+          enum:
+            - BBT
+            - BP
+            - AD
+            - CP
+            - PO
+            - OBEP
+            - JIF
+            - MYBK
+            - PPAL
+            - UNKNOWN
+        payer:
+          $ref: "#/components/schemas/UserDetailDTO"
+        amount:
+          type: integer
+          format: int64
+        fee:
+          type: integer
+          format: int64
+        origin:
+          type: string
+          enum:
+            - INTERNAL
+            - PM
+            - NDP001PROD
+            - NDP002PROD
+            - NDP003PROD
+            - UNKNOWN
     PaymentNoticesListDTO:
       type: object
       properties:
@@ -883,6 +985,7 @@ components:
             - generic_error
             - transaction_not_found_error
             - receipt_not_found_error
+            - notice_not_found_error
             - invalid_amount
             - invalid_date
             - invalid_email
