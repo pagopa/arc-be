@@ -71,7 +71,7 @@ class CustomAuthenticationSuccessHandlerTest {
   @Test
   void givenAuthenticationRequestThenInResponseGetForbidden()
       throws IOException {
-    Mockito.when(authService.getWhiteListUsers()).thenReturn(List.of("PLOMRC01P30L736YA","PLOMRC01P30L736"));
+    Mockito.when(authService.getWhiteListUsers()).thenReturn(null);
     OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken();
 
     MockHttpServletResponse response = new MockHttpServletResponse();
