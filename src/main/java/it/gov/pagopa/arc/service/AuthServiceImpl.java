@@ -1,12 +1,10 @@
 package it.gov.pagopa.arc.service;
 
-import it.gov.pagopa.arc.config.WhiteListUsers;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.dto.mapper.IamUserInfoDTO2UserInfoMapper;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.model.generated.UserInfo;
 import it.gov.pagopa.arc.utils.SecurityUtils;
-import java.util.List;
 import java.util.Map;
 import org.springframework.stereotype.Service;
 
@@ -19,15 +17,12 @@ public class AuthServiceImpl implements AuthService{
 
   private final AccessTokenBuilderService accessTokenBuilderService;
 
-  private final WhiteListUsers whiteListUsers;
   public AuthServiceImpl(IamUserInfoDTO2UserInfoMapper iamUserInfoDTO2UserInfoMapper,
-      TokenStoreService tokenStoreService,
-      AccessTokenBuilderService accessTokenBuilderService,
-      WhiteListUsers whiteListUsers){
+                         TokenStoreService tokenStoreService,
+                         AccessTokenBuilderService accessTokenBuilderService){
     this.iamUserInfoDTO2UserInfoMapper = iamUserInfoDTO2UserInfoMapper;
     this.tokenStoreService = tokenStoreService;
     this.accessTokenBuilderService = accessTokenBuilderService;
-    this.whiteListUsers = whiteListUsers;
   }
 
   @Override
@@ -50,11 +45,6 @@ public class AuthServiceImpl implements AuthService{
     IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
     tokenStoreService.save(accessToken.getAccessToken(), iamUserInfoDTO);
     return accessToken;
-  }
-
-  @Override
-  public List<String> getWhiteListUsers() {
-    return whiteListUsers.getUsers();
   }
 
 

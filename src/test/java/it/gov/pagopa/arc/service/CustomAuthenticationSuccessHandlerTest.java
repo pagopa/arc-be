@@ -10,14 +10,12 @@ import it.gov.pagopa.arc.config.JWTSampleConfiguration;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import java.io.IOException;
 import java.time.Instant;
-import java.util.List;
 import java.util.Map;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
@@ -35,9 +33,6 @@ class CustomAuthenticationSuccessHandlerTest {
   @Mock
   private TokenStoreService tokenStoreService;
 
-  @Mock
-  private AuthService authService;
-
   @BeforeEach
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
@@ -46,12 +41,10 @@ class CustomAuthenticationSuccessHandlerTest {
         new AccessTokenBuilderService(jwtConfiguration),
         new ObjectMapper(),
         jwtConfiguration,
-        tokenStoreService,
-        authService);
+        tokenStoreService);
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
-    Mockito.when(authService.getWhiteListUsers()).thenReturn(List.of("PLOMRC01P30L736Y"));
     OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken();
 
     MockHttpServletResponse response = new MockHttpServletResponse();
@@ -71,7 +64,6 @@ class CustomAuthenticationSuccessHandlerTest {
   @Test
   void givenAuthenticationRequestThenInResponseGetForbidden()
       throws IOException {
-    Mockito.when(authService.getWhiteListUsers()).thenReturn(null);
     OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken();
 
     MockHttpServletResponse response = new MockHttpServletResponse();

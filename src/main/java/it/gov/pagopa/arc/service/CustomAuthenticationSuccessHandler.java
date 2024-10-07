@@ -7,7 +7,8 @@ import it.gov.pagopa.arc.model.generated.TokenResponse;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
-import java.util.List;
+import java.util.Set;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -21,19 +22,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   private final ObjectMapper objectMapper;
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
-  private final AuthService authService;
+
+  @Value("${white-list}")
+  private Set<String> cfWhitelist;
 
   CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
       ObjectMapper objectMapper,
       JWTConfiguration jwtConfiguration,
-      TokenStoreService tokenStoreService,
-      AuthService authService){
+      TokenStoreService tokenStoreService){
     this.accessTokenBuilderService = accessTokenBuilderService;
     this.objectMapper = objectMapper;
     this.jwtConfiguration = jwtConfiguration;
     this.tokenStoreService = tokenStoreService;
-    this.authService = authService;
   }
 
   @Override
@@ -67,7 +68,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   }
 
   boolean isInWhiteList(String fiscalCode){
-    List<String> whiteListUsers = authService.getWhiteListUsers();
+    Set<String> whiteListUsers = cfWhitelist;
 
     if (whiteListUsers == null) {
       return false; // or handle the null case as needed

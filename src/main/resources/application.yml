@@ -21,6 +21,7 @@ spring:
             token-uri: \${AUTH_CLIENT_TOKEN_URI:}
             user-name-attribute: sub
             jwk-set-uri: \${AUTH_CLIENT_JWK_URI:}
+white-list: \${WHITE_LIST_USERS:}
 
 jwt:
   audience: "\${JWT_TOKEN_AUDIENCE:application-audience}"
@@ -45,7 +46,7 @@ rest-client:
       baseUrl: \${BIZ_EVENTS_BASE_URL:}
       api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
     paid-notice:
-      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
+      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:google.com}
       api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
   pull-payment:
     baseUrl: \${PULL_PAYMENT_BASE_URL:}
