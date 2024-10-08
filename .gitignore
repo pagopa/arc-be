@@ -115,3 +115,8 @@ Desktop.ini
 mypay4-be/src/main/resources/application-localdev.properties
 mypay4-be/.java-version
 /helm/charts/*
+
+### Terraform ###
+**/.terraform/*
+*.tfstate
+*.tfstate.*
