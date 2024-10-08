@@ -8,7 +8,7 @@ import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.AuthService;
-import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
+import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;

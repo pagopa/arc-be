@@ -8,6 +8,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.config.JWTSampleConfiguration;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
+import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
