@@ -29,7 +29,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
       ObjectMapper objectMapper,
       JWTConfiguration jwtConfiguration,
       TokenStoreService tokenStoreService,
-      @Value("${white-list-users}") Set<String> cfWhitelist){
+      @Value("${white-list-cf-users}") Set<String> cfWhitelist){
     this.accessTokenBuilderService = accessTokenBuilderService;
     this.objectMapper = objectMapper;
     this.jwtConfiguration = jwtConfiguration;

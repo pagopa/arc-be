@@ -47,26 +47,27 @@ class CustomAuthenticationSuccessHandlerTest {
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
-    OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken();
+    OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken(true);
 
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockHttpServletRequest request = new MockHttpServletRequest();
 
     customAuthenticationSuccessHandler.onAuthenticationSuccess(request,response,oAuth2AuthenticationToken);
 
-    assertEquals(ContentType.APPLICATION_JSON.getMimeType(),response.getContentType());
-
     TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(),TokenResponse.class);
-    assertNotNull(token.getAccessToken());
+
+    assertEquals(ContentType.APPLICATION_JSON.getMimeType(),response.getContentType());
     assertNotNull(tokenStoreService.getUserInfo(token.getAccessToken()));
-    assertNotNull(token.getTokenType());
-    assertNotNull(token.getExpiresIn());
+    assertEquals("Bearer",token.getTokenType());
+    assertEquals(3600,token.getExpiresIn());
+
+    assertNotNull(JWT.decode(token.getAccessToken()));
   }
 
   @Test
   void givenAuthenticationRequestThenInResponseGetForbidden()
       throws IOException {
-    OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken();
+    OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken(false);
 
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockHttpServletRequest request = new MockHttpServletRequest();
@@ -75,13 +76,14 @@ class CustomAuthenticationSuccessHandlerTest {
 
     assertEquals(ContentType.APPLICATION_JSON.getMimeType(), response.getContentType());
     assertEquals(403,response.getStatus());
+    assertEquals("{\"error\": \"User not allowed to access this application\"}",response.getContentAsString());
   }
 
-  private OAuth2AuthenticationToken getAuthenticationToken(){
+  private OAuth2AuthenticationToken getAuthenticationToken(boolean isValidUser){
     Consumer<Map<String, Object>> attributesConsumer = attributes -> {
       attributes.putAll(Map.of(
           "sub", "123456",
-          "fiscalNumber", "TINIT-PLOMRC01P30L736Y",
+          "fiscalNumber", isValidUser ? "TINIT-PLOMRC01P30L736Y" : "TINIT-PLOMRC01P30L736A",
           "familyName", "Polo",
           "name", "Marco",
           "email", "marco.polo@example.com",

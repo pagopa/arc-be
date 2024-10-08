@@ -69,7 +69,7 @@ import org.springframework.web.util.UriComponentsBuilder;
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
         "spring.application.name=app",
         "spring.application.version=1",
-        "white-list=PLOMRC01P30L736Y",
+        "white-list-cf-users=PLOMRC01P30L736Y",
         "rest-client.biz-events.transactions.api-key=x_api_key0",
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.transactions.baseUrl= bizEventsMock",
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
