@@ -8,11 +8,15 @@ import feign.Response;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
+import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
+import it.gov.pagopa.arc.connector.bizevents.enums.PaymentMethod;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
@@ -234,4 +238,59 @@ class BizEventsPaidNoticeConnectorImplTest {
         Assertions.assertEquals("An error occurred handling request from biz-Events",exception.getMessage());
     }
 
+    @Test
+    void givenEventIdWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeDetails() {
+        //When
+        BizEventsPaidNoticeDetailsDTO paidNoticeDetails = bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID", "DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS", "EVENT_ID_OK_1");
+        //then
+        Assertions.assertNotNull(paidNoticeDetails.getInfoNotice());
+        Assertions.assertEquals(1, paidNoticeDetails.getCarts().size());
+        Assertions.assertEquals("EVENT_ID_OK_1", paidNoticeDetails.getInfoNotice().getEventId());
+        Assertions.assertEquals("250863", paidNoticeDetails.getInfoNotice().getAuthCode());
+        Assertions.assertEquals("223560110624", paidNoticeDetails.getInfoNotice().getRrn());
+        Assertions.assertEquals("2024-06-13T15:22:04Z", paidNoticeDetails.getInfoNotice().getNoticeDate());
+        Assertions.assertEquals("Worldline Merchant Services Italia S.p.A.", paidNoticeDetails.getInfoNotice().getPspName());
+
+        Assertions.assertEquals("ERNESTO HOLDER", paidNoticeDetails.getInfoNotice().getWalletInfo().getAccountHolder());
+        Assertions.assertEquals("MASTERCARD", paidNoticeDetails.getInfoNotice().getWalletInfo().getBrand());
+        Assertions.assertEquals("0403", paidNoticeDetails.getInfoNotice().getWalletInfo().getBlurredNumber());
+
+        Assertions.assertEquals(PaymentMethod.PO, paidNoticeDetails.getInfoNotice().getPaymentMethod());
+        Assertions.assertEquals("ERNESTO PAYER", paidNoticeDetails.getInfoNotice().getPayer().getName());
+        Assertions.assertEquals("TAX_CODE", paidNoticeDetails.getInfoNotice().getPayer().getTaxCode());
+
+        Assertions.assertEquals("634.37", paidNoticeDetails.getInfoNotice().getAmount());
+        Assertions.assertEquals("0.53", paidNoticeDetails.getInfoNotice().getFee());
+        Assertions.assertEquals(Origin.UNKNOWN, paidNoticeDetails.getInfoNotice().getOrigin());
+
+        Assertions.assertEquals("pagamento", paidNoticeDetails.getCarts().get(0).getSubject());
+        Assertions.assertEquals("634.37", paidNoticeDetails.getCarts().get(0).getAmount());
+
+        Assertions.assertEquals("ACI Automobile Club Italia", paidNoticeDetails.getCarts().get(0).getPayee().getName());
+        Assertions.assertEquals("00493410583", paidNoticeDetails.getCarts().get(0).getPayee().getTaxCode());
+
+        Assertions.assertEquals("ERNESTO PAYER", paidNoticeDetails.getCarts().get(0).getDebtor().getName());
+        Assertions.assertEquals("TAX_CODE", paidNoticeDetails.getCarts().get(0).getDebtor().getTaxCode());
+
+        Assertions.assertEquals("960000000094659945", paidNoticeDetails.getCarts().get(0).getRefNumberValue());
+        Assertions.assertEquals("IUV", paidNoticeDetails.getCarts().get(0).getRefNumberType());
+    }
+
+    @Test
+    void givenEventIdWhenNotFoundThenReturnException() {
+        //given
+        //when
+        BizEventsPaidNoticeNotFoundException bizEventsPaidNoticeNotFoundException = assertThrows(BizEventsPaidNoticeNotFoundException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS_NOT_FOUND", "EVENT_ID_NOT_FOUND_1"));
+        Assertions.assertEquals("An error occurred handling request from biz-Events to retrieve paid notice with event id [EVENT_ID_NOT_FOUND_1] for the current user with userId [USER_ID]", bizEventsPaidNoticeNotFoundException.getMessage());
+    }
+
+    @Test
+    void givenEventIdWhenErrorThenThrowBizEventsInvocationException() {
+        //When
+        //Then
+        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS_ERROR", "EVENT_ID_ERROR_1"));
+        Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
+    }
 }

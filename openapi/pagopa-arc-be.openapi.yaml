@@ -701,6 +701,11 @@ components:
             - NDP003PROD
             - UNKNOWN
     CartItemDTO:
+      required:
+        - subject
+        - amount
+        - refNumberValue
+        - refNumberType
       type: object
       properties:
         subject:
@@ -717,6 +722,8 @@ components:
         refNumberType:
           type: string
     UserDetailDTO:
+      required:
+        - taxCode
       type: object
       properties:
         name:
@@ -745,6 +752,13 @@ components:
             $ref: "#/components/schemas/CartItemDTO"
           x-field-extra-annotation: "@lombok.Builder.Default"
     InfoNoticeDTO:
+      required:
+        - eventId
+        - rrn
+        - noticeDate
+        - pspName
+        - amount
+        - origin
       type: object
       properties:
         eventId:

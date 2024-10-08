@@ -3,11 +3,13 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import feign.FeignException;
 import feign.Response;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeListDTO;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
+import it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -64,6 +66,19 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
             }
         }
 
+    }
+
+    @Override
+    public BizEventsPaidNoticeDetailsDTO getPaidNoticeDetails(String userId, String userFiscalCode, String eventId) {
+
+        try {
+            return bizEventsPaidNoticeRestClient.paidNoticeDetails(apikey, userFiscalCode, eventId);
+        }catch (FeignException e){
+            if(e.status() == HttpStatus.NOT_FOUND.value()){
+                throw new BizEventsPaidNoticeNotFoundException("An error occurred handling request from biz-Events to retrieve paid notice with event id [%s] for the current user with userId [%s]".formatted(eventId, userId));
+            }
+            throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
+        }
     }
 
     private NoticesListResponseDTO handleNotFound(){
