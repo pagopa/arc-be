@@ -1,4 +1,4 @@
-package it.gov.pagopa.arc.service;
+package it.gov.pagopa.arc.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -8,7 +8,9 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.config.JWTSampleConfiguration;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
-import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
+import it.gov.pagopa.arc.service.AccessTokenBuilderService;
+import it.gov.pagopa.arc.service.TokenStoreService;
+import it.gov.pagopa.arc.service.TokenStoreServiceImpl;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
