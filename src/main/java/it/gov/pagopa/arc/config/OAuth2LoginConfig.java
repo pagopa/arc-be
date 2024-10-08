@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.security.InMemoryOAuth2AuthorizationRequestRepository;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
-import it.gov.pagopa.arc.service.CustomAuthenticationSuccessHandler;
+import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
