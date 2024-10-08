@@ -11,6 +11,7 @@ import it.gov.pagopa.arc.model.generated.TokenResponse;
 import java.io.IOException;
 import java.time.Instant;
 import java.util.Map;
+import java.util.Set;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -41,7 +42,8 @@ class CustomAuthenticationSuccessHandlerTest {
         new AccessTokenBuilderService(jwtConfiguration),
         new ObjectMapper(),
         jwtConfiguration,
-        tokenStoreService);
+        tokenStoreService,
+        Set.of("PLOMRC01P30L736Y"));
   }
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {

@@ -22,19 +22,19 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
   private final ObjectMapper objectMapper;
   private final TokenStoreService tokenStoreService;
   private final JWTConfiguration jwtConfiguration;
+  private final Set<String> cfWhitelist;
 
-  @Value("${white-list-users}")
-  private Set<String> cfWhitelist;
-
-  CustomAuthenticationSuccessHandler(
+  public CustomAuthenticationSuccessHandler(
       AccessTokenBuilderService accessTokenBuilderService,
       ObjectMapper objectMapper,
       JWTConfiguration jwtConfiguration,
-      TokenStoreService tokenStoreService){
+      TokenStoreService tokenStoreService,
+      @Value("${white-list-users}") Set<String> cfWhitelist){
     this.accessTokenBuilderService = accessTokenBuilderService;
     this.objectMapper = objectMapper;
     this.jwtConfiguration = jwtConfiguration;
     this.tokenStoreService = tokenStoreService;
+    this.cfWhitelist = cfWhitelist;
   }
 
   @Override
@@ -43,7 +43,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
     IamUserInfoDTO userInfoDTO = IamUserInfoDTO.map2IamUserInfoDTO( oauth2Token.getPrincipal().getAttributes());
-
+    String body;
     if( isInWhiteList(userInfoDTO.getFiscalCode()) ){
       TokenResponse accessToken = new TokenResponse(
           accessTokenBuilderService.build(),
@@ -53,18 +53,15 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
           null);
 
       tokenStoreService.save( accessToken.getAccessToken() , userInfoDTO );
-
-      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      response.getWriter().write( objectMapper.writeValueAsString(accessToken) );
-      response.getWriter().flush();
+      body = objectMapper.writeValueAsString(accessToken);
     } else {
       authentication.setAuthenticated(false);
       response.setStatus(403);
-      response.setContentType(MediaType.APPLICATION_JSON_VALUE);
-      response.getWriter().write("{\"error\": \"User not allowed to access this application\"}");
-      response.getWriter().flush();
+      body = "{\"error\": \"User not allowed to access this application\"}";
     }
-
+    response.setContentType(MediaType.APPLICATION_JSON_VALUE);
+    response.getWriter().write(body);
+    response.getWriter().flush();
   }
 
   private boolean isInWhiteList(String fiscalCode){
