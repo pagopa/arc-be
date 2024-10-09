@@ -11,6 +11,7 @@ import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsInfoPaidNoticeDTOF
 import it.gov.pagopa.arc.model.generated.InfoNoticeDTO;
 import it.gov.pagopa.arc.model.generated.UserDetailDTO;
 import it.gov.pagopa.arc.model.generated.WalletInfoDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -62,5 +63,7 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
         assertEquals( 565430L, infoNoticeDTO.getAmount());
         assertEquals( 29L, infoNoticeDTO.getFee());
         assertEquals(InfoNoticeDTO.OriginEnum.PM, infoNoticeDTO.getOrigin());
+
+        TestUtils.assertNotNullFields(infoNoticeDTO);
     }
 }

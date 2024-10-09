@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.mapper.BizEventsCartItem2CartItemDTOMapper;
 import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -47,5 +48,7 @@ class BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperTest {
         assertEquals(noticeDetailsDTO.getInfoNotice(), result.getInfoNotice());
         assertEquals(2, result.getCarts().size());
         assertEquals(noticeDetailsDTO.getCarts(), result.getCarts());
+
+        TestUtils.assertNotNullFields(result);
     }
 }
