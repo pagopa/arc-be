@@ -4,8 +4,10 @@ import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
+import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
 import it.gov.pagopa.arc.utils.MemoryAppender;
@@ -46,7 +48,7 @@ class NoticesServiceImplTest {
     }
 
     @Test
-    void givenRetrieveNoticesAndTokenWhenThen() {
+    void givenRequestWhenRetrieveNoticesAndTokenThenReturnNoticesListResponseDTO () {
         //given
         NoticeDTO noticeDTO = NoticeDTOFaker.mockInstance(1, false);
         List<NoticeDTO> listOfNoticeDTO = List.of(noticeDTO);
@@ -64,5 +66,18 @@ class NoticesServiceImplTest {
         Assertions.assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices(), result.getNoticesListDTO().getNotices());
         Assertions.assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_NOTICES_LIST] The current user with id : user_id, has requested to retrieve his list of paid notices, with the current parameters: size 2, paidByMe true, registeredToMe true, orderBy TRANSACTION_DATE and ordering DESC"));
+    }
+
+    @Test
+    void givenRequestWhenRetrieveNoticeDetailsThenReturnNoticeDetailsDTO(){
+        //given
+        NoticeDetailsDTO noticeDetailsDTO = NoticeDetailsDTOFaker.mockInstance();
+
+        Mockito.when(bizEventsServiceMock.retrievePaidNoticeDetailsFromBizEvents(USER_ID, DUMMY_FISCAL_CODE, "EVENT_ID")).thenReturn(noticeDetailsDTO);
+        //When
+        NoticeDetailsDTO result = noticesService.retrieveNoticeDetails(USER_ID, DUMMY_FISCAL_CODE, "EVENT_ID");
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(noticeDetailsDTO, result);
     }
 }
