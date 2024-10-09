@@ -6,9 +6,10 @@ import it.gov.pagopa.arc.fakers.CommonUserDetailDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsCartItemDTOFaker;
 import it.gov.pagopa.arc.model.generated.CartItemDTO;
 import it.gov.pagopa.arc.model.generated.UserDetailDTO;
-import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mapstruct.factory.Mappers;
+import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -20,15 +21,11 @@ import static org.mockito.ArgumentMatchers.any;
 @ExtendWith(MockitoExtension.class)
 class BizEventsCartItem2CartItemDTOMapperTest {
 
-    private BizEventsCartItem2CartItemDTOMapper cartItemMapper;
-
     @Mock
     private BizEventsUserDetail2UserDetailDTOMapper userDetailsMapperMock;
 
-    @BeforeEach
-    void setUp() {
-        cartItemMapper = new BizEventsCartItem2CartItemDTOMapper(userDetailsMapperMock);
-    }
+    @InjectMocks
+    private final BizEventsCartItem2CartItemDTOMapper cartItemMapper = Mappers.getMapper(BizEventsCartItem2CartItemDTOMapper.class);
 
     @Test
     void givenBizEventsCartItemDTOWhenMapCartThenReturnCartItemDTO() {
