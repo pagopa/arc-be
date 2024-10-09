@@ -4,19 +4,19 @@ import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
-import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
-import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
-import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
-import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper;
+import it.gov.pagopa.arc.fakers.*;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
+import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.*;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
@@ -65,6 +65,9 @@ class BizEventsServiceImplTest {
     @Mock
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
 
+    @Mock
+    private BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock;
+
     @BeforeEach
     void setUp() {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
@@ -77,7 +80,8 @@ class BizEventsServiceImplTest {
                 transactionDTOMapperMock,
                 transactionsListDTOMapperMock,
                 transactionDetailsDTOMapperMock,
-                bizEventsPaidNoticeConnectorMock);
+                bizEventsPaidNoticeConnectorMock,
+                bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock);
     }
 
     @AfterEach
@@ -87,7 +91,8 @@ class BizEventsServiceImplTest {
                 transactionDTOMapperMock,
                 transactionsListDTOMapperMock,
                 transactionDetailsDTOMapperMock,
-                bizEventsPaidNoticeConnectorMock
+                bizEventsPaidNoticeConnectorMock,
+                bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock
         );
         SecurityContextHolder.clearContext();
     }
@@ -236,5 +241,23 @@ class BizEventsServiceImplTest {
 
     }
 
+    @Test
+    void givenEventIdWhenCallRetrievePaidNoticeDetailsFromBizEventsThenReturnPaidNoticeDetails() {
+        //given
+        BizEventsPaidNoticeDetailsDTO bizEventsPaidNoticeDetailsDTO = BizEventsPaidNoticeDetailsDTOFaker.mockInstance();
+        NoticeDetailsDTO expectedResult = NoticeDetailsDTOFaker.mockInstance();
 
+        Mockito.when(bizEventsPaidNoticeConnectorMock.getPaidNoticeDetails("USER_ID", DUMMY_FISCAL_CODE, "EVENT_ID")).thenReturn(bizEventsPaidNoticeDetailsDTO);
+        Mockito.when(bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock.toNoticeDetailsDTO(bizEventsPaidNoticeDetailsDTO)).thenReturn(expectedResult);
+        //when
+        NoticeDetailsDTO result = bizEventsService.retrievePaidNoticeDetailsFromBizEvents("USER_ID", DUMMY_FISCAL_CODE, "EVENT_ID");
+
+        //then
+        Assertions.assertNotNull(result);
+        assertEquals(2, result.getCarts().size());
+        assertEquals(expectedResult.getInfoNotice(), result.getInfoNotice());
+        assertEquals(expectedResult.getCarts(), result.getCarts());
+        assertEquals(expectedResult, result);
+
+    }
 }
