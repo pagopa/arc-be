@@ -4,6 +4,7 @@ import it.gov.pagopa.arc.controller.generated.ArcNoticesApi;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.NoticeRequestDTOMapper;
+import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.service.NoticesService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
@@ -40,5 +41,14 @@ public class NoticesControllerImpl implements ArcNoticesApi {
                 .ok()
                 .header("x-continuation-token", continuationToken)
                 .body(noticesListResponseDTO.getNoticesListDTO());
+    }
+
+    @Override
+    public ResponseEntity<NoticeDetailsDTO> getNoticeDetails(String eventId) {
+        String userFiscalCode = SecurityUtils.getUserFiscalCode();
+        String userId = SecurityUtils.getUserId();
+        NoticeDetailsDTO noticeDetailsDTO = noticesService.retrieveNoticeDetails(userId, userFiscalCode, eventId);
+
+        return ResponseEntity.ok().body(noticeDetailsDTO);
     }
 }
