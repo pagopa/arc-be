@@ -3,12 +3,15 @@ package it.gov.pagopa.arc.service.bizevents;
 import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
+import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper;
+import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
 import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
@@ -27,17 +30,20 @@ public class BizEventsServiceImpl implements BizEventsService{
     private final BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper;
     private final BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper;
     private final BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
+    private final BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper;
 
     public BizEventsServiceImpl(BizEventsConnector bizEventsConnector,
                                 BizEventsTransactionDTO2TransactionDTOMapper transactionDTOMapper,
                                 BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapper,
                                 BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapper,
-                                BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector) {
+                                BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector,
+                                BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper) {
         this.bizEventsConnector = bizEventsConnector;
         this.transactionDTOMapper = transactionDTOMapper;
         this.transactionsListDTOMapper = transactionsListDTOMapper;
         this.transactionDetailsDTOMapper = transactionDetailsDTOMapper;
         this.bizEventsPaidNoticeConnector = bizEventsPaidNoticeConnector;
+        this.bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper = bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper;
     }
 
     @Override
@@ -73,5 +79,11 @@ public class BizEventsServiceImpl implements BizEventsService{
     @Override
     public NoticesListResponseDTO retrievePaidListFromBizEvents(String userFiscalCode, NoticeRequestDTO noticeRequestDTO) {
          return bizEventsPaidNoticeConnector.getPaidNoticeList(userFiscalCode, noticeRequestDTO);
+    }
+
+    @Override
+    public NoticeDetailsDTO retrievePaidNoticeDetailsFromBizEvents(String userId, String userFiscalCode, String eventId) {
+        BizEventsPaidNoticeDetailsDTO paidNoticeDetails = bizEventsPaidNoticeConnector.getPaidNoticeDetails(userId, userFiscalCode, eventId);
+        return bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper.toNoticeDetailsDTO(paidNoticeDetails);
     }
 }

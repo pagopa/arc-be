@@ -8,7 +8,9 @@ import it.gov.pagopa.arc.dto.mapper.NoticeRequestDTOMapper;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
+import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
+import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.NoticesService;
@@ -50,7 +52,7 @@ class NoticesControllerImplTest {
     private static final String ORDERING = "DESC";
     private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final String USER_ID = "user_id";
-
+    private static final String EVENT_ID = "event_id";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -146,4 +148,27 @@ class NoticesControllerImplTest {
         Assertions.assertNotNull(resultResponse);
         Assertions.assertEquals(noticesListDTO, resultResponse);
     }
+
+    @Test
+    void givenEventIdWhenCallGetNoticeDetailsThenReturnNoticeDetails() throws Exception {
+        //Given
+        NoticeDetailsDTO noticeDetailsDTO = NoticeDetailsDTOFaker.mockInstance();
+
+        Mockito.when(noticesServiceMock.retrieveNoticeDetails(USER_ID,DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(noticeDetailsDTO);
+        //When
+        MvcResult result = mockMvc.perform(
+                        get("/notices/{eventId}", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        NoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(
+                result.getResponse().getContentAsString(),
+                NoticeDetailsDTO.class);
+
+
+        //Then
+        Assertions.assertNotNull(resultResponse);
+        Assertions.assertEquals(noticeDetailsDTO, resultResponse);
+    }
+
 }
