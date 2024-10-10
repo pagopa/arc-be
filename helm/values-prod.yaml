@@ -35,7 +35,6 @@ microservice-chart:
     AUTH_CLIENT_AUTHORIZATION_URI: TBD
     AUTH_CLIENT_TOKEN_URI: TBD
     AUTH_CLIENT_JWK_URI: TBD
-    JWT_TOKEN_EXPIRATION_SECONDS: 28800
   keyvault:
     name: "arc-p-itn-cittadini-kv"
     tenantId: "7788edaf-0346-4068-9d79-c868aed15b3d"
