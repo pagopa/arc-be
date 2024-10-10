@@ -65,7 +65,7 @@ dependencies {
 	implementation("com.auth0:java-jwt:$javaJwtVersion")
 	implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
 
-	// Forced dependecy cause the imported one from spring-cloud-starter-openfeign has a CVE
+	// Forced transient dependecies to solve CVEs
 	implementation ("commons-io:commons-io:$commonsIo")
 
 	//	Testing
