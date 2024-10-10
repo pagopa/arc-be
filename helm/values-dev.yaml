@@ -35,6 +35,7 @@ microservice-chart:
     AUTH_CLIENT_AUTHORIZATION_URI: https://dev.oneid.pagopa.it/login
     AUTH_CLIENT_TOKEN_URI: https://dev.oneid.pagopa.it/oidc/token
     AUTH_CLIENT_JWK_URI: https://dev.oneid.pagopa.it/oidc/keys
+
   keyvault:
     name: "arc-d-itn-cittadini-kv"
     tenantId: "7788edaf-0346-4068-9d79-c868aed15b3d"
