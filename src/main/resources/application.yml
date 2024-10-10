@@ -56,9 +56,9 @@ logging:
   level:
     org:
       springframework:
-        security: INFO
-        web: INFO
+        security: DEBUG
+        web: DEBUG
         session:
           web:
             http:
-              SessionRepositoryFilter: INFO
+              SessionRepositoryFilter: DEBUG
