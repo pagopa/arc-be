@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.2.5"
+	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.4"
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
@@ -32,11 +32,8 @@ val wiremockVersion = "3.5.4"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
-val commonsIo = "2.16.1"
-val tomcat = "10.1.25"
 
 dependencies {
-	implementation ("org.apache.tomcat.embed:tomcat-embed-core:$tomcat")
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
@@ -45,14 +42,12 @@ dependencies {
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
 	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
-	implementation ("commons-io:commons-io:$commonsIo")
 	// Spring Security
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
 	//lombok
 	annotationProcessor("org.projectlombok:lombok")
 	compileOnly("org.projectlombok:lombok")
-	// CVE Fix
 
 
 
@@ -91,7 +86,7 @@ tasks.jacocoTestReport {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
 	}
 }
 
