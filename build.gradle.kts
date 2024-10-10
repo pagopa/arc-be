@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.2.5"
+	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.4"
 	jacoco
 	id("org.sonarqube") version "5.0.0.4638"
@@ -32,6 +32,7 @@ val wiremockVersion = "3.5.4"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
+val commonsIo = "2.16.1"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -49,6 +50,8 @@ dependencies {
 	annotationProcessor("org.projectlombok:lombok")
 	compileOnly("org.projectlombok:lombok")
 
+
+
 	/**
 	* Mapstruct
 	* https://mapstruct.org/
@@ -61,6 +64,9 @@ dependencies {
 	// validation token jwt
 	implementation("com.auth0:java-jwt:$javaJwtVersion")
 	implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
+
+	// Forced transient dependecies to solve CVEs
+	implementation ("commons-io:commons-io:$commonsIo")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
@@ -84,7 +90,7 @@ tasks.jacocoTestReport {
 
 dependencyManagement {
 	imports {
-		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.1")
+		mavenBom("org.springframework.cloud:spring-cloud-dependencies:2023.0.3")
 	}
 }
 
