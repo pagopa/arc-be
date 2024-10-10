@@ -35,6 +35,7 @@ microservice-chart:
     AUTH_CLIENT_AUTHORIZATION_URI: https://uat.oneid.pagopa.it/login
     AUTH_CLIENT_TOKEN_URI: https://uat.oneid.pagopa.it/oidc/token
     AUTH_CLIENT_JWK_URI: https://uat.oneid.pagopa.it/oidc/keys
+    JWT_TOKEN_EXPIRATION_SECONDS: JWT_TOKEN_EXPIRATION_SECONDS
 
   keyvault:
     name: "arc-u-itn-cittadini-kv"

@@ -87,7 +87,6 @@ microservice-chart:
     JWT_TOKEN_PUBLIC_KEY: jwt-public-key
     JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY: jwt-assistance-zendesk-private-key
     WHITE_LIST_USERS: cf-whitelist
-    JWT_TOKEN_EXPIRATION_SECONDS: 28800
   # nodeSelector: {}
 
   # tolerations: []
