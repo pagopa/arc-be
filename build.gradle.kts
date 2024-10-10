@@ -32,6 +32,7 @@ val wiremockVersion = "3.5.4"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
+val commonsIo = "2.16.1"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -63,6 +64,9 @@ dependencies {
 	// validation token jwt
 	implementation("com.auth0:java-jwt:$javaJwtVersion")
 	implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
+
+	// Forced dependecy cause the imported one from spring-cloud-starter-openfeign has a CVE
+	implementation ("commons-io:commons-io:$commonsIo")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
