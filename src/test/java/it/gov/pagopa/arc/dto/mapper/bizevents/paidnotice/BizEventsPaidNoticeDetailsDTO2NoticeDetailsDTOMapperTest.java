@@ -7,6 +7,7 @@ import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDetailsD
 import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -14,6 +15,8 @@ import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
+
+import java.util.Collections;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -50,5 +53,17 @@ class BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperTest {
         assertEquals(noticeDetailsDTO.getCarts(), result.getCarts());
 
         TestUtils.assertNotNullFields(result);
+    }
+
+    @Test
+    void givenBizEventsPaidNoticeDetailsDTOWithNullWhenCallToNoticeDetailsDTOThenReturnNoticeDetailsDTO() {
+        //given
+       BizEventsPaidNoticeDetailsDTO bizEventsPaidNoticeDetailsDTO = new BizEventsPaidNoticeDetailsDTO();
+        //when
+        NoticeDetailsDTO result = mapper.toNoticeDetailsDTO(bizEventsPaidNoticeDetailsDTO);
+        //then
+        Assertions.assertNull(result.getInfoNotice());
+        Assertions.assertEquals(Collections.emptyList(), result.getCarts());
+
     }
 }

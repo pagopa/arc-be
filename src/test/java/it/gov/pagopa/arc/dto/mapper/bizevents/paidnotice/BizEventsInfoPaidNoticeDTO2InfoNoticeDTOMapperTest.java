@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsUserDetailDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsWalletInfoDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsInfoPaidNoticeDTO;
+import it.gov.pagopa.arc.connector.bizevents.enums.Origin;
 import it.gov.pagopa.arc.dto.mapper.BizEventsUserDetail2UserDetailDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsWalletInfo2WalletInfoDTOMapper;
 import it.gov.pagopa.arc.fakers.CommonUserDetailDTOFaker;
@@ -25,6 +26,8 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.time.ZonedDateTime;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNull;
+
 @ExtendWith(MockitoExtension.class)
 class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
     @Mock
@@ -65,5 +68,36 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
         assertEquals(InfoNoticeDTO.OriginEnum.PM, infoNoticeDTO.getOrigin());
 
         TestUtils.assertNotNullFields(infoNoticeDTO);
+    }
+
+    @Test
+    void givenBizEventsInfoPaidNoticeDTOWithNullWalletInfoAndPayerWhenCallMapperThenReturnInfoNoticeDTO() {
+        //given
+        BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO = BizEventsInfoPaidNoticeDTO.builder()
+                .eventId("EVENT_ID")
+                .authCode("250863")
+                .rrn("51561651")
+                .noticeDate("2024-06-27T13:07:25Z")
+                .pspName("Worldline Merchant Services Italia S.p.A.")
+                .amount("5,654.3")
+                .fee("0.29")
+                .origin(Origin.PM)
+                .build();
+
+        //when
+        InfoNoticeDTO infoNoticeDTO = mapper.toInfoNoticeDTO(bizEventsInfoPaidNoticeDTO);
+        //then
+        Assertions.assertEquals("EVENT_ID", infoNoticeDTO.getEventId());
+        Assertions.assertEquals("250863", infoNoticeDTO.getAuthCode());
+        Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
+        Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
+        Assertions.assertEquals(ZonedDateTime.parse("2024-06-27T13:07:25Z"), infoNoticeDTO.getNoticeDate());
+        Assertions.assertEquals("Worldline Merchant Services Italia S.p.A.", infoNoticeDTO.getPspName());
+        assertEquals( 565430L, infoNoticeDTO.getAmount());
+        assertEquals( 29L, infoNoticeDTO.getFee());
+        assertEquals(InfoNoticeDTO.OriginEnum.PM, infoNoticeDTO.getOrigin());
+        assertNull(infoNoticeDTO.getWalletInfo());
+
+        TestUtils.assertNotNullFields(infoNoticeDTO, "walletInfo","paymentMethod","payer");
     }
 }
