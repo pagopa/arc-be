@@ -1110,7 +1110,7 @@
                       "script": {
                         "exec": [
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout,1500);\r",
+                          "    retryRequest(postman,pm,setTimeout,2000);\r",
                           "}else{\r",
                           "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -2765,6 +2765,16 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "setTimeout(()=>{}, 2000)"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -2820,6 +2830,16 @@
                           "pm.test(\"Disable event from Biz-Events, expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "setTimeout(()=>{}, 2000)"
                         ],
                         "type": "text/javascript",
                         "packages": {}
