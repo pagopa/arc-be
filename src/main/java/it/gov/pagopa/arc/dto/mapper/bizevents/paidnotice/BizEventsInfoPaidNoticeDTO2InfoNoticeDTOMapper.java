@@ -15,5 +15,7 @@ public interface BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapper {
     @Mapping(source = "amount", target = "amount", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "euroToCents")
     @Mapping(source = "fee", target = "fee", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "euroToCents")
     @Mapping(source = "noticeDate", target = "noticeDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "dateStringToZonedDateTime")
+    @Mapping(source = "walletInfo", target = "walletInfo", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
+    @Mapping(source = "payer", target = "payer", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS)
     InfoNoticeDTO toInfoNoticeDTO(BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO);
 }
