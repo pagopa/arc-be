@@ -7,7 +7,7 @@
   },
   "item": [
     {
-      "name": "transactions",
+      "name": "1. transactions",
       "item": [
         {
           "name": "setup",
@@ -314,7 +314,7 @@
                       "script": {
                         "exec": [
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout,1500); \r",
                           "}else{\r",
                           "    pm.test(\"[Get transaction receipt - Case 1], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -683,7 +683,7 @@
                       "script": {
                         "exec": [
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout, 1500);\r",
                           "}else{\r",
                           "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -1110,7 +1110,7 @@
                       "script": {
                         "exec": [
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout,1500);\r",
                           "}else{\r",
                           "    pm.test(\"[Get transaction receipt - Case 2], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -1401,7 +1401,7 @@
       ]
     },
     {
-      "name": "Notices",
+      "name": "2. Notices",
       "item": [
         {
           "name": "Happy Case",
@@ -1624,7 +1624,7 @@
                         "exec": [
                           "\r",
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout,1000);\r",
                           "}else{\r",
                           "    pm.test(\"[Get notice details - Case 1], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -1856,65 +1856,6 @@
                   "response": []
                 },
                 {
-                  "name": "Disable notices User 2",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "pm.test(\"Disable event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})"
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "apikey",
-                      "apikey": [
-                        {
-                          "key": "value",
-                          "value": "{{Apim-Subscription-Key-bizevents-Notices}}",
-                          "type": "string"
-                        },
-                        {
-                          "key": "key",
-                          "value": "Ocp-Apim-Subscription-Key",
-                          "type": "string"
-                        },
-                        {
-                          "key": "in",
-                          "value": "header",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "POST",
-                    "header": [
-                      {
-                        "key": "x-fiscal-code",
-                        "value": "{{fakeUser1}}",
-                        "type": "text"
-                      }
-                    ],
-                    "url": {
-                      "raw": "{{baseUrlBizEventsNotices}}/paids/{{eventId}}/disable",
-                      "host": [
-                        "{{baseUrlBizEventsNotices}}"
-                      ],
-                      "path": [
-                        "paids",
-                        "{{eventId}}",
-                        "disable"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
                   "name": "Notices list",
                   "event": [
                     {
@@ -1986,7 +1927,7 @@
                         "exec": [
                           "\r",
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout,1000);\r",
                           "}else{\r",
                           "    pm.test(\"[Get notice details - Case 2], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -2089,6 +2030,65 @@
                       {
                         "key": "x-fiscal-code",
                         "value": "{{CF_MOCK_BE_ARC}}",
+                        "type": "text"
+                      }
+                    ],
+                    "url": {
+                      "raw": "{{baseUrlBizEventsNotices}}/paids/{{eventId}}/disable",
+                      "host": [
+                        "{{baseUrlBizEventsNotices}}"
+                      ],
+                      "path": [
+                        "paids",
+                        "{{eventId}}",
+                        "disable"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Disable notices User 2",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Disable event from Biz-Events, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-Key-bizevents-Notices}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [
+                      {
+                        "key": "x-fiscal-code",
+                        "value": "{{fakeUser1}}",
                         "type": "text"
                       }
                     ],
@@ -2289,7 +2289,7 @@
                         "exec": [
                           "\r",
                           "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "    retryRequest(postman,pm,setTimeout,10000);\r",
                           "}else{\r",
                           "    pm.test(\"[Get notice details - Case 3], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -2694,7 +2694,7 @@
                           "let jsonResponse = pm.response.json();\r",
                           "\r",
                           "if(jsonResponse.notices.length === 0 || !jsonResponse.notices.some(n => n.eventId == pm.collectionVariables.get('eventId'))){\r",
-                          "    retryRequest(postman,pm,setTimeout,2000);\r",
+                          "    retryRequest(postman,pm,setTimeout,2500);\r",
                           "}else{\r",
                           "    pm.test(\"[Get notices list - Check continuation token], expected httpStatus: 200\", () => {\r",
                           "        pm.response.to.have.status(200);\r",
@@ -2967,7 +2967,7 @@
       ]
     },
     {
-      "name": "payment-notices",
+      "name": "3. payment-notices",
       "item": [
         {
           "name": "setup",
@@ -3053,7 +3053,14 @@
                       "script": {
                         "exec": [
                           "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
-                          "    pm.response.to.have.status(201);\r",
+                          "    if(pm.response.code === 201){\r",
+                          "        pm.response.to.have.status(201);\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", true)\r",
+                          "    }else {\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", false)\r",
+                          "        pm.expect.fail(\"the debt position was not created\");\r",
+                          "    }\r",
+                          "    \r",
                           "})"
                         ],
                         "type": "text/javascript",
@@ -3142,6 +3149,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -3209,6 +3231,21 @@
                           "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
                           "\r",
                           "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
                           "}"
                         ],
                         "type": "text/javascript",
@@ -3305,6 +3342,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -3342,6 +3394,21 @@
                           "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3452,7 +3519,13 @@
                       "script": {
                         "exec": [
                           "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
-                          "    pm.response.to.have.status(201);\r",
+                          "    if(pm.response.code === 201){\r",
+                          "        pm.response.to.have.status(201);\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", true)\r",
+                          "    }else {\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", false)\r",
+                          "         pm.expect.fail(\"the debt position was not created\");\r",
+                          "    }\r",
                           "})"
                         ],
                         "type": "text/javascript",
@@ -3539,6 +3612,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "    console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -3607,6 +3695,21 @@
                           "        pm.expect(paymentNotice.paymentOptions[1].numberOfInstallments).to.eq(3);\r",
                           "\r",
                           "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
                           "}"
                         ],
                         "type": "text/javascript",
@@ -3702,6 +3805,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -3739,6 +3857,21 @@
                           "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3849,7 +3982,13 @@
                       "script": {
                         "exec": [
                           "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
-                          "    pm.response.to.have.status(201);\r",
+                          "    if(pm.response.code === 201){\r",
+                          "        pm.response.to.have.status(201);\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", true)\r",
+                          "    }else {\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", false)\r",
+                          "         pm.expect.fail(\"the debt position was not created\");\r",
+                          "    }\r",
                           "})"
                         ],
                         "type": "text/javascript",
@@ -3936,6 +4075,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "    console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -4003,6 +4157,21 @@
                           "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(1);\r",
                           "\r",
                           "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
                           "}"
                         ],
                         "type": "text/javascript",
@@ -4098,6 +4267,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -4135,6 +4319,21 @@
                           "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -4245,7 +4444,13 @@
                       "script": {
                         "exec": [
                           "pm.test(\"[Create payment notice GPD - Single Payment Option], expected httpStatus: 201\", () => {\r",
-                          "    pm.response.to.have.status(201);\r",
+                          "    if(pm.response.code === 201){\r",
+                          "        pm.response.to.have.status(201);\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", true)\r",
+                          "    }else {\r",
+                          "        pm.collectionVariables.set(\"debtorPositionCreated\", false)\r",
+                          "        pm.expect.fail(\"the debt position was not created\");\r",
+                          "    }\r",
                           "})"
                         ],
                         "type": "text/javascript",
@@ -4332,6 +4537,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -4399,6 +4619,21 @@
                           "        pm.expect(paymentNotice.paymentOptions[0].numberOfInstallments).to.eq(4);\r",
                           "\r",
                           "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
                           "}"
                         ],
                         "type": "text/javascript",
@@ -4494,6 +4729,21 @@
                         "type": "text/javascript",
                         "packages": {}
                       }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
                     }
                   ],
                   "request": {
@@ -4531,6 +4781,21 @@
                           "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
                           "    pm.response.to.have.status(200);\r",
                           "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -4640,7 +4905,7 @@
       ]
     },
     {
-      "name": "zendesk assistance",
+      "name": "4. zendesk assistance",
       "item": [
         {
           "name": "setup",
@@ -4816,7 +5081,7 @@
       ]
     },
     {
-      "name": "auth",
+      "name": "5. auth",
       "item": [
         {
           "name": "setup",
@@ -5633,6 +5898,10 @@
     },
     {
       "key": "noticeDate",
+      "value": ""
+    },
+    {
+      "key": "debtorPositionCreated",
       "value": ""
     }
   ]
