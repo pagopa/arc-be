@@ -21,6 +21,9 @@ public class CustomEntryPoint implements AuthenticationEntryPoint {
       case HttpServletResponse.SC_BAD_REQUEST:
         message = "Resource not found";
         break;
+      case HttpServletResponse.SC_INTERNAL_SERVER_ERROR:
+        message = "Internal server error";
+        break;
       default:
         status = HttpServletResponse.SC_UNAUTHORIZED;
         message = "Unauthorized access, please login.";
