@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 import feign.Response;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.core.io.Resource;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -34,6 +35,16 @@ public interface BizEventsPaidNoticeRestClient {
     @ResponseBody
     @ResponseStatus(HttpStatus.OK)
     BizEventsPaidNoticeDetailsDTO paidNoticeDetails(
+            @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
+            @RequestHeader(value = "x-fiscal-code") String fiscalCode,
+            @PathVariable(value = "event-id") String eventId
+    );
+
+    @GetMapping(
+            value = "/paids/{event-id}/pdf")
+    @ResponseBody
+    @ResponseStatus(HttpStatus.OK)
+    Resource paidNoticeReceipt(
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
             @PathVariable(value = "event-id") String eventId
