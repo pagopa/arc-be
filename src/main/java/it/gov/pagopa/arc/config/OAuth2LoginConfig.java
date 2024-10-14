@@ -1,7 +1,7 @@
 package it.gov.pagopa.arc.config;
 
 import it.gov.pagopa.arc.security.CustomAuthenticationFailureHandler;
-import it.gov.pagopa.arc.security.CustomEntryPoint;
+import it.gov.pagopa.arc.security.CustomAuthenticationEntryPoint;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.security.InMemoryOAuth2AuthorizationRequestRepository;
@@ -60,7 +60,7 @@ public class OAuth2LoginConfig {
                     .logoutSuccessHandler(customLogoutSuccessHandler)
         )
         .exceptionHandling(exceptionHandling -> exceptionHandling
-            .authenticationEntryPoint(new CustomEntryPoint())
+            .authenticationEntryPoint(new CustomAuthenticationEntryPoint())
         )
 
         .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
