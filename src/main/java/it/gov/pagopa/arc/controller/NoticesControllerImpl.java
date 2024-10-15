@@ -9,6 +9,7 @@ import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import it.gov.pagopa.arc.service.NoticesService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
+import org.springframework.core.io.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -50,5 +51,15 @@ public class NoticesControllerImpl implements ArcNoticesApi {
         NoticeDetailsDTO noticeDetailsDTO = noticesService.retrieveNoticeDetails(userId, userFiscalCode, eventId);
 
         return ResponseEntity.ok().body(noticeDetailsDTO);
+    }
+
+    @Override
+    public ResponseEntity<Resource> getNoticeReceipt(String eventId) {
+        String userFiscalCode = SecurityUtils.getUserFiscalCode();
+        String userId = SecurityUtils.getUserId();
+
+        Resource receipt = noticesService.retrieveNoticeReceipt(userId, userFiscalCode, eventId);
+
+        return ResponseEntity.ok().body(receipt);
     }
 }

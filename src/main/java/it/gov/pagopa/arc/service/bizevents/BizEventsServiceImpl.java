@@ -86,4 +86,9 @@ public class BizEventsServiceImpl implements BizEventsService{
         BizEventsPaidNoticeDetailsDTO paidNoticeDetails = bizEventsPaidNoticeConnector.getPaidNoticeDetails(userId, userFiscalCode, eventId);
         return bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper.toNoticeDetailsDTO(paidNoticeDetails);
     }
+
+    @Override
+    public Resource retrievePaidNoticeReceiptFromBizEvents(String userId, String userFiscalCode, String eventId) {
+        return bizEventsPaidNoticeConnector.getPaidNoticeReceipt(userId, userFiscalCode, eventId);
+    }
 }
