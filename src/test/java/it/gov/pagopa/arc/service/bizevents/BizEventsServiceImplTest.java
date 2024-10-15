@@ -260,4 +260,21 @@ class BizEventsServiceImplTest {
         assertEquals(expectedResult, result);
 
     }
+
+    @Test
+    void givenEventIdWhenCallRetrieveNoticeReceiptFromBizEventsThenReturnNoticeReceipt() throws IOException {
+        //given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+
+        when(bizEventsPaidNoticeConnectorMock.getPaidNoticeReceipt("USER_ID", DUMMY_FISCAL_CODE, "EVENT_ID")).thenReturn(receipt);
+        //when
+        Resource result = bizEventsService.retrievePaidNoticeReceiptFromBizEvents("USER_ID", DUMMY_FISCAL_CODE, "EVENT_ID");
+
+        //then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] resultAsByteArray = result.getContentAsByteArray();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertArrayEquals(resultAsByteArray, expectedContent);
+    }
 }

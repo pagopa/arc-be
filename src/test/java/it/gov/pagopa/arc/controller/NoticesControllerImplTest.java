@@ -6,9 +6,9 @@ import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.NoticeRequestDTOMapper;
 import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
-import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
@@ -26,6 +26,8 @@ import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -33,6 +35,8 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 import static org.hamcrest.CoreMatchers.nullValue;
@@ -169,6 +173,27 @@ class NoticesControllerImplTest {
         //Then
         Assertions.assertNotNull(resultResponse);
         Assertions.assertEquals(noticeDetailsDTO, resultResponse);
+    }
+
+    @Test
+    void givenEventIdWhenCallGetNoticeReceiptThenReturnNoticeReceipt() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+
+        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+
+        //When
+        MvcResult result = mockMvc.perform(
+                        get("/notices/{eventId}/receipt", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        //Then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] actualContent = result.getResponse().getContentAsByteArray();
+
+        Assertions.assertNotNull(actualContent);
+        Assertions.assertArrayEquals(expectedContent, actualContent);
     }
 
 }
