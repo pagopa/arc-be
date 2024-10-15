@@ -227,4 +227,15 @@ class ArcExceptionHandlerTest {
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException occurred handling request GET /test/EVENT_ID: HttpStatus 404 - Error"));
     }
 
+    @Test
+    void givenGenericErrorThenThrowException() throws Exception {
+        doThrow(new RuntimeException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                .contentType(MediaType.APPLICATION_JSON)
+                .accept(MediaType.APPLICATION_JSON))
+            .andExpect(MockMvcResultMatchers.status().is(500))
+            .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"));
+    }
+
 }
