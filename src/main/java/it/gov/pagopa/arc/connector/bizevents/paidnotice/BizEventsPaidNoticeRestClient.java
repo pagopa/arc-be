@@ -4,9 +4,11 @@ import feign.Response;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.io.Resource;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.RequestHeader;
+import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "biz-events-paid-notice",
@@ -16,8 +18,6 @@ public interface BizEventsPaidNoticeRestClient {
     @GetMapping(
             value = "/paids",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     Response paidNoticeList(
                                      @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
                                      @RequestHeader(value = "x-fiscal-code") String fiscalCode,
@@ -32,8 +32,6 @@ public interface BizEventsPaidNoticeRestClient {
     @GetMapping(
             value = "/paids/{event-id}",
             produces = MediaType.APPLICATION_JSON_VALUE)
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     BizEventsPaidNoticeDetailsDTO paidNoticeDetails(
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
@@ -42,8 +40,6 @@ public interface BizEventsPaidNoticeRestClient {
 
     @GetMapping(
             value = "/paids/{event-id}/pdf")
-    @ResponseBody
-    @ResponseStatus(HttpStatus.OK)
     Resource paidNoticeReceipt(
             @RequestHeader(value = "Ocp-Apim-Subscription-Key") String apikey,
             @RequestHeader(value = "x-fiscal-code") String fiscalCode,
