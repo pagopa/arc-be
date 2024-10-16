@@ -15,7 +15,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.security.core.AuthenticationException;
 
 @ExtendWith(MockitoExtension.class)
-class CustomEntryPointTest {
+class CustomAuthenticationEntryPointTest {
 
   @Mock
   private HttpServletRequest request;
@@ -26,7 +26,7 @@ class CustomEntryPointTest {
   @Mock
   private AuthenticationException authException;
 
-  private CustomEntryPoint customEntryPoint;
+  private CustomAuthenticationEntryPoint customAuthenticationEntryPoint;
 
   @Test
   void givenExceptionDuringRequestValidationThenReturn404() throws IOException {
@@ -34,8 +34,8 @@ class CustomEntryPointTest {
     when(response.getWriter()).thenReturn(writer);
     when(response.getStatus()).thenReturn(404);
 
-    customEntryPoint = new CustomEntryPoint();
-    customEntryPoint.commence(request,response,authException);
+    customAuthenticationEntryPoint = new CustomAuthenticationEntryPoint();
+    customAuthenticationEntryPoint.commence(request,response,authException);
     verify(response).setStatus(HttpServletResponse.SC_NOT_FOUND);
   }
 
@@ -44,8 +44,8 @@ class CustomEntryPointTest {
     PrintWriter writer = mock(PrintWriter.class);
     when(response.getWriter()).thenReturn(writer);
 
-    customEntryPoint = new CustomEntryPoint();
-    customEntryPoint.commence(request,response,authException);
+    customAuthenticationEntryPoint = new CustomAuthenticationEntryPoint();
+    customAuthenticationEntryPoint.commence(request,response,authException);
     verify(response).setStatus(HttpServletResponse.SC_UNAUTHORIZED);
   }
 
@@ -55,8 +55,8 @@ class CustomEntryPointTest {
     when(response.getWriter()).thenReturn(writer);
     when(response.getStatus()).thenReturn(400);
 
-    customEntryPoint = new CustomEntryPoint();
-    customEntryPoint.commence(request,response,authException);
+    customAuthenticationEntryPoint = new CustomAuthenticationEntryPoint();
+    customAuthenticationEntryPoint.commence(request,response,authException);
     verify(response).setStatus(HttpServletResponse.SC_BAD_REQUEST);
   }
 

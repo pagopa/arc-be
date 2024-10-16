@@ -411,6 +411,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /notices/{eventId}/receipt:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve notice receipt from arc"
+      operationId: getNoticeReceipt
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: eventId
+          in: path
+          description: "A unique id that identifies a notice"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained PDF notice receipt"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Notice receipt not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "receipt_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /payment-notices:
     get:
       tags:

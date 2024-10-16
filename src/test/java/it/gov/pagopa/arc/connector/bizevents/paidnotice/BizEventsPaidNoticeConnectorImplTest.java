@@ -17,6 +17,7 @@ import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
@@ -32,11 +33,14 @@ import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConf
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
+import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.time.ZonedDateTime;
 import java.util.Collections;
 import java.util.List;
@@ -291,6 +295,38 @@ class BizEventsPaidNoticeConnectorImplTest {
         //Then
         BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
                 () -> bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS_ERROR", "EVENT_ID_ERROR_1"));
+        Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
+    }
+
+    @Test
+    void givenEventIdWhenCallBizEventsPaidNoticeConnectorThenReturnNoticeReceipt() throws IOException {
+        //given
+        //when
+        Resource noticeReceipt = bizEventsPaidNoticeConnector.getPaidNoticeReceipt("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_RECEIPT_OK", "EVENT_ID_OK_1");
+
+        //then
+        Assertions.assertNotNull(noticeReceipt);
+        Assertions.assertTrue(noticeReceipt.exists());
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] actualContent = noticeReceipt.getInputStream().readAllBytes();
+        assertArrayEquals(expectedContent, actualContent);
+    }
+
+    @Test
+    void givenEventIdWhenReceiptNotFoundThenReturnException() {
+        //given
+        //when
+        BizEventsReceiptNotFoundException bizEventsReceiptNotFoundException = assertThrows(BizEventsReceiptNotFoundException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeReceipt("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_RECEIPT_NOT_FOUND", "EVENT_ID_NOT_FOUND_1"));
+        Assertions.assertEquals("An error occurred handling request from biz-Events to retrieve notice receipt with event id [EVENT_ID_NOT_FOUND_1] for the current user with userId [USER_ID]", bizEventsReceiptNotFoundException.getMessage());
+    }
+
+    @Test
+    void givenEventIdWhenReceiptErrorThenThrowBizEventsInvocationException() {
+        //When
+        //Then
+        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeReceipt("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_RECEIPT_ERROR", "EVENT_ID_ERROR_2"));
         Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 }

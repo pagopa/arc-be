@@ -13,4 +13,5 @@ public interface BizEventsService {
     Resource retrieveTransactionReceiptFromBizEvents(String transactionId);
     NoticesListResponseDTO retrievePaidListFromBizEvents(String userFiscalCode, NoticeRequestDTO noticeRequestDTO);
     NoticeDetailsDTO retrievePaidNoticeDetailsFromBizEvents(String userId, String userFiscalCode, String eventId);
+    Resource retrievePaidNoticeReceiptFromBizEvents(String userId, String userFiscalCode, String eventId);
 }

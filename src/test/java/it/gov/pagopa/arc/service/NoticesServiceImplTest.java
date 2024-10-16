@@ -19,7 +19,12 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.slf4j.LoggerFactory;
+import org.springframework.core.io.FileSystemResource;
+import org.springframework.core.io.Resource;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.List;
 
 @ExtendWith(MockitoExtension.class)
@@ -79,5 +84,20 @@ class NoticesServiceImplTest {
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(noticeDetailsDTO, result);
+    }
+
+    @Test
+    void givenEventIdWhenCallRetrieveNoticeReceiptThenReturnNoticeReceipt() throws IOException {
+        //given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
+        Mockito.when(bizEventsServiceMock.retrievePaidNoticeReceiptFromBizEvents(USER_ID, DUMMY_FISCAL_CODE, "EVENT_ID")).thenReturn(receipt);
+        //when
+        Resource result = noticesService.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, "EVENT_ID");
+        //then
+        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
+        byte[] resultAsByteArray = result.getContentAsByteArray();
+
+        Assertions.assertNotNull(result);
+        Assertions.assertArrayEquals(expectedContent, resultAsByteArray);
     }
 }

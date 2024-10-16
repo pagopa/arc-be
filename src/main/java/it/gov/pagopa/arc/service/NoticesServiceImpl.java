@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.core.io.Resource;
 import org.springframework.stereotype.Service;
 
 @Slf4j
@@ -30,5 +31,12 @@ public class NoticesServiceImpl implements NoticesService{
         log.info("[GET_NOTICE_DETAILS] The current user with user id : {}, has requested to retrieve paid notice details for paid notice with id {}", userId, eventId);
 
         return bizEventsService.retrievePaidNoticeDetailsFromBizEvents(userId, userFiscalCode, eventId);
+    }
+
+    @Override
+    public Resource retrieveNoticeReceipt(String userId, String userFiscalCode, String eventId) {
+        log.info("[GET_NOTICE_RECEIPT] The current user with user id : {}, has requested to retrieve paid notice receipt for paid notice with id {}", userId, eventId);
+
+        return bizEventsService.retrievePaidNoticeReceiptFromBizEvents(userId, userFiscalCode, eventId);
     }
 }
