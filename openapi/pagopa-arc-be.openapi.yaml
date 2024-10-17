@@ -888,39 +888,23 @@ components:
           description: Company name of the Creditor Body
           type: string
         insertedDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Date of entry of the Debt Position
+          $ref: '#/components/schemas/LocalDateTime'
         publishDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Date of publication of the Debt Position. In the case of Positions created by ACA it corresponds to the insertion date.
+          $ref: '#/components/schemas/LocalDateTime'
         validityDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Start date of validity of the Debt Position. if set to null it goes directly to valid when publishing
+          $ref: '#/components/schemas/LocalDateTime'
         status:
-          allOf:
-            - $ref: '#/components/schemas/PaymentNoticeStatus'
-            - description: |-
-                State of the Debt Position. Will be
-                VALID
-                 or
-                PARTIALLY_PAID
+          $ref: '#/components/schemas/PaymentNoticeStatus'
         lastUpdateDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDate'
-            - description: Date of update of the Debt Position
+          format: date
+          type: string
+          example: '2022-03-10'
         paymentOptions:
           description: Array structure containing any payment options (there always exists at least 1)
           type: array
           items:
             $ref: '#/components/schemas/PaymentOptionDTO'
           x-field-extra-annotation: "@lombok.Builder.Default"
-    LocalDate:
-      format: date
-      type: string
-      example: '2022-03-10'
     LocalDateTime:
       format: date-time
       type: string
@@ -949,9 +933,7 @@ components:
           description: total amount for the payment option
           type: integer
         dueDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Is the date by which the Payment option is payable.
+          $ref: '#/components/schemas/LocalDateTime'
         isPartialPayment:
           description: Indicates whether the OP is part of an installment plan
           type: boolean
@@ -998,29 +980,19 @@ components:
           description: Description of the OP (e.g. "SISA - 741T, 942T - Checks without authorization or funding")
           type: string
         dueDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Is the date by which (TO) the Payment option is payable.
+          $ref: '#/components/schemas/LocalDateTime'
         retentionDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: Not currently used in any logic. The purpose of this date will be to give the possibility to specify a time period after the dueDate within which a payment option, even if expired, will still be payable.
+          $ref: '#/components/schemas/LocalDateTime'
         insertedDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: date of insertion of the OP
+          $ref: '#/components/schemas/LocalDateTime'
         notificationFee:
           format: int64
           description: corresponds to the SEND notification costs
           type: integer
         status:
-          allOf:
-            - $ref: '#/components/schemas/PaymentOptionStatus'
-            - description: Status of the OP
+          $ref: '#/components/schemas/PaymentOptionStatus'
         lastUpdatedDate:
-          allOf:
-            - $ref: '#/components/schemas/LocalDateTime'
-            - description: OP update date
+          $ref: '#/components/schemas/LocalDateTime'
     PaymentOptionStatus:
       enum:
         - PO_UNPAID
