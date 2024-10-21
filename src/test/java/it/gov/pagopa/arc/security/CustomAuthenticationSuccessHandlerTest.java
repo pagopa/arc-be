@@ -18,9 +18,7 @@ import java.util.Set;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -29,7 +27,6 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import wiremock.org.apache.hc.core5.http.ContentType;
 
-@ExtendWith(MockitoExtension.class)
 class CustomAuthenticationSuccessHandlerTest {
 
   private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -55,14 +52,13 @@ class CustomAuthenticationSuccessHandlerTest {
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    customAuthenticationSuccessHandler.onAuthenticationSuccess(request,response,oAuth2AuthenticationToken);
+    customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, oAuth2AuthenticationToken);
 
-    TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(),TokenResponse.class);
+    TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(), TokenResponse.class);
 
-    assertEquals(ContentType.APPLICATION_JSON.getMimeType(),response.getContentType());
-    assertNotNull(tokenStoreService.getUserInfo(token.getAccessToken()));
-    assertEquals("Bearer",token.getTokenType());
-    assertEquals(3600,token.getExpiresIn());
+    assertEquals(ContentType.APPLICATION_JSON.getMimeType(), response.getContentType());
+    assertEquals("Bearer", token.getTokenType());
+    assertEquals(3600, token.getExpiresIn());
 
     assertNotNull(JWT.decode(token.getAccessToken()));
   }

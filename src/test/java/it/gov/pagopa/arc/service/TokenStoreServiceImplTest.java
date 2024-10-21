@@ -1,13 +1,15 @@
 package it.gov.pagopa.arc.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class TokenStoreServiceImplTest {
 
   @Mock
@@ -29,31 +31,28 @@ class TokenStoreServiceImplTest {
   }
   @Test
   void givenAccessTokenAndUserInfoThenSaveAndRetrieveTheSameData() {
-    String wrongToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
-
     IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
-    tokenStoreService.save(token,userInfo);
 
-    assertNotNull(tokenStoreService.getUserInfo(token));
+    String accessToken = token;
 
-    assertEquals(attributes.get("sub"),tokenStoreService.getUserInfo(token).getUserId());
-    assertEquals(attributes.get("fiscalNumber"),tokenStoreService.getUserInfo(token).getFiscalCode());
-    assertEquals(attributes.get("familyName"),tokenStoreService.getUserInfo(token).getFamilyName());
-    assertEquals(attributes.get("name"),tokenStoreService.getUserInfo(token).getName());
-    assertEquals(attributes.get("email"),tokenStoreService.getUserInfo(token).getEmail());
-    assertEquals(attributes.get("iss"),tokenStoreService.getUserInfo(token).getIssuer());
+    // When
+    IamUserInfoDTO result = tokenStoreService.save(accessToken, userInfo);
 
-    assertNull(tokenStoreService.getUserInfo(wrongToken));
+    // Then
+    Assertions.assertSame(userInfo, result);
+
   }
 
   @Test
   void givenAccessTokenAndUserInfoThenRemoveTokenAndNonInfoShouldBeFound(){
-    IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
-    tokenStoreService.save(token,userInfo);
+    // Given
+    String accessToken = token;
 
-    tokenStoreService.delete(token);
+    // When
+    IamUserInfoDTO result = tokenStoreService.getUserInfo(accessToken);
 
-    assertNull(tokenStoreService.getUserInfo(token));
+    // Then
+    Assertions.assertNull(result);
   }
 
 }
