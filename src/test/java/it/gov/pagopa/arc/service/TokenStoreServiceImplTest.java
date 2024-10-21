@@ -36,16 +36,14 @@ class TokenStoreServiceImplTest {
 
     assertNotNull(tokenStoreService.getUserInfo(token));
 
-    assertTrue(tokenStoreService.getUserInfo(token).isPresent());
+    assertEquals(attributes.get("sub"),tokenStoreService.getUserInfo(token).getUserId());
+    assertEquals(attributes.get("fiscalNumber"),tokenStoreService.getUserInfo(token).getFiscalCode());
+    assertEquals(attributes.get("familyName"),tokenStoreService.getUserInfo(token).getFamilyName());
+    assertEquals(attributes.get("name"),tokenStoreService.getUserInfo(token).getName());
+    assertEquals(attributes.get("email"),tokenStoreService.getUserInfo(token).getEmail());
+    assertEquals(attributes.get("iss"),tokenStoreService.getUserInfo(token).getIssuer());
 
-    assertEquals(attributes.get("sub"),tokenStoreService.getUserInfo(token).get().getUserId());
-    assertEquals(attributes.get("fiscalNumber"),tokenStoreService.getUserInfo(token).get().getFiscalCode());
-    assertEquals(attributes.get("familyName"),tokenStoreService.getUserInfo(token).get().getFamilyName());
-    assertEquals(attributes.get("name"),tokenStoreService.getUserInfo(token).get().getName());
-    assertEquals(attributes.get("email"),tokenStoreService.getUserInfo(token).get().getEmail());
-    assertEquals(attributes.get("iss"),tokenStoreService.getUserInfo(token).get().getIssuer());
-
-    assertFalse(tokenStoreService.getUserInfo(wrongToken).isPresent());
+    assertNull(tokenStoreService.getUserInfo(wrongToken));
   }
 
   @Test
@@ -55,7 +53,7 @@ class TokenStoreServiceImplTest {
 
     tokenStoreService.delete(token);
 
-    assertFalse(tokenStoreService.getUserInfo(token).isPresent());
+    assertNull(tokenStoreService.getUserInfo(token));
   }
 
 }
