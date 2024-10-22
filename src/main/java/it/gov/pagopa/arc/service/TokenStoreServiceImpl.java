@@ -2,7 +2,6 @@ package it.gov.pagopa.arc.service;
 
 import it.gov.pagopa.arc.config.RedisConfig;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import java.util.Optional;
 import org.springframework.cache.annotation.CacheConfig;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;

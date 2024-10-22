@@ -8,6 +8,7 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.mockito.Mock;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 class InMemoryOAuth2AuthorizationRequestRepositoryTest {
@@ -16,9 +17,13 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   private HttpServletRequest request;
   private HttpServletResponse response;
   private OAuth2AuthorizationRequest authorizationRequest;
+
+  @Mock
+  OAuth2StateStoreRepository oAuth2AuthorizationRequest;
+
   @BeforeEach
   void setUp() {
-    repository = new InMemoryOAuth2AuthorizationRequestRepository();
+    repository = new InMemoryOAuth2AuthorizationRequestRepository(oAuth2AuthorizationRequest);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     authorizationRequest = mock(OAuth2AuthorizationRequest.class);
@@ -40,7 +45,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenAuthorizationRequestThenFailCauseStateNotInRequest(){
+  void givenAuthorizationRequestThenFailCauseStateNotInRequest() {
     when(authorizationRequest.getState()).thenReturn(null);
     when(request.getParameter("state")).thenReturn(null);
     // Execute
@@ -77,7 +82,8 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
     // Execute
-    OAuth2AuthorizationRequest removedRequest = repository.removeAuthorizationRequest(request, response);
+    OAuth2AuthorizationRequest removedRequest = repository.removeAuthorizationRequest(request,
+        response);
 
     // Verify
     assertNotNull(removedRequest);
@@ -86,14 +92,15 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenInvalidStateThenFailToRemoveAuthRequest(){
+  void givenInvalidStateThenFailToRemoveAuthRequest() {
     when(request.getParameter("state")).thenReturn(null);
     when(authorizationRequest.getState()).thenReturn(null);
 
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
     // Execute
-    OAuth2AuthorizationRequest removedRequest = repository.removeAuthorizationRequest(request, response);
+    OAuth2AuthorizationRequest removedRequest = repository.removeAuthorizationRequest(request,
+        response);
 
     // Verify
     assertNull(removedRequest);
