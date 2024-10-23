@@ -1,6 +1,8 @@
 package it.gov.pagopa.arc.security;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.mockito.Mockito.mock;
 import static org.mockito.Mockito.when;
 
@@ -8,7 +10,6 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 class InMemoryOAuth2AuthorizationRequestRepositoryTest {
@@ -17,12 +18,11 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   private HttpServletRequest request;
   private HttpServletResponse response;
   private OAuth2AuthorizationRequest authorizationRequest;
-
-  @Mock
-  OAuth2StateStoreRepository oAuth2AuthorizationRequest;
+  private OAuth2StateStoreRepository oAuth2AuthorizationRequest;
 
   @BeforeEach
   void setUp() {
+    oAuth2AuthorizationRequest = mock(OAuth2StateStoreRepository.class);
     repository = new InMemoryOAuth2AuthorizationRequestRepository(oAuth2AuthorizationRequest);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
@@ -35,6 +35,8 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(authorizationRequest.getState()).thenReturn(state);
     when(request.getParameter("state")).thenReturn(state);
+    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest(state)).thenReturn(authorizationRequest);
+
     // Execute
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
@@ -48,6 +50,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   void givenAuthorizationRequestThenFailCauseStateNotInRequest() {
     when(authorizationRequest.getState()).thenReturn(null);
     when(request.getParameter("state")).thenReturn(null);
+    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest("state")).thenReturn(null);
     // Execute
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
@@ -61,6 +64,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
     when(authorizationRequest.getState()).thenReturn(state);
+    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest(state)).thenReturn(authorizationRequest);
 
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
@@ -78,6 +82,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
     when(authorizationRequest.getState()).thenReturn(state);
+    when(repository.removeAuthorizationRequest(request, response)).thenReturn(authorizationRequest);
 
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
