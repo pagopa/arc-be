@@ -14,9 +14,6 @@ class TokenStoreServiceImplTest {
 
   @Mock
   TokenStoreServiceImpl tokenStoreService;
-
-  private final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
   private final Map<String, Object> attributes = Map.of(
       "sub", "123456",
       "fiscalNumber", "789012",
@@ -25,6 +22,8 @@ class TokenStoreServiceImplTest {
       "email", "marco.polo@example.com",
       "iss", "issuer"
   );
+  private final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
+
   @BeforeEach
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
@@ -50,6 +49,18 @@ class TokenStoreServiceImplTest {
 
     // When
     IamUserInfoDTO result = tokenStoreService.getUserInfo(accessToken);
+
+    // Then
+    Assertions.assertNull(result);
+  }
+
+  @Test
+  void givenAccessThenRemoveToken(){
+    // Given
+    String accessToken = token;
+
+    // When
+    IamUserInfoDTO result = tokenStoreService.delete(accessToken);
 
     // Then
     Assertions.assertNull(result);
