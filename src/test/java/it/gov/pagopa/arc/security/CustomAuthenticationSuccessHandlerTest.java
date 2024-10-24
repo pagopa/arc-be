@@ -61,7 +61,6 @@ class CustomAuthenticationSuccessHandlerTest {
 
     TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(),TokenResponse.class);
 
-
     assertEquals(ContentType.APPLICATION_JSON.getMimeType(),response.getContentType());
     assertNotNull(tokenStoreService.getUserInfo(token.getAccessToken()));
     assertEquals("Bearer",token.getTokenType());
