@@ -42,7 +42,11 @@ public class InMemoryOAuth2AuthorizationRequestRepository implements
     String state = request.getParameter(STATE);
     if (StringUtils.hasText(state)) {
       // Remove and return the authorization request from the map
-      return oAuth2AuthorizationRequest.delete(state);
+      OAuth2AuthorizationRequest result = loadAuthorizationRequest(request);
+      if (result!=null){
+        oAuth2AuthorizationRequest.delete(state);
+        return result;
+      }
     }
     return null;
   }

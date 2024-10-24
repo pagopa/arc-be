@@ -13,7 +13,6 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.data.redis.cache.RedisCacheConfiguration;
 import org.springframework.data.redis.serializer.Jackson2JsonRedisSerializer;
 import org.springframework.data.redis.serializer.RedisSerializationContext;
-import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
 @Configuration
 @EnableCaching
@@ -29,25 +28,20 @@ public class RedisConfig {
       @Value("${jwt.access-token.expire-in}") int accessTokenExpirationSeconds
   ) {
     Map<String, RedisCacheConfiguration> cacheConfigurations = new HashMap<>();
-    cacheConfigurations.put(CACHE_OAUTH2_STATE,redisConfiguration(objectMapper,300,CACHE_OAUTH2_STATE));
-    cacheConfigurations.put(CACHE_NAME_ACCESS_TOKEN,redisConfiguration(objectMapper,accessTokenExpirationSeconds,CACHE_NAME_ACCESS_TOKEN));
+    cacheConfigurations.put(CACHE_OAUTH2_STATE,RedisCacheConfiguration.defaultCacheConfig()
+        .entryTtl(Duration.ofSeconds(300))
+        .disableCachingNullValues());
+    cacheConfigurations.put(CACHE_NAME_ACCESS_TOKEN,redisConfiguration(objectMapper,accessTokenExpirationSeconds));
     return builder -> builder
         .withInitialCacheConfigurations(cacheConfigurations);
   }
 
-  private RedisCacheConfiguration redisConfiguration( ObjectMapper objectMapper,int ttl, String cacheType){
-    Class<?> type;
-
-    if(cacheType.equals(CACHE_NAME_ACCESS_TOKEN)){
-      type = IamUserInfoDTO.class;
-    } else {
-      type = OAuth2AuthorizationRequest.class;
-    }
-
+  private RedisCacheConfiguration redisConfiguration( ObjectMapper objectMapper,int ttl){
     return RedisCacheConfiguration.defaultCacheConfig()
-        .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper,type)))
-        .entryTtl(Duration.ofSeconds(ttl))
-        .disableCachingNullValues();
+          .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper,
+              (Class<?>) IamUserInfoDTO.class)))
+          .entryTtl(Duration.ofSeconds(ttl))
+          .disableCachingNullValues();
   }
 
 }

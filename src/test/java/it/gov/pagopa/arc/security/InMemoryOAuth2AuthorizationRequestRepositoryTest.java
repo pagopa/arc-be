@@ -82,7 +82,9 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
     when(authorizationRequest.getState()).thenReturn(state);
-    when(repository.removeAuthorizationRequest(request, response)).thenReturn(authorizationRequest);
+    when(repository.removeAuthorizationRequest(request, response))
+        .thenReturn(authorizationRequest)
+        .thenReturn(null);
 
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
