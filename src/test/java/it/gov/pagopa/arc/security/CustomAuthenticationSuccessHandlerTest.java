@@ -2,11 +2,14 @@ package it.gov.pagopa.arc.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.config.JWTSampleConfiguration;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.service.AccessTokenBuilderService;
 import it.gov.pagopa.arc.service.TokenStoreService;
@@ -19,6 +22,7 @@ import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -36,7 +40,7 @@ class CustomAuthenticationSuccessHandlerTest {
 
   @BeforeEach
   void setUp(){
-    tokenStoreService = new TokenStoreServiceImpl();
+    tokenStoreService = mock(TokenStoreServiceImpl.class);
     JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
     customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
         new AccessTokenBuilderService(jwtConfiguration),
@@ -48,17 +52,20 @@ class CustomAuthenticationSuccessHandlerTest {
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
     OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken(true);
+    Mockito.when(tokenStoreService.getUserInfo(anyString())).thenReturn(new IamUserInfoDTO());
 
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockHttpServletRequest request = new MockHttpServletRequest();
 
-    customAuthenticationSuccessHandler.onAuthenticationSuccess(request, response, oAuth2AuthenticationToken);
+    customAuthenticationSuccessHandler.onAuthenticationSuccess(request,response,oAuth2AuthenticationToken);
 
-    TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(), TokenResponse.class);
+    TokenResponse token = new ObjectMapper().readValue(response.getContentAsString(),TokenResponse.class);
 
-    assertEquals(ContentType.APPLICATION_JSON.getMimeType(), response.getContentType());
-    assertEquals("Bearer", token.getTokenType());
-    assertEquals(3600, token.getExpiresIn());
+
+    assertEquals(ContentType.APPLICATION_JSON.getMimeType(),response.getContentType());
+    assertNotNull(tokenStoreService.getUserInfo(token.getAccessToken()));
+    assertEquals("Bearer",token.getTokenType());
+    assertEquals(3600,token.getExpiresIn());
 
     assertNotNull(JWT.decode(token.getAccessToken()));
   }
