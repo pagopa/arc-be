@@ -73,7 +73,8 @@ import org.springframework.web.util.UriComponentsBuilder;
         "rest-client.biz-events.transactions.api-key=x_api_key0",
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.transactions.baseUrl= bizEventsMock",
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl= bizEventsMock"
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl= bizEventsMock",
+        "spring.cache.type=simple"
     })
 @AutoConfigureMockMvc
 class IdpIntegrationTest {
@@ -93,6 +94,9 @@ class IdpIntegrationTest {
     ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
+
+    @Autowired
+    OAuth2StateStoreRepository oAuth2StateStoreRepository;
 
     private static RSAPublicKey rsaPublicKey = null;
     private static RSAPrivateKey rsaPrivateKey = null;

@@ -15,10 +15,10 @@ public class CustomAuthenticationEntryPoint implements AuthenticationEntryPoint 
     String message;
 
     switch (status) {
-      case HttpServletResponse.SC_NOT_FOUND:
+      case HttpServletResponse.SC_BAD_REQUEST:
         message = "Missing parameters";
         break;
-      case HttpServletResponse.SC_BAD_REQUEST:
+      case HttpServletResponse.SC_NOT_FOUND:
         message = "Resource not found";
         break;
       default:

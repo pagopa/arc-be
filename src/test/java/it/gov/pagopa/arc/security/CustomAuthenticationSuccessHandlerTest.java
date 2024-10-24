@@ -2,11 +2,14 @@ package it.gov.pagopa.arc.security;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.mockito.ArgumentMatchers.anyString;
+import static org.mockito.Mockito.mock;
 
 import com.auth0.jwt.JWT;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.config.JWTConfiguration;
 import it.gov.pagopa.arc.config.JWTSampleConfiguration;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.model.generated.TokenResponse;
 import it.gov.pagopa.arc.service.AccessTokenBuilderService;
 import it.gov.pagopa.arc.service.TokenStoreService;
@@ -18,9 +21,8 @@ import java.util.Set;
 import java.util.function.Consumer;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
-import org.mockito.junit.jupiter.MockitoExtension;
+import org.mockito.Mockito;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpServletResponse;
 import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
@@ -29,7 +31,6 @@ import org.springframework.security.oauth2.core.oidc.user.DefaultOidcUser;
 import org.springframework.security.oauth2.core.user.OAuth2User;
 import wiremock.org.apache.hc.core5.http.ContentType;
 
-@ExtendWith(MockitoExtension.class)
 class CustomAuthenticationSuccessHandlerTest {
 
   private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandler;
@@ -39,7 +40,7 @@ class CustomAuthenticationSuccessHandlerTest {
 
   @BeforeEach
   void setUp(){
-    tokenStoreService = new TokenStoreServiceImpl();
+    tokenStoreService = mock(TokenStoreServiceImpl.class);
     JWTConfiguration jwtConfiguration = JWTSampleConfiguration.getCorrectConfiguration();
     customAuthenticationSuccessHandler = new CustomAuthenticationSuccessHandler(
         new AccessTokenBuilderService(jwtConfiguration),
@@ -51,6 +52,7 @@ class CustomAuthenticationSuccessHandlerTest {
   @Test
   void givenAuthenticationRequestThenInResponseGetCustomTokenResponse() throws IOException {
     OAuth2AuthenticationToken oAuth2AuthenticationToken = getAuthenticationToken(true);
+    Mockito.when(tokenStoreService.getUserInfo(anyString())).thenReturn(new IamUserInfoDTO());
 
     MockHttpServletResponse response = new MockHttpServletResponse();
     MockHttpServletRequest request = new MockHttpServletRequest();

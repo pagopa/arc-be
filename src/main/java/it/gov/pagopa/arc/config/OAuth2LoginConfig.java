@@ -1,17 +1,18 @@
 package it.gov.pagopa.arc.config;
 
-import it.gov.pagopa.arc.security.CustomAuthenticationFailureHandler;
 import it.gov.pagopa.arc.security.CustomAuthenticationEntryPoint;
+import it.gov.pagopa.arc.security.CustomAuthenticationFailureHandler;
+import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
-import it.gov.pagopa.arc.security.InMemoryOAuth2AuthorizationRequestRepository;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
-import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
+import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 
@@ -36,14 +37,16 @@ public class OAuth2LoginConfig {
   }
 
   @Bean
-  public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
+  public SecurityFilterChain securityFilterChain(
+      HttpSecurity http,
+      AuthorizationRequestRepository<OAuth2AuthorizationRequest> authorizationRequestRepository) throws Exception {
     http
         .csrf(AbstractHttpConfigurer::disable)
         .oauth2Login(oauth2Login -> oauth2Login
             .authorizationEndpoint(authConfig ->
                 authConfig
                     .baseUri("/login")
-                    .authorizationRequestRepository(new InMemoryOAuth2AuthorizationRequestRepository())
+                    .authorizationRequestRepository(authorizationRequestRepository)
             )
             .redirectionEndpoint(redirection ->
                 redirection
