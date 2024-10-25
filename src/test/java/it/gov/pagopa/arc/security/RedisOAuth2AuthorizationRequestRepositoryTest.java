@@ -30,7 +30,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenAuthorizationRequestThenSaveIt() {
+  void givenAuthorizationRequestWhenTokenExchangeThenOK() {
     // Setup
     String state = "state123";
     when(authorizationRequest.getState()).thenReturn(state);
@@ -59,7 +59,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void testLoadAuthorizationRequest() {
+  void givenValidStateWhenLoadAuthotizationRequesteThenGetAuthRequest() {
     // Setup
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
@@ -77,7 +77,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenValidStateThenRemoveAuthRequest() {
+  void givenValidStateWhenTokenExchangeThenRemoveAuthRequest() {
     // Setup
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
@@ -99,7 +99,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenInvalidStateThenFailToRemoveAuthRequest() {
+  void givenInvalidStateWhenTokenExchangeThenNull() {
     when(request.getParameter("state")).thenReturn(null);
     when(authorizationRequest.getState()).thenReturn(null);
 

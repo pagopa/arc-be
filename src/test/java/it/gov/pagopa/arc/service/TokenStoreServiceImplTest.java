@@ -20,7 +20,7 @@ class TokenStoreServiceImplTest {
     tokenStoreService = new TokenStoreServiceImpl();
   }
   @Test
-  void givenAccessTokenWhenUserLoggedThenGetUserInfo() {
+  void givenAccessTokenWhenUserLoggedThenReturnUserInfo() {
     IamUserInfoDTO userInfo = new IamUserInfoDTO();
     // When
     IamUserInfoDTO result = tokenStoreService.save(token, userInfo);
@@ -31,7 +31,7 @@ class TokenStoreServiceImplTest {
   }
 
   @Test
-  void givenAccessTokenAndUserInfoThenRemoveTokenAndNonInfoShouldBeFound(){
+  void givenNotAuthenticatedAccessTokenWhenGetUserThenNull(){
     // When
     IamUserInfoDTO result = tokenStoreService.getUserInfo(token);
 
@@ -40,7 +40,7 @@ class TokenStoreServiceImplTest {
   }
 
   @Test
-  void givenAccessThenRemoveToken(){
+  void givenAccessWhenDeleteThenNull(){
     // When
     IamUserInfoDTO result = tokenStoreService.delete(token);
 
