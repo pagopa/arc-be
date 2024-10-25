@@ -8,21 +8,24 @@ import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
 @Service
-public class InMemoryOAuth2AuthorizationRequestRepository implements
+public class RedisOAuth2AuthorizationRequestRepository implements
     AuthorizationRequestRepository<OAuth2AuthorizationRequest> {
 
   private final OAuth2StateStoreRepository oAuth2AuthorizationRequest;
   private static final String STATE = "state";
 
-  public InMemoryOAuth2AuthorizationRequestRepository(OAuth2StateStoreRepository oAuth2AuthorizationRequest){
+  public RedisOAuth2AuthorizationRequestRepository(OAuth2StateStoreRepository oAuth2AuthorizationRequest){
     this.oAuth2AuthorizationRequest = oAuth2AuthorizationRequest;
 
   }
+
+
   @Override
   public OAuth2AuthorizationRequest loadAuthorizationRequest(HttpServletRequest request) {
     String state = request.getParameter(STATE);
+
     if (StringUtils.hasText(state)) {
-      return oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest(state);
+      return oAuth2AuthorizationRequest.get(state);
     }
     return null;
   }

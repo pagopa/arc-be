@@ -21,8 +21,7 @@ public class OAuth2StateStoreRepository {
     return null;
   }
   @CacheEvict
-  public OAuth2AuthorizationRequest delete(String oauth2State){
-    return null;
+  public void delete(String oauth2State){ // Evict data from cache
   }
 
 }

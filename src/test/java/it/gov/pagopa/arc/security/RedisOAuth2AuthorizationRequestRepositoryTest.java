@@ -12,9 +12,9 @@ import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.security.oauth2.core.endpoint.OAuth2AuthorizationRequest;
 
-class InMemoryOAuth2AuthorizationRequestRepositoryTest {
+class RedisOAuth2AuthorizationRequestRepositoryTest {
 
-  private InMemoryOAuth2AuthorizationRequestRepository repository;
+  private RedisOAuth2AuthorizationRequestRepository repository;
   private HttpServletRequest request;
   private HttpServletResponse response;
   private OAuth2AuthorizationRequest authorizationRequest;
@@ -23,7 +23,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   @BeforeEach
   void setUp() {
     oAuth2AuthorizationRequest = mock(OAuth2StateStoreRepository.class);
-    repository = new InMemoryOAuth2AuthorizationRequestRepository(oAuth2AuthorizationRequest);
+    repository = new RedisOAuth2AuthorizationRequestRepository(oAuth2AuthorizationRequest);
     request = mock(HttpServletRequest.class);
     response = mock(HttpServletResponse.class);
     authorizationRequest = mock(OAuth2AuthorizationRequest.class);
@@ -35,7 +35,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(authorizationRequest.getState()).thenReturn(state);
     when(request.getParameter("state")).thenReturn(state);
-    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest(state)).thenReturn(authorizationRequest);
+    when(oAuth2AuthorizationRequest.get(state)).thenReturn(authorizationRequest);
 
     // Execute
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
@@ -47,10 +47,10 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenAuthorizationRequestThenFailCauseStateNotInRequest() {
+  void givenTokenRequestWhenStateNotInRequestThenFailCause() {
     when(authorizationRequest.getState()).thenReturn(null);
     when(request.getParameter("state")).thenReturn(null);
-    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest("state")).thenReturn(null);
+    when(oAuth2AuthorizationRequest.get("state")).thenReturn(null);
     // Execute
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
@@ -64,7 +64,7 @@ class InMemoryOAuth2AuthorizationRequestRepositoryTest {
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
     when(authorizationRequest.getState()).thenReturn(state);
-    when(oAuth2AuthorizationRequest.getOAuth2AuthorizationRequest(state)).thenReturn(authorizationRequest);
+    when(oAuth2AuthorizationRequest.get(state)).thenReturn(authorizationRequest);
 
     repository.saveAuthorizationRequest(authorizationRequest, request, response);
 
