@@ -31,15 +31,15 @@ public class RedisConfig {
     cacheConfigurations.put(CACHE_OAUTH2_STATE,RedisCacheConfiguration.defaultCacheConfig()
         .entryTtl(Duration.ofSeconds(300))
         .disableCachingNullValues());
-    cacheConfigurations.put(CACHE_NAME_ACCESS_TOKEN,redisJsonSerializationConfiguration(objectMapper,accessTokenExpirationSeconds));
+    cacheConfigurations.put(CACHE_NAME_ACCESS_TOKEN,redisJsonSerializationConfiguration(objectMapper,accessTokenExpirationSeconds,IamUserInfoDTO.class));
     return builder -> builder
         .withInitialCacheConfigurations(cacheConfigurations);
   }
 
-  private RedisCacheConfiguration redisJsonSerializationConfiguration( ObjectMapper objectMapper,int ttl){
+  private RedisCacheConfiguration redisJsonSerializationConfiguration( ObjectMapper objectMapper,int ttl, Class<?> type){
     return RedisCacheConfiguration.defaultCacheConfig()
           .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper,
-              (Class<?>) IamUserInfoDTO.class)))
+              (Class<?>) type)))
           .entryTtl(Duration.ofSeconds(ttl))
           .disableCachingNullValues();
   }
