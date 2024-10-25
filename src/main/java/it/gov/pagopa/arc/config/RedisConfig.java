@@ -39,7 +39,7 @@ public class RedisConfig {
   private RedisCacheConfiguration redisJsonSerializationConfiguration( ObjectMapper objectMapper,int ttl, Class<?> type){
     return RedisCacheConfiguration.defaultCacheConfig()
           .serializeValuesWith(RedisSerializationContext.SerializationPair.fromSerializer(new Jackson2JsonRedisSerializer<>(objectMapper,
-              (Class<?>) type)))
+              type)))
           .entryTtl(Duration.ofSeconds(ttl))
           .disableCachingNullValues();
   }
