@@ -12,7 +12,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 class TokenStoreServiceImplTest {
 
   @Mock
-  TokenStoreServiceImpl tokenStoreService;
+  private TokenStoreServiceImpl tokenStoreService;
   private final String token = "token";
 
   @BeforeEach
