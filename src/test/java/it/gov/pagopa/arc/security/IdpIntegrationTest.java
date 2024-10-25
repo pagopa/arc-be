@@ -96,7 +96,7 @@ class IdpIntegrationTest {
     private MockMvc mockMvc;
 
     @Autowired
-    OAuth2StateStoreRepository oAuth2StateStoreRepository;
+    private OAuth2StateStoreRepository oAuth2StateStoreRepository;
 
     private static RSAPublicKey rsaPublicKey = null;
     private static RSAPrivateKey rsaPrivateKey = null;
