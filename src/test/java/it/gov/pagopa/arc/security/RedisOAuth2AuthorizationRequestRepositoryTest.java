@@ -30,7 +30,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenAuthorizationRequestWhenTokenExchangeThenOK() {
+  void givenAuthorizationRequestWhenSaveAuthorizationRequestThenOK() {
     // Setup
     String state = "state123";
     when(authorizationRequest.getState()).thenReturn(state);
