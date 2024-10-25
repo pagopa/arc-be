@@ -1,0 +1,1022 @@
+openapi: 3.0.1
+info:
+  title: pagopa-arc-be
+  description: Api and Models
+  version: 0.0.1
+servers:
+  - url: "http://localhost:8080"
+    description: Generated server url
+paths:
+  /login/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the authentication endpoint"
+      operationId: getAuthenticationEndpoint
+      responses:
+        '302':
+          description: "Redirect to the authentication endpoint"
+          headers:
+            Location:
+              description: >
+                The URL to redirect to, including the following query parameters:
+                - response_type: The type of response, e.g., "code".
+                - scope: The scope of the access request, e.g., "openid profile email".
+                - client_id: The client ID, e.g., "abc4hdRkqt3".
+                - state: An opaque value used to maintain state between the request and callback, e.g., "abc4hdRkqt3".
+                - redirect_uri: The URI to redirect to after authorization, e.g., "https://client.example.org/cb".
+              schema:
+                type: string
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /token/oneidentity:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide authorization endpoint for exchanging code for token"
+      operationId: getAuthenticationToken
+      parameters:
+        - name: code
+          in: query
+          description: "The value used for exchanging code for token"
+          required: true
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: "The value of the state this value is handled by the security component"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /logout:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide the logout endpoint"
+      operationId: getLogoutEndpoint
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: "User successfully logged out"
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /auth/user:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide information regarding authenticated user"
+      operationId: getUserInfo
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserInfo'
+        '400':
+          description: "Request cannot be processed, required parameters are not present"
+        '401':
+          description: "Unauthorized"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /auth/testuser:
+    get:
+      tags:
+        - arc auth
+      summary: "Provide access token for the sample user"
+      operationId: getAuthTokenTestUser
+      responses:
+        '200':
+          description: "Token Response"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TokenResponse'
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /transactions:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve the paged transaction list from arc"
+      operationId: getTransactionsList
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: page
+          in: query
+          description: "Number of page required"
+          required: false
+          schema:
+            type: integer
+            format: int32
+        - name: size
+          in: query
+          description: "Number of items for page"
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: filter
+          in: query
+          description: "The field passed to filter the list of transactions"
+          required: false
+          schema:
+            type: string
+            enum: ["paidByMe", "registeredToMe"]
+          example: paidByMe
+      responses:
+        '200':
+          description: "Obtained transaction list"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionsListDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_amount
+                error_description: "Invalid amount format"
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /transactions/{transactionId}:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve transaction details from arc"
+      operationId: getTransactionDetails
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: transactionId
+          in: path
+          description: "A unique id that identifies a transaction"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained transaction details"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TransactionDetailsDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_amount
+                error_description: "Invalid amount format"
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Transaction details not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "transaction_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /transactions/{transactionId}/receipt:
+    get:
+      tags:
+        - arc transactions
+      summary: "Retrieve transaction receipt from arc"
+      operationId: getTransactionReceipt
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: transactionId
+          in: path
+          description: "A unique id that identifies a transaction"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained PDF transaction receipt"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Transaction details not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "receipt_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /notices:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve the paged notices list from arc"
+      operationId: getNoticesList
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: x-continuation-token
+          in: header
+          description: "Continuation token"
+          required: false
+          schema:
+            type: string
+        - name: size
+          in: query
+          description: "Number of items for page"
+          required: false
+          schema:
+            type: integer
+            format: int32
+            default: 10
+        - name: paidByMe
+          in: query
+          description: "The field to filter notices by if is payer"
+          required: false
+          schema:
+            type: boolean
+        - name: registeredToMe
+          in: query
+          description: "The field to filter notices by if is debtor"
+          required: false
+          schema:
+            type: boolean
+        - name: orderBy
+          in: query
+          description: "A value passed to sort by field (Default: TRANSACTION_DATE)"
+          required: false
+          schema:
+            type: string
+            enum: ["TRANSACTION_DATE"]
+            default: "TRANSACTION_DATE"
+        - name: ordering
+          in: query
+          description: "Direction of ordering (Default: DESC)"
+          required: false
+          schema:
+            type: string
+            enum: ["ASC", "DESC"]
+            default: "DESC"
+      responses:
+        '200':
+          description: "Obtained notices list"
+          headers:
+            x-continuation-token:
+              schema:
+                type: string
+              description: "Continuation token"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticesListDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_amount
+                error_description: "Invalid amount format"
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /notices/{eventId}:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve notice details from arc"
+      operationId: getNoticeDetails
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: eventId
+          in: path
+          description: "A unique id that identifies a paid notice"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained notice details"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NoticeDetailsDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Notice details not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "notice_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /notices/{eventId}/receipt:
+    get:
+      tags:
+        - arc notices
+      summary: "Retrieve notice receipt from arc"
+      operationId: getNoticeReceipt
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: eventId
+          in: path
+          description: "A unique id that identifies a notice"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: "Obtained PDF notice receipt"
+          content:
+            application/pdf:
+              schema:
+                type: string
+                format: binary
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Notice receipt not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: "receipt_not_found_error"
+                error_description: "string"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /payment-notices:
+    get:
+      tags:
+        - arc payment notices
+      summary: "Retrieve payment notices from arc"
+      operationId: getPaymentNotices
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: dueDate
+          in: query
+          description: Optional date to filter paymentNotices (if provided use the format yyyy-MM-dd)
+          schema:
+            format: date
+            type: string
+            example: '2022-03-10'
+        - name: size
+          in: query
+          description: Number of elements on one page. Default = 50
+          schema:
+            format: int32
+            default: 50
+            maximum: 100
+            minimum: 1
+            type: integer
+        - name: page
+          in: query
+          description: Page number. Page value starts from 0
+          schema:
+            format: int32
+            default: 0
+            minimum: 0
+            type: integer
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentNoticesListDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_request
+                error_description: "One or more inputs provided during the request from pull payment are invalid"
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /token/assistance:
+    get:
+      tags:
+        - arc zendesk assistance
+      summary: "Retrieve jwt token for the zendesk assistance"
+      operationId: getZendeskAssistanceToken
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: userEmail
+          in: query
+          description: Required user mail for the assistance
+          required: true
+          schema:
+            type: string
+            format: email
+            example: "someone@example.com"
+      responses:
+        '200':
+          description: "Obtained token for zendesk assistance"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ZendeskAssistanceTokenResponse'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+  schemas:
+    TokenResponse:
+      type: object
+      required:
+        - accessToken
+        - tokenType
+        - expiresIn
+      properties:
+        accessToken:
+          type: string
+        tokenType:
+          type: string
+          default: Bearer
+          x-field-extra-annotation: "@lombok.Builder.Default"
+        expiresIn:
+          type: integer
+        refreshToken:
+          type: string
+        idToken:
+          type: string
+    UserInfo:
+      type: object
+      required:
+        - userId
+        - fiscalCode
+      properties:
+        userId:
+          type: string
+        fiscalCode:
+          type: string
+        familyName:
+          type: string
+        name:
+          type: string
+        email:
+          type: string
+    ZendeskAssistanceTokenResponse:
+      type: object
+      required:
+        - assistanceToken
+        - returnTo
+        - actionUrl
+      properties:
+        assistanceToken:
+          type: string
+        returnTo:
+          type: string
+          description: URL of the Help Center to return
+        actionUrl:
+          type: string
+          description: URL of Zendesk endpoint
+    TransactionsListDTO:
+      type: object
+      properties:
+        transactions:
+          type: array
+          items:
+            $ref: '#/components/schemas/TransactionDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+        currentPage:
+          type: integer
+          format: int32
+        itemsForPage:
+          type: integer
+          format: int32
+        totalItems:
+          type: integer
+          format: int32
+        totalPages:
+          type: integer
+          format: int32
+    TransactionDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        payeeName:
+          type: string
+        payeeTaxCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        transactionDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        isCart:
+          type: boolean
+        paidByMe:
+          type: boolean
+        registeredToMe:
+          type: boolean
+    NoticesListDTO:
+      type: object
+      properties:
+        notices:
+          type: array
+          items:
+            $ref: '#/components/schemas/NoticeDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    NoticeDTO:
+      type: object
+      required:
+        - eventId
+        - payeeTaxCode
+        - amount
+        - noticeDate
+        - isCart
+        - paidByMe
+        - registeredToMe
+      properties:
+        eventId:
+          type: string
+        payeeName:
+          type: string
+        payeeTaxCode:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        noticeDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        isCart:
+          type: boolean
+        paidByMe:
+          type: boolean
+        registeredToMe:
+          type: boolean
+    TransactionDetailsDTO:
+      type: object
+      properties:
+        infoTransaction:
+          $ref: "#/components/schemas/InfoTransactionDTO"
+        carts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemDTO"
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    InfoTransactionDTO:
+      type: object
+      properties:
+        transactionId:
+          type: string
+        authCode:
+          type: string
+        rrn:
+          type: string
+        transactionDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        pspName:
+          type: string
+        walletInfo:
+          $ref: "#/components/schemas/WalletInfoDTO"
+        paymentMethod:
+          type: string
+          enum:
+            - BBT
+            - BP
+            - AD
+            - CP
+            - PO
+            - OBEP
+            - JIF
+            - MYBK
+            - PPAL
+            - UNKNOWN
+        payer:
+          $ref: "#/components/schemas/UserDetailDTO"
+        amount:
+          type: integer
+          format: int64
+        fee:
+          type: integer
+          format: int64
+        origin:
+          type: string
+          enum:
+            - INTERNAL
+            - PM
+            - NDP001PROD
+            - NDP002PROD
+            - NDP003PROD
+            - UNKNOWN
+    CartItemDTO:
+      required:
+        - subject
+        - amount
+        - refNumberValue
+        - refNumberType
+      type: object
+      properties:
+        subject:
+          type: string
+        amount:
+          type: integer
+          format: int64
+        payee:
+          $ref: "#/components/schemas/UserDetailDTO"
+        debtor:
+          $ref: "#/components/schemas/UserDetailDTO"
+        refNumberValue:
+          type: string
+        refNumberType:
+          type: string
+    UserDetailDTO:
+      required:
+        - taxCode
+      type: object
+      properties:
+        name:
+          type: string
+        taxCode:
+          type: string
+    WalletInfoDTO:
+      type: object
+      properties:
+        accountHolder:
+          type: string
+        brand:
+          type: string
+        blurredNumber:
+          type: string
+        maskedEmail:
+          type: string
+    NoticeDetailsDTO:
+      type: object
+      properties:
+        infoNotice:
+          $ref: "#/components/schemas/InfoNoticeDTO"
+        carts:
+          type: array
+          items:
+            $ref: "#/components/schemas/CartItemDTO"
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    InfoNoticeDTO:
+      required:
+        - eventId
+        - rrn
+        - noticeDate
+        - pspName
+        - amount
+        - origin
+      type: object
+      properties:
+        eventId:
+          type: string
+        authCode:
+          type: string
+        rrn:
+          type: string
+        noticeDate:
+          type: string
+          format: zoned-date-time
+          example: "2024-05-31T13:07:25Z"
+        pspName:
+          type: string
+        walletInfo:
+          $ref: "#/components/schemas/WalletInfoDTO"
+        paymentMethod:
+          type: string
+          enum:
+            - BBT
+            - BP
+            - AD
+            - CP
+            - PO
+            - OBEP
+            - JIF
+            - MYBK
+            - PPAL
+            - UNKNOWN
+        payer:
+          $ref: "#/components/schemas/UserDetailDTO"
+        amount:
+          type: integer
+          format: int64
+        fee:
+          type: integer
+          format: int64
+        origin:
+          type: string
+          enum:
+            - INTERNAL
+            - PM
+            - NDP001PROD
+            - NDP002PROD
+            - NDP003PROD
+            - UNKNOWN
+    PaymentNoticesListDTO:
+      type: object
+      properties:
+        paymentNotices:
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentNoticeDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    PaymentNoticeDTO:
+      required:
+        - iupd
+        - debtorTaxCode
+        - debtorFullName
+        - debtorType
+        - paTaxCode
+        - paFullName
+        - insertedDate
+        - publishDate
+        - validityDate
+        - status
+        - lastUpdateDate
+        - paymentOptions
+      type: object
+      properties:
+        iupd:
+          description: Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)
+          type: string
+        debtorTaxCode:
+          description: Tax code of the person to whom the Debt Position is registered
+          type: string
+        debtorFullName:
+          description: Full name of the person to whom the Debt Position is registered
+          type: string
+        debtorType:
+          description: Type of subject to whom the Debt Position is registered (Will be F (Physical) or G(Legal))
+          type: string
+        paTaxCode:
+          description: Tax code of the Creditor Body
+          type: string
+        paFullName:
+          description: Company name of the Creditor Body
+          type: string
+        insertedDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        publishDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        validityDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        status:
+          $ref: '#/components/schemas/PaymentNoticeStatus'
+        lastUpdateDate:
+          format: date
+          type: string
+          example: '2022-03-10'
+        paymentOptions:
+          description: Array structure containing any payment options (there always exists at least 1)
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    LocalDateTime:
+      format: date-time
+      type: string
+      example: '2022-03-10T12:15:50'
+    PaymentNoticeStatus:
+      enum:
+        - VALID
+        - PARTIALLY_PAID
+      type: string
+    PaymentOptionDTO:
+      required:
+        - numberOfInstallments
+        - switchToExpired
+        - installments
+      type: object
+      properties:
+        description:
+          description: Description of the payment option
+          type: string
+        numberOfInstallments:
+          format: int32
+          description: Number of installments that make up the payment option, if equal to 1 it is a single payment
+          type: integer
+        amount:
+          format: int64
+          description: total amount for the payment option
+          type: integer
+        dueDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        isPartialPayment:
+          description: Indicates whether the OP is part of an installment plan
+          type: boolean
+        switchToExpired:
+          description: Indicates, if set to true, in the case of PD created on GPD, that once the expiration date (dueDate ) has passed the PD is automatically set to the expired status
+          type: boolean
+        installments:
+          description: Array structure containing the installments that make up the payment option (there always exists at least 1)
+          type: array
+          items:
+            $ref: '#/components/schemas/InstallmentDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    InstallmentDTO:
+      required:
+        - nav
+        - iuv
+        - paTaxCode
+        - paFullName
+        - amount
+        - description
+        - dueDate
+        - insertedDate
+        - status
+        - lastUpdatedDate
+      type: object
+      properties:
+        nav:
+          description: Notice Code
+          type: string
+        iuv:
+          description: Unique identifier
+          type: string
+        paTaxCode:
+          description: Tax code of the Creditor Body
+          type: string
+        paFullName:
+          description: Company name of the Creditor Body
+          type: string
+        amount:
+          format: int64
+          description: Payment Option Amount
+          type: integer
+        description:
+          description: Description of the OP (e.g. "SISA - 741T, 942T - Checks without authorization or funding")
+          type: string
+        dueDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        retentionDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        insertedDate:
+          $ref: '#/components/schemas/LocalDateTime'
+        notificationFee:
+          format: int64
+          description: corresponds to the SEND notification costs
+          type: integer
+        status:
+          $ref: '#/components/schemas/PaymentOptionStatus'
+        lastUpdatedDate:
+          $ref: '#/components/schemas/LocalDateTime'
+    PaymentOptionStatus:
+      enum:
+        - PO_UNPAID
+        - PO_PAID
+        - PO_PARTIALLY_REPORTED
+        - PO_REPORTED
+      type: string
+    ErrorDTO:
+      type: object
+      required:
+        - error
+      properties:
+        error:
+          type: string
+          enum:
+            - generic_error
+            - transaction_not_found_error
+            - receipt_not_found_error
+            - notice_not_found_error
+            - invalid_amount
+            - invalid_date
+            - invalid_email
+            - invalid_request
+            - auth_user_unauthorized
+        error_description:
+          type: string
+          x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

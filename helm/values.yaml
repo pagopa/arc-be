@@ -1,0 +1,95 @@
+microservice-chart:
+  namespace: "cittadini"
+  nameOverride: ""
+  fullnameOverride: ""
+
+  livenessProbe:
+    httpGet:
+      path: /actuator/health/liveness
+      port: 8080
+    initialDelaySeconds: 120
+    failureThreshold: 15
+    periodSeconds: 10
+
+  readinessProbe:
+    httpGet:
+      path: /actuator/health/readiness
+      port: 8080
+    initialDelaySeconds: 120
+    failureThreshold: 15
+    periodSeconds: 10
+
+  deployment:
+    create: true
+
+  service:
+    create: true
+    type: ClusterIP
+    port: 8080
+
+  ingress:
+    create: true
+    path: /arcbe/(.*)
+
+  azure:
+    # -- Azure Workload Identity Client ID
+    workloadIdentityClientId: WORK_IDENTITY_CLIENT_ID
+
+  serviceAccount:
+    create: false
+    annotations: {}
+    name: "cittadini-workload-identity"
+
+  podAnnotations: {}
+
+  podSecurityContext:
+    seccompProfile:
+      type: RuntimeDefault
+
+  securityContext:
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 65534
+    runAsGroup: 65534
+
+  externalConfigMapFiles:
+    create: true
+    configMaps:
+      - name: appinsights-config
+        key: applicationinsights.json
+
+  envConfig:
+    APPLICATIONINSIGHTS_ROLE_NAME: "pagopaarcbe"
+    APPLICATIONINSIGHTS_INSTRUMENTATION_LOGGING_LEVEL: "OFF"
+    APPLICATIONINSIGHTS_INSTRUMENTATION_MICROMETER_ENABLED: "false"
+    APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
+    ENABLE_AUDIT_APPENDER: "TRUE"
+    JWT_TOKEN_EXPIRATION_SECONDS: "28800"
+
+  externalConfigMapValues:
+    rest-client:
+      BIZ_EVENTS_BASE_URL: bizevents-base-url
+      BIZ_EVENTS_PAID_NOTICE_BASE_URL: bizevents-paids-base-url
+      PULL_PAYMENT_BASE_URL: pullpayment-base-url
+    assistance:
+      ASSISTANCE_ZENDESK_PRODUCT_ID: assistance-arc-zendesk-product-id
+      ASSISTANCE_ZENDESK_ORGANIZATION: assistance-arc-zendesk-organization
+      HELP_CENTER_URL: arc-help-center-url
+      ZENDESK_ACTION_URL: zendesk-action-url
+
+  envSecret:
+    APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
+    BIZ_EVENTS_SERVICE_API_KEY: pagopa-bizevents-trx-apimv1-subscription-key
+    BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY: pagopa-bizevents-paids-trx-apimv1-subscription-key
+    PULL_PAYMENT_SERVICE_API_KEY: pagopa-pullpayment-apimv1-subscription-key
+    AUTH_CLIENT_ID: oneidentity-client-id
+    AUTH_CLIENT_SECRET: oneidentity-client-secret
+    JWT_TOKEN_PRIVATE_KEY: jwt-private-key
+    JWT_TOKEN_PUBLIC_KEY: jwt-public-key
+    JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY: jwt-assistance-zendesk-private-key
+    WHITE_LIST_USERS: cf-whitelist
+  # nodeSelector: {}
+
+  # tolerations: []
+
+  # affinity: {}
