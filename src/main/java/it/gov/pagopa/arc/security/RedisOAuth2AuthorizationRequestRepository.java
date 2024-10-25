@@ -45,7 +45,7 @@ public class RedisOAuth2AuthorizationRequestRepository implements
     String state = request.getParameter(STATE);
     if (StringUtils.hasText(state)) {
       // Remove and return the authorization request from the map
-      OAuth2AuthorizationRequest result = loadAuthorizationRequest(request);
+      OAuth2AuthorizationRequest result = oAuth2AuthorizationRequest.get(state);
       if (result!=null){
         oAuth2AuthorizationRequest.delete(state);
         return result;

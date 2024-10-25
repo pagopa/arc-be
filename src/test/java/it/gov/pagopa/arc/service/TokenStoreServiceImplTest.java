@@ -22,11 +22,8 @@ class TokenStoreServiceImplTest {
   @Test
   void givenAccessTokenWhenUserLoggedThenGetUserInfo() {
     IamUserInfoDTO userInfo = new IamUserInfoDTO();
-
-    String accessToken = token;
-
     // When
-    IamUserInfoDTO result = tokenStoreService.save(accessToken, userInfo);
+    IamUserInfoDTO result = tokenStoreService.save(token, userInfo);
 
     // Then
     Assertions.assertSame(userInfo, result);
@@ -35,11 +32,8 @@ class TokenStoreServiceImplTest {
 
   @Test
   void givenAccessTokenAndUserInfoThenRemoveTokenAndNonInfoShouldBeFound(){
-    // Given
-    String accessToken = token;
-
     // When
-    IamUserInfoDTO result = tokenStoreService.getUserInfo(accessToken);
+    IamUserInfoDTO result = tokenStoreService.getUserInfo(token);
 
     // Then
     Assertions.assertNull(result);
@@ -47,11 +41,8 @@ class TokenStoreServiceImplTest {
 
   @Test
   void givenAccessThenRemoveToken(){
-    // Given
-    String accessToken = token;
-
     // When
-    IamUserInfoDTO result = tokenStoreService.delete(accessToken);
+    IamUserInfoDTO result = tokenStoreService.delete(token);
 
     // Then
     Assertions.assertNull(result);
