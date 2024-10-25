@@ -62,7 +62,7 @@ jobs:
           echo "CVE_CRITICAL=$(echo $SCAN_RESULTS | grep -o critical | wc -l)" >> $GITHUB_ENV
           echo "CVE_HIGH=$(echo $SCAN_RESULTS | grep -o high | wc -l)" >> $GITHUB_ENV
           echo "CVE_MEDIUM=$(echo $SCAN_RESULTS | grep -o medium | wc -l)" >> $GITHUB_ENV
-          
+
           echo -e $SCAN_RESULTS
       # - name: Send notification to Slack
       #   id: slack
