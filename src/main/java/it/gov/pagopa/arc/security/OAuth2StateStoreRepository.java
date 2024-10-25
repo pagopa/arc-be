@@ -17,7 +17,7 @@ public class OAuth2StateStoreRepository {
     return oAuth2AuthorizationRequest;
   }
   @Cacheable(unless="#result == null")
-  public OAuth2AuthorizationRequest getOAuth2AuthorizationRequest(String oauth2State) {
+  public OAuth2AuthorizationRequest get(String oauth2State) {
     return null;
   }
   @CacheEvict
