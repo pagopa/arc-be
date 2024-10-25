@@ -47,7 +47,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenTokenRequestWhenStateNotInRequestThenFailCause() {
+  void givenRequestWithNoStateWhenSaveAuthorizationRequestThenReturnNull() {
     when(authorizationRequest.getState()).thenReturn(null);
     when(request.getParameter("state")).thenReturn(null);
     when(oAuth2AuthorizationRequest.get("state")).thenReturn(null);
@@ -59,7 +59,7 @@ class RedisOAuth2AuthorizationRequestRepositoryTest {
   }
 
   @Test
-  void givenValidStateWhenLoadAuthotizationRequesteThenGetAuthRequest() {
+  void givenValidStateWhenLoadAuthenticationRequestThenGetAuthRequest() {
     // Setup
     String state = "state123";
     when(request.getParameter("state")).thenReturn(state);
