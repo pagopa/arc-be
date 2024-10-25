@@ -10,7 +10,6 @@ import jakarta.servlet.ServletException;
 import java.io.IOException;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Optional;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -52,8 +51,7 @@ class JwtAuthenticationFilterTest {
   void givenValidAuthenticationTokenThenVerifyThatSecurityContextIsCreated()
       throws ServletException, IOException, NoSuchAlgorithmException, InvalidKeySpecException {
     IamUserInfoDTO userInfoDTO = IamUserInfoDTOFaker.mockInstance();
-    Mockito.when(tokenStoreService.getUserInfo(sampleJwt)).thenReturn(
-        Optional.of(userInfoDTO));
+    Mockito.when(tokenStoreService.getUserInfo(sampleJwt)).thenReturn(userInfoDTO);
     doNothing().when(accessTokenValidationService).validate(sampleJwt);
 
     MockHttpServletRequest request = new MockHttpServletRequest();
