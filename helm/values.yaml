@@ -65,6 +65,8 @@ microservice-chart:
     APPLICATIONINSIGHTS_PREVIEW_PROFILER_ENABLED: "false"
     ENABLE_AUDIT_APPENDER: "TRUE"
     JWT_TOKEN_EXPIRATION_SECONDS: "28800"
+    REDIS_PORT: "6380"
+    REDIS_SSL_ENABLED: "true"
 
   externalConfigMapValues:
     rest-client:
@@ -88,6 +90,8 @@ microservice-chart:
     JWT_TOKEN_PUBLIC_KEY: jwt-public-key
     JWT_TOKEN_ASSISTANCE_ZENDESK_PRIVATE_KEY: jwt-assistance-zendesk-private-key
     WHITE_LIST_USERS: cf-whitelist
+    REDIS_HOST: cache-standalone-host
+    REDIS_PASSWORD: cache-password
   # nodeSelector: {}
 
   # tolerations: []

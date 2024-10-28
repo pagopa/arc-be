@@ -1,61 +1,51 @@
 package it.gov.pagopa.arc.service;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
-import java.util.Map;
+import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
+import org.mockito.junit.jupiter.MockitoExtension;
 
+@ExtendWith(MockitoExtension.class)
 class TokenStoreServiceImplTest {
 
   @Mock
-  TokenStoreServiceImpl tokenStoreService;
+  private TokenStoreServiceImpl tokenStoreService;
+  private final String token = "token";
 
-  private final String token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c";
-
-  private final Map<String, Object> attributes = Map.of(
-      "sub", "123456",
-      "fiscalNumber", "789012",
-      "familyName", "Polo",
-      "name", "Marco",
-      "email", "marco.polo@example.com",
-      "iss", "issuer"
-  );
   @BeforeEach
   void setUp(){
     tokenStoreService = new TokenStoreServiceImpl();
   }
   @Test
-  void givenAccessTokenAndUserInfoThenSaveAndRetrieveTheSameData() {
-    String wrongToken = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9";
+  void givenAccessTokenWhenUserLoggedThenReturnUserInfo() {
+    IamUserInfoDTO userInfo = new IamUserInfoDTO();
+    // When
+    IamUserInfoDTO result = tokenStoreService.save(token, userInfo);
 
-    IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
-    tokenStoreService.save(token,userInfo);
+    // Then
+    Assertions.assertSame(userInfo, result);
 
-    assertNotNull(tokenStoreService.getUserInfo(token));
-
-    assertTrue(tokenStoreService.getUserInfo(token).isPresent());
-
-    assertEquals(attributes.get("sub"),tokenStoreService.getUserInfo(token).get().getUserId());
-    assertEquals(attributes.get("fiscalNumber"),tokenStoreService.getUserInfo(token).get().getFiscalCode());
-    assertEquals(attributes.get("familyName"),tokenStoreService.getUserInfo(token).get().getFamilyName());
-    assertEquals(attributes.get("name"),tokenStoreService.getUserInfo(token).get().getName());
-    assertEquals(attributes.get("email"),tokenStoreService.getUserInfo(token).get().getEmail());
-    assertEquals(attributes.get("iss"),tokenStoreService.getUserInfo(token).get().getIssuer());
-
-    assertFalse(tokenStoreService.getUserInfo(wrongToken).isPresent());
   }
 
   @Test
-  void givenAccessTokenAndUserInfoThenRemoveTokenAndNonInfoShouldBeFound(){
-    IamUserInfoDTO userInfo = IamUserInfoDTO.map2IamUserInfoDTO(attributes);
-    tokenStoreService.save(token,userInfo);
+  void givenNotAuthenticatedAccessTokenWhenGetUserThenNull(){
+    // When
+    IamUserInfoDTO result = tokenStoreService.getUserInfo(token);
 
-    tokenStoreService.delete(token);
+    // Then
+    Assertions.assertNull(result);
+  }
 
-    assertFalse(tokenStoreService.getUserInfo(token).isPresent());
+  @Test
+  void givenAccessWhenDeleteThenNull(){
+    // When
+    IamUserInfoDTO result = tokenStoreService.delete(token);
+
+    // Then
+    Assertions.assertNull(result);
   }
 
 }
