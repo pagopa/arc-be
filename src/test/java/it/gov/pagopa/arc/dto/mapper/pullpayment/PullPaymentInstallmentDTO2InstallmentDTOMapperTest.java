@@ -14,7 +14,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 
 import static org.mockito.ArgumentMatchers.any;
 
@@ -49,12 +49,12 @@ class PullPaymentInstallmentDTO2InstallmentDTOMapperTest {
             Assertions.assertEquals("EC Demo Pagamenti Pull Test", result.getPaFullName());
             Assertions.assertEquals(120L, result.getAmount());
             Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
-            Assertions.assertEquals(LocalDateTime.parse("2024-10-30T23:59:59"), result.getDueDate());
-            Assertions.assertEquals(LocalDateTime.parse("2024-11-30T23:59:59"), result.getRetentionDate());
-            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14"), result.getInsertedDate());
+            Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
+            Assertions.assertEquals(ZonedDateTime.parse("2024-11-30T23:59:59Z"), result.getRetentionDate());
+            Assertions.assertEquals(ZonedDateTime.parse("2024-04-11T06:56:14Z"), result.getInsertedDate());
             Assertions.assertEquals(0L, result.getNotificationFee());
             Assertions.assertEquals(unpaid, result.getStatus());
-            Assertions.assertEquals(LocalDateTime.parse("2024-04-11T06:56:14"), result.getLastUpdatedDate());
+            Assertions.assertEquals(ZonedDateTime.parse("2024-04-11T06:56:14Z"), result.getLastUpdatedDate());
 
             Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMapperMock).toPaymentOptionStatus(any());
         });
