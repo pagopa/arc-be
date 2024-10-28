@@ -15,7 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 import static org.mockito.ArgumentMatchers.any;
@@ -43,7 +43,7 @@ class PullPaymentOptionDTO2PaymentOptionDTOMapperTest {
             Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
             Assertions.assertEquals(1, result.getNumberOfInstallments());
             Assertions.assertEquals(120L, result.getAmount());
-            Assertions.assertEquals(LocalDateTime.parse("2024-10-30T23:59:59"), result.getDueDate());
+            Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
             Assertions.assertFalse(result.getIsPartialPayment());
             Assertions.assertFalse(result.getSwitchToExpired());
             Assertions.assertEquals(List.of(installmentDTO), result.getInstallments());

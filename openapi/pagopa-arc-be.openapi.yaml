@@ -888,11 +888,11 @@ components:
           description: Company name of the Creditor Body
           type: string
         insertedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         publishDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         validityDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         status:
           $ref: '#/components/schemas/PaymentNoticeStatus'
         lastUpdateDate:
@@ -905,10 +905,10 @@ components:
           items:
             $ref: '#/components/schemas/PaymentOptionDTO'
           x-field-extra-annotation: "@lombok.Builder.Default"
-    LocalDateTime:
-      format: date-time
+    ZonedDateTime:
       type: string
-      example: '2022-03-10T12:15:50'
+      format: zoned-date-time
+      example: "2024-05-31T13:07:25Z"
     PaymentNoticeStatus:
       enum:
         - VALID
@@ -933,7 +933,7 @@ components:
           description: total amount for the payment option
           type: integer
         dueDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         isPartialPayment:
           description: Indicates whether the OP is part of an installment plan
           type: boolean
@@ -980,11 +980,11 @@ components:
           description: Description of the OP (e.g. "SISA - 741T, 942T - Checks without authorization or funding")
           type: string
         dueDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         retentionDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         insertedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         notificationFee:
           format: int64
           description: corresponds to the SEND notification costs
@@ -992,7 +992,7 @@ components:
         status:
           $ref: '#/components/schemas/PaymentOptionStatus'
         lastUpdatedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
     PaymentOptionStatus:
       enum:
         - PO_UNPAID

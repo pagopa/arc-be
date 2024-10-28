@@ -18,15 +18,16 @@ class MapperUtilitiesTest {
 
     @ParameterizedTest
     @CsvSource(value = {
-            "2024-04-11T06:56:14.845126, 2024-04-11T06:56:14",
-            "2023-02-08T06:56:18.542235, 2023-02-08T06:56:18",
-            "2023-02-08T06:56:18, 2023-02-08T06:56:18"
+            "2024-04-11T06:56:14.845126, 2024-04-11T06:56:14Z",
+            "2023-02-08T06:56:18.542235, 2023-02-08T06:56:18Z",
+            "2023-02-08T06:56:18, 2023-02-08T06:56:18Z"
     })
-    void givenDateTimeWithMillisWhenCallTruncateToSecondsThenReturnDateTimeWithoutMillis(LocalDateTime dateTime, LocalDateTime expectedDateTime) {
+    void givenDateTimeWithMillisWhenCallTruncateToSecondsThenReturnDateTimeWithoutMillis(LocalDateTime dateTime, ZonedDateTime expectedDateTime) {
         //when
-        LocalDateTime localDateTime = MapperUtilities.truncateToSeconds(dateTime);
+        ZonedDateTime zonedDateTime = MapperUtilities.convertToZonedDateTimeAndTruncateSeconds(dateTime);
         //then
-        Assertions.assertEquals(expectedDateTime, localDateTime);
+        Assertions.assertEquals(expectedDateTime, zonedDateTime);
+        System.out.println(zonedDateTime);
     }
 
     @ParameterizedTest
