@@ -10,7 +10,6 @@ import static org.mockito.Mockito.when;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-import java.util.Optional;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -45,7 +44,7 @@ class CustomLogoutHandlerTest {
     String authorizationHeader = "Bearer " + token;
 
     when(request.getHeader(HttpHeaders.AUTHORIZATION)).thenReturn(authorizationHeader);
-    when(tokenStoreService.delete(token)).thenReturn(Optional.empty());
+    when(tokenStoreService.delete(token)).thenReturn(null);
 
     customLogoutHandler.logout(request, response, authentication);
 
