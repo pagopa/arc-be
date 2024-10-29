@@ -8,6 +8,7 @@ import org.mapstruct.Named;
 import java.text.NumberFormat;
 import java.text.ParseException;
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
 import java.time.format.DateTimeParseException;
@@ -16,10 +17,10 @@ import java.util.Locale;
 
 @Mapper
 public interface MapperUtilities {
-
-    @Named("truncateToSeconds")
-    static LocalDateTime truncateToSeconds(LocalDateTime dateTime){
-        return dateTime.truncatedTo(ChronoUnit.SECONDS);
+    /** To convert LocalDateTime into ZonedDateTime and truncate to seconds */
+    @Named("convertToZonedDateTimeAndTruncateSeconds")
+    static ZonedDateTime convertToZonedDateTimeAndTruncateSeconds(LocalDateTime dateTime){
+        return ZonedDateTime.of(dateTime, ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS);
     }
 
     /** To convert euro into cents */
