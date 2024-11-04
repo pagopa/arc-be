@@ -1,23 +1,36 @@
 package it.gov.pagopa.arc.service.bizevents;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.when;
+
 import it.gov.pagopa.arc.connector.bizevents.BizEventsConnector;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDTO;
-import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.paidnotice.BizEventsPaidNoticeConnector;
 import it.gov.pagopa.arc.dto.NoticeRequestDTO;
 import it.gov.pagopa.arc.dto.NoticesListResponseDTO;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDTO2TransactionDTOMapper;
-import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionDetails2TransactionDetailsDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.BizEventsTransactionsListDTO2TransactionsListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapper;
-import it.gov.pagopa.arc.fakers.*;
+import it.gov.pagopa.arc.fakers.NoticeDTOFaker;
+import it.gov.pagopa.arc.fakers.NoticeDetailsDTOFaker;
+import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
+import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDTOFaker;
-import it.gov.pagopa.arc.fakers.bizEvents.BizEventsTransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.paidnotice.BizEventsPaidNoticeDetailsDTOFaker;
-import it.gov.pagopa.arc.model.generated.*;
+import it.gov.pagopa.arc.model.generated.NoticeDTO;
+import it.gov.pagopa.arc.model.generated.NoticeDetailsDTO;
+import it.gov.pagopa.arc.model.generated.NoticesListDTO;
+import it.gov.pagopa.arc.model.generated.TransactionDTO;
+import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
@@ -32,16 +45,6 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
 class BizEventsServiceImplTest {
@@ -61,8 +64,6 @@ class BizEventsServiceImplTest {
     @Mock
     private BizEventsTransactionsListDTO2TransactionsListDTOMapper transactionsListDTOMapperMock;
     @Mock
-    private BizEventsTransactionDetails2TransactionDetailsDTOMapper transactionDetailsDTOMapperMock;
-    @Mock
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnectorMock;
 
     @Mock
@@ -79,7 +80,6 @@ class BizEventsServiceImplTest {
                 bizEventsConnectorMock ,
                 transactionDTOMapperMock,
                 transactionsListDTOMapperMock,
-                transactionDetailsDTOMapperMock,
                 bizEventsPaidNoticeConnectorMock,
                 bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock);
     }
@@ -90,7 +90,6 @@ class BizEventsServiceImplTest {
                 bizEventsConnectorMock,
                 transactionDTOMapperMock,
                 transactionsListDTOMapperMock,
-                transactionDetailsDTOMapperMock,
                 bizEventsPaidNoticeConnectorMock,
                 bizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperMock
         );
@@ -180,26 +179,6 @@ class BizEventsServiceImplTest {
         assertEquals(2, result.getItemsForPage());
         assertEquals(1, result.getTotalPages());
         assertEquals(10, result.getTotalItems());
-    }
-
-    @Test
-    void givenTransactionIdWhenCallRetrieveTransactionDetailsFromBizEventsThenReturnTransactionDetails() {
-        //given
-        BizEventsTransactionDetailsDTO bizEventsTransactionDetails = BizEventsTransactionDetailsDTOFaker.mockInstance();
-        TransactionDetailsDTO expectedResult = TransactionDetailsDTOFaker.mockInstance();
-
-        when(bizEventsConnectorMock.getTransactionDetails(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(bizEventsTransactionDetails);
-        when(transactionDetailsDTOMapperMock.apply(bizEventsTransactionDetails)).thenReturn(expectedResult);
-        //when
-        TransactionDetailsDTO result = bizEventsService.retrieveTransactionDetailsFromBizEvents(TRANSACTION_ID);
-
-        //then
-        Assertions.assertNotNull(result);
-        assertEquals(2, result.getCarts().size());
-        assertEquals(expectedResult.getInfoTransaction(), result.getInfoTransaction());
-        assertEquals(expectedResult.getCarts(), result.getCarts());
-        assertEquals(expectedResult, result);
-
     }
 
     @Test
