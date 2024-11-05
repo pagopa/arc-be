@@ -1,10 +1,8 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
 import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
-import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 import ch.qos.logback.classic.LoggerContext;
@@ -12,11 +10,7 @@ import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
-import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
 import it.gov.pagopa.arc.utils.MemoryAppender;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -25,7 +19,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
-import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
 
@@ -97,38 +90,6 @@ class BizEventsConnectorImplTest {
         Assertions.assertThrows(BizEventsInvocationException.class,
                 () -> bizEventsConnector.getTransactionsList("DUMMY_FISCAL_CODE_ERROR", 2));
 
-    }
-
-    @Test
-    void givenTransactionIdWhenCallBizEventsConnectorThenReturnTransactionReceipt() throws IOException {
-        //given
-        //when
-        Resource transactionReceipt = bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT", "TRANSACTION_ID_RECEIPT_OK_1");
-
-        //then
-        Assertions.assertNotNull(transactionReceipt);
-        Assertions.assertTrue(transactionReceipt.exists());
-        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
-        byte[] actualContent = transactionReceipt.getInputStream().readAllBytes();
-        assertArrayEquals(expectedContent, actualContent);
-    }
-
-    @Test
-    void givenTransactionIdWhenReceiptNotFoundThenReturnException() {
-        //given
-        //when
-        BizEventsReceiptNotFoundException bizEventsReceiptNotFoundException = assertThrows(BizEventsReceiptNotFoundException.class,
-                () -> bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT_NOT_FOUND", "TRANSACTION_ID_RECEIPT_NOT_FOUND_1"));
-        Assertions.assertEquals("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [TRANSACTION_ID_RECEIPT_NOT_FOUND_1] for the current user", bizEventsReceiptNotFoundException.getMessage());
-    }
-
-    @Test
-    void givenTransactionIdWhenReceiptErrorThenThrowBizEventsInvocationException() {
-        //When
-        //Then
-        BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
-                () -> bizEventsConnector.getTransactionReceipt("DUMMY_FISCAL_CODE_RECEIPT_ERROR", "TRANSACTION_ID_RECEIPT_ERROR_1"));
-        Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
     }
 
 }

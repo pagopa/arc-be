@@ -198,46 +198,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /transactions/{transactionId}/receipt:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve transaction receipt from arc"
-      operationId: getTransactionReceipt
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: transactionId
-          in: path
-          description: "A unique id that identifies a transaction"
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "Obtained PDF transaction receipt"
-          content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-        '401':
-          description: "Wrong or missing function key"
-        '404':
-          description: "Transaction details not found"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: "receipt_not_found_error"
-                error_description: "string"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
   /notices:
     get:
       tags:

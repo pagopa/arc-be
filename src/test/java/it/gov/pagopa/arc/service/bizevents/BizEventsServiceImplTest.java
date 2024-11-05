@@ -51,7 +51,6 @@ class BizEventsServiceImplTest {
     private static final int PAGE = 1;
     private static final int SIZE = 2;
     private static final String FILTER = "DUMMY_FILTER";
-    private static final String TRANSACTION_ID = "TRANSACTION_ID";
     private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final String CONTINUATION_TOKEN = "continuation-token";
 
@@ -179,23 +178,6 @@ class BizEventsServiceImplTest {
         assertEquals(2, result.getItemsForPage());
         assertEquals(1, result.getTotalPages());
         assertEquals(10, result.getTotalItems());
-    }
-
-    @Test
-    void givenTransactionIdWhenCallRetrieveTransactionReceiptFromBizEventsThenReturnTransactionReceipt() throws IOException {
-        //given
-        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf");
-
-        when(bizEventsConnectorMock.getTransactionReceipt(DUMMY_FISCAL_CODE,TRANSACTION_ID)).thenReturn(receipt);
-        //when
-        Resource result = bizEventsService.retrieveTransactionReceiptFromBizEvents(TRANSACTION_ID);
-
-        //then
-        byte[] expectedContent = Files.readAllBytes(Paths.get("src/test/resources/stub/__files/testReceiptPdfFile.pdf"));
-        byte[] resultAsByteArray = result.getContentAsByteArray();
-
-        Assertions.assertNotNull(result);
-        Assertions.assertArrayEquals(resultAsByteArray, expectedContent);
     }
 
     @Test

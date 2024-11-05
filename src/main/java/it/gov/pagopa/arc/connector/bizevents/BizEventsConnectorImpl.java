@@ -48,18 +48,5 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
         }
         return bizEventsTransactionsListDTO;
     }
-
-    @Override
-    public Resource getTransactionReceipt(String fiscalCode, String transactionId) {
-        Resource transactionReceipt;
-        try {
-            transactionReceipt = bizEventsRestClient.transactionReceipt(apikey, fiscalCode, transactionId);
-        }catch (FeignException e){
-            if (e.status() == HttpStatus.NOT_FOUND.value()){
-                throw  new BizEventsReceiptNotFoundException("An error occurred handling request from biz-Events to retrieve transaction receipt with transaction id [%s] for the current user".formatted(transactionId));
-            }
-            throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
-        }
-        return transactionReceipt;
-    }
+    
 }

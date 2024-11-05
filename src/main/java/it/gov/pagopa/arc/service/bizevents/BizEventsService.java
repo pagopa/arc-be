@@ -8,7 +8,6 @@ import org.springframework.core.io.Resource;
 
 public interface BizEventsService {
     TransactionsListDTO retrieveTransactionsListFromBizEvents(Integer page, Integer size, String filter);
-    Resource retrieveTransactionReceiptFromBizEvents(String transactionId);
     NoticesListResponseDTO retrievePaidListFromBizEvents(String userFiscalCode, NoticeRequestDTO noticeRequestDTO);
     NoticeDetailsDTO retrievePaidNoticeDetailsFromBizEvents(String userId, String userFiscalCode, String eventId);
     Resource retrievePaidNoticeReceiptFromBizEvents(String userId, String userFiscalCode, String eventId);
