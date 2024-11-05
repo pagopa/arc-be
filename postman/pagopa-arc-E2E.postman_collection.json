@@ -1,9 +1,9 @@
 {
   "info": {
-    "_postman_id": "523a1bde-3c3d-49f0-bd75-62dda1ab1614",
+    "_postman_id": "03117a36-15e5-4be7-9293-d0d28c10678a",
     "name": "ARC collection e2e",
     "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-    "_exporter_id": "26204012"
+    "_exporter_id": "9202061"
   },
   "item": [
     {
@@ -242,65 +242,6 @@
                           "value": null,
                           "disabled": true
                         }
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "transaction details",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
-                          "}else{\r",
-                          "    pm.test(\"[Get transaction details - Case 1], expected httpStatus: 200\", () => {\r",
-                          "        pm.response.to.have.status(200);\r",
-                          "    })\r",
-                          "\r",
-                          "    pm.test(\"[Get transaction details - Case 1] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                          "        let jsonResponse = pm.response.json();\r",
-                          "\r",
-                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
-                          "\r",
-                          "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
-                          "    })\r",
-                          "}\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{accessToken}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "transactions",
-                        "{{transactionId}}"
                       ]
                     }
                   },
@@ -611,65 +552,6 @@
                           "value": null,
                           "disabled": true
                         }
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
-                  "name": "transaction details",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
-                          "}else{\r",
-                          "    pm.test(\"[Get transaction details - Case 2], expected httpStatus: 200\", () => {\r",
-                          "        pm.response.to.have.status(200);\r",
-                          "    })\r",
-                          "\r",
-                          "    pm.test(\"[Get transaction details - Case 2] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                          "        let jsonResponse = pm.response.json();\r",
-                          "\r",
-                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"walletInfo\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"paymentMethod\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).to.have.property(\"payer\");\r",
-                          "\r",
-                          "        pm.expect(jsonResponse.infoTransaction.payer.name).not.eq(null);\r",
-                          "    })\r",
-                          "}\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{accessToken}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "transactions",
-                        "{{transactionId}}"
                       ]
                     }
                   },
@@ -1045,64 +927,6 @@
                   "response": []
                 },
                 {
-                  "name": "transaction details",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "if(pm.response.code != 200 ){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
-                          "}else{\r",
-                          "    pm.test(\"[Get transaction details - Case 3], expected httpStatus: 200\", () => {\r",
-                          "        pm.response.to.have.status(200);\r",
-                          "    })\r",
-                          "\r",
-                          "    pm.test(\"[Get transaction details - Case 3] - When you get the transaction details, ARC return a transaction details\", () => {\r",
-                          "        let jsonResponse = pm.response.json();\r",
-                          "\r",
-                          "        pm.expect(jsonResponse.infoTransaction.transactionId).to.eq(pm.collectionVariables.get('transactionId'));\r",
-                          "        pm.expect(jsonResponse.carts).to.have.length(1);\r",
-                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"walletInfo\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"paymentMethod\");\r",
-                          "        pm.expect(jsonResponse.infoTransaction).not.to.have.property(\"payer\");\r",
-                          "\r",
-                          "    })\r",
-                          "}\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{accessToken}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/transactions/{{transactionId}}",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "transactions",
-                        "{{transactionId}}"
-                      ]
-                    }
-                  },
-                  "response": []
-                },
-                {
                   "name": "transaction receipt",
                   "event": [
                     {
@@ -1277,65 +1101,6 @@
         {
           "name": "Unhappy Case",
           "item": [
-            {
-              "name": "TRANSACTION_NOT_FOUND_ERROR",
-              "item": [
-                {
-                  "name": "[TRANSACTION_NOT_FOUND_EXCEPTION] transaction details",
-                  "event": [
-                    {
-                      "listen": "test",
-                      "script": {
-                        "exec": [
-                          "\r",
-                          "if(pm.response.code != 404){\r",
-                          "    retryRequest(postman,pm,setTimeout);\r",
-                          "} else{\r",
-                          "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception , expected httpStatus: 404\", () => {\r",
-                          "    pm.response.to.have.status(404);\r",
-                          "    })\r",
-                          "\r",
-                          "    pm.test(\"[Get transaction details- TRANSACTION_NOT_FOUND_EXCEPTION] - When you retrieve the transaction details from Biz-Event and it responds with not found, ARC returns a transaction not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
-                          "    let response = pm.response.json();\r",
-                          "    pm.expect(response.error).to.eq(\"transaction_not_found_error\");\r",
-                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from biz-Events to retrieve transaction with transaction id [3562] for the current user\");\r",
-                          "    })\r",
-                          "}\r",
-                          ""
-                        ],
-                        "type": "text/javascript",
-                        "packages": {}
-                      }
-                    }
-                  ],
-                  "request": {
-                    "auth": {
-                      "type": "bearer",
-                      "bearer": [
-                        {
-                          "key": "token",
-                          "value": "{{accessToken}}",
-                          "type": "string"
-                        }
-                      ]
-                    },
-                    "method": "GET",
-                    "header": [],
-                    "url": {
-                      "raw": "{{baseurlArc}}/transactions/3562",
-                      "host": [
-                        "{{baseurlArc}}"
-                      ],
-                      "path": [
-                        "transactions",
-                        "3562"
-                      ]
-                    }
-                  },
-                  "response": []
-                }
-              ]
-            },
             {
               "name": "RECEIPT_NOT_FOUND_ERROR",
               "item": [

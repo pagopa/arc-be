@@ -1,13 +1,19 @@
 package it.gov.pagopa.arc.service;
 
+import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
+
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.fakers.TransactionDTOFaker;
-import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
 import it.gov.pagopa.arc.model.generated.TransactionDTO;
-import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.bizevents.BizEventsService;
 import it.gov.pagopa.arc.utils.MemoryAppender;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.List;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -19,15 +25,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.util.ArrayList;
-import java.util.List;
-
-import static org.mockito.ArgumentMatchers.anyInt;
-import static org.mockito.ArgumentMatchers.anyString;
 
 @ExtendWith(MockitoExtension.class)
 class TransactionsServiceTest {
@@ -116,21 +113,6 @@ class TransactionsServiceTest {
         Assertions.assertEquals(1, result.getTotalPages());
         Assertions.assertEquals(10, result.getTotalItems());
         Mockito.verify(bizEventsServiceMock).retrieveTransactionsListFromBizEvents(anyInt(),anyInt(),anyString());
-    }
-
-    @Test
-    void givenTransactionIdWhenCallRetrieveTransactionDetailsThenReturnTransactionDetails() {
-        TransactionDetailsDTO transactionDetails = TransactionDetailsDTOFaker.mockInstance();
-        //given
-        Mockito.when(bizEventsServiceMock.retrieveTransactionDetailsFromBizEvents(TRANSACTION_ID)).thenReturn(transactionDetails);
-        //when
-        TransactionDetailsDTO result = transactionsService.retrieveTransactionDetails(TRANSACTION_ID);
-        //then
-        Assertions.assertNotNull(result);
-        Assertions.assertEquals(2, result.getCarts().size());
-        Assertions.assertEquals(transactionDetails, result);
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_TRANSACTION_DETAILS] The current user has requested to retrieve transaction details for transaction with ID TRANSACTION_ID"));
-        Mockito.verify(bizEventsServiceMock).retrieveTransactionDetailsFromBizEvents(anyString());
     }
 
     @Test

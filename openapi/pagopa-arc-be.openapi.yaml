@@ -198,54 +198,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /transactions/{transactionId}:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve transaction details from arc"
-      operationId: getTransactionDetails
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: transactionId
-          in: path
-          description: "A unique id that identifies a transaction"
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "Obtained transaction details"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionDetailsDTO'
-        '400':
-          description: "Invalid Request"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: invalid_amount
-                error_description: "Invalid amount format"
-        '401':
-          description: "Wrong or missing function key"
-        '404':
-          description: "Transaction details not found"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: "transaction_not_found_error"
-                error_description: "string"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
   /transactions/{transactionId}/receipt:
     get:
       tags:
@@ -683,63 +635,6 @@ components:
           type: boolean
         registeredToMe:
           type: boolean
-    TransactionDetailsDTO:
-      type: object
-      properties:
-        infoTransaction:
-          $ref: "#/components/schemas/InfoTransactionDTO"
-        carts:
-          type: array
-          items:
-            $ref: "#/components/schemas/CartItemDTO"
-          x-field-extra-annotation: "@lombok.Builder.Default"
-    InfoTransactionDTO:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        authCode:
-          type: string
-        rrn:
-          type: string
-        transactionDate:
-          type: string
-          format: zoned-date-time
-          example: "2024-05-31T13:07:25Z"
-        pspName:
-          type: string
-        walletInfo:
-          $ref: "#/components/schemas/WalletInfoDTO"
-        paymentMethod:
-          type: string
-          enum:
-            - BBT
-            - BP
-            - AD
-            - CP
-            - PO
-            - OBEP
-            - JIF
-            - MYBK
-            - PPAL
-            - UNKNOWN
-        payer:
-          $ref: "#/components/schemas/UserDetailDTO"
-        amount:
-          type: integer
-          format: int64
-        fee:
-          type: integer
-          format: int64
-        origin:
-          type: string
-          enum:
-            - INTERNAL
-            - PM
-            - NDP001PROD
-            - NDP002PROD
-            - NDP003PROD
-            - UNKNOWN
     CartItemDTO:
       required:
         - subject
@@ -1009,7 +904,6 @@ components:
           type: string
           enum:
             - generic_error
-            - transaction_not_found_error
             - receipt_not_found_error
             - notice_not_found_error
             - invalid_amount

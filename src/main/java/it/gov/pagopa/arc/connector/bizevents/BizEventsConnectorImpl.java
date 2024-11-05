@@ -1,11 +1,9 @@
 package it.gov.pagopa.arc.connector.bizevents;
 
 import feign.FeignException;
-import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionDetailsDTO;
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsTransactionsListDTO;
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
-import it.gov.pagopa.arc.exception.custom.BizEventsTransactionNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.Resource;
@@ -49,20 +47,6 @@ public class BizEventsConnectorImpl implements BizEventsConnector {
             }
         }
         return bizEventsTransactionsListDTO;
-    }
-
-    @Override
-    public BizEventsTransactionDetailsDTO getTransactionDetails(String fiscalCode, String transactionId) {
-        BizEventsTransactionDetailsDTO bizEventsTransactionDetailsDTO;
-        try {
-            bizEventsTransactionDetailsDTO = bizEventsRestClient.transactionDetails(apikey, fiscalCode, transactionId);
-        }catch (FeignException e){
-            if(e.status() == HttpStatus.NOT_FOUND.value()){
-                throw new BizEventsTransactionNotFoundException("An error occurred handling request from biz-Events to retrieve transaction with transaction id [%s] for the current user".formatted(transactionId));
-            }
-            throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
-        }
-        return bizEventsTransactionDetailsDTO;
     }
 
     @Override

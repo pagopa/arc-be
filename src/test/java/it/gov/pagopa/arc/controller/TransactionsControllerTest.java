@@ -7,8 +7,6 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
-import it.gov.pagopa.arc.fakers.TransactionDetailsDTOFaker;
-import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.TransactionsService;
@@ -70,29 +68,6 @@ class TransactionsControllerTest {
         Assertions.assertNotNull(resultResponse);
         Assertions.assertEquals(transactionsListDTO,resultResponse);
         Mockito.verify(transactionsServiceMock).retrieveTransactionsList(anyInt(),anyInt(),anyString());
-    }
-
-    @Test
-    void givenTransactionIdWhenCallGetTransactionDetailsThenReturnTransactionDetails() throws Exception {
-        //Given
-        TransactionDetailsDTO transactionDetailsDTO = TransactionDetailsDTOFaker.mockInstance();
-
-        Mockito.when(transactionsServiceMock.retrieveTransactionDetails(TRANSACTION_ID)).thenReturn(transactionDetailsDTO);
-
-        //When
-        MvcResult result = mockMvc.perform(
-                        get("/transactions/{transactionId}", TRANSACTION_ID)
-                ).andExpect(status().is2xxSuccessful())
-                .andReturn();
-
-        TransactionDetailsDTO resultResponse = TestUtils.objectMapper.readValue(
-                result.getResponse().getContentAsString(),
-                TransactionDetailsDTO.class);
-
-        //Then
-        Assertions.assertNotNull(resultResponse);
-        Assertions.assertEquals(transactionDetailsDTO,resultResponse);
-        Mockito.verify(transactionsServiceMock).retrieveTransactionDetails(anyString());
     }
 
     @Test

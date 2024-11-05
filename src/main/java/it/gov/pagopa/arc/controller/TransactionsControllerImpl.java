@@ -2,7 +2,6 @@ package it.gov.pagopa.arc.controller;
 
 
 import it.gov.pagopa.arc.controller.generated.ArcTransactionsApi;
-import it.gov.pagopa.arc.model.generated.TransactionDetailsDTO;
 import it.gov.pagopa.arc.model.generated.TransactionsListDTO;
 import it.gov.pagopa.arc.service.TransactionsService;
 import org.springframework.core.io.Resource;
@@ -22,12 +21,6 @@ public class TransactionsControllerImpl implements ArcTransactionsApi {
     public ResponseEntity<TransactionsListDTO> getTransactionsList(Integer page, Integer size, String filter) {
         TransactionsListDTO transactionsListDTO = transactionsService.retrieveTransactionsList(page,size,filter);
         return new ResponseEntity<>(transactionsListDTO, HttpStatus.OK);
-    }
-
-    @Override
-    public ResponseEntity<TransactionDetailsDTO> getTransactionDetails(String transactionId) {
-        TransactionDetailsDTO transactionDetailsDTO = transactionsService.retrieveTransactionDetails(transactionId);
-        return new ResponseEntity<>(transactionDetailsDTO, HttpStatus.OK);
     }
 
     @Override
