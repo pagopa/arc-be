@@ -635,53 +635,6 @@ components:
           type: boolean
         registeredToMe:
           type: boolean
-    InfoTransactionDTO:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        authCode:
-          type: string
-        rrn:
-          type: string
-        transactionDate:
-          type: string
-          format: zoned-date-time
-          example: "2024-05-31T13:07:25Z"
-        pspName:
-          type: string
-        walletInfo:
-          $ref: "#/components/schemas/WalletInfoDTO"
-        paymentMethod:
-          type: string
-          enum:
-            - BBT
-            - BP
-            - AD
-            - CP
-            - PO
-            - OBEP
-            - JIF
-            - MYBK
-            - PPAL
-            - UNKNOWN
-        payer:
-          $ref: "#/components/schemas/UserDetailDTO"
-        amount:
-          type: integer
-          format: int64
-        fee:
-          type: integer
-          format: int64
-        origin:
-          type: string
-          enum:
-            - INTERNAL
-            - PM
-            - NDP001PROD
-            - NDP002PROD
-            - NDP003PROD
-            - UNKNOWN
     CartItemDTO:
       required:
         - subject
@@ -951,7 +904,6 @@ components:
           type: string
           enum:
             - generic_error
-            - transaction_not_found_error
             - receipt_not_found_error
             - notice_not_found_error
             - invalid_amount
