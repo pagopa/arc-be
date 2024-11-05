@@ -48,10 +48,12 @@ class ArcExceptionHandlerTest {
 
         @GetMapping("/test")
         void testEndpoint() {
+            //Needed for testing notice API
         }
 
         @GetMapping("/test/{Id}")
         void testEndpointDetails() {
+            //Needed for testing notice API
         }
     }
 
