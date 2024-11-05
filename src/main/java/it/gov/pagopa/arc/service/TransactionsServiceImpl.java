@@ -21,11 +21,5 @@ public class TransactionsServiceImpl implements TransactionsService {
         return bizEventsService.retrieveTransactionsListFromBizEvents(page,size,filter);
     }
 
-    @Override
-    public Resource retrieveTransactionReceipt(String transactionId) {
-        log.info("[GET_TRANSACTION_RECEIPT] The current user has requested to retrieve transaction receipt for transaction with ID {}", transactionId);
-        return bizEventsService.retrieveTransactionReceiptFromBizEvents(transactionId);
-    }
-
 }
 

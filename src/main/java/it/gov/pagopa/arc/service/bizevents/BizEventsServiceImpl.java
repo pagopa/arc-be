@@ -55,13 +55,6 @@ public class BizEventsServiceImpl implements BizEventsService{
         }
         return transactionsListDTOMapper.apply(transactions, size);
     }
-
-    @Override
-    public Resource retrieveTransactionReceiptFromBizEvents(String transactionId) {
-        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
-        return bizEventsConnector.getTransactionReceipt(retrievedUserFiscalCode, transactionId);
-    }
-
     @Override
     public NoticesListResponseDTO retrievePaidListFromBizEvents(String userFiscalCode, NoticeRequestDTO noticeRequestDTO) {
          return bizEventsPaidNoticeConnector.getPaidNoticeList(userFiscalCode, noticeRequestDTO);
