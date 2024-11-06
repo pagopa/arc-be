@@ -70,7 +70,6 @@ microservice-chart:
 
   externalConfigMapValues:
     rest-client:
-      BIZ_EVENTS_BASE_URL: bizevents-base-url
       BIZ_EVENTS_PAID_NOTICE_BASE_URL: bizevents-paids-base-url
       PULL_PAYMENT_BASE_URL: pullpayment-base-url
     assistance:
@@ -81,7 +80,6 @@ microservice-chart:
 
   envSecret:
     APPLICATIONINSIGHTS_CONNECTION_STRING: appinsights-connection-string
-    BIZ_EVENTS_SERVICE_API_KEY: pagopa-bizevents-trx-apimv1-subscription-key
     BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY: pagopa-bizevents-paids-trx-apimv1-subscription-key
     PULL_PAYMENT_SERVICE_API_KEY: pagopa-pullpayment-apimv1-subscription-key
     AUTH_CLIENT_ID: oneidentity-client-id
