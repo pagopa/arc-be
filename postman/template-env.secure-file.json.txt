@@ -25,12 +25,6 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
       "enabled": true
     },
     {
-      "key": "Apim-Subscription-Key-bizevents",
-      "value": "<!SubscriptionKeyBizEvents!>",
-      "type": "secret",
-      "enabled": true
-    },
-    {
       "key": "CF_MOCK_BE_ARC",
       "value": "<!_CF_!>",
       "type": "secret",
@@ -45,12 +39,6 @@ ad ambiente usando la seguente notazione <NOME_PARAMETRO>, mentre per i secret <
     {
           "key": "baseurlArcInternal",
           "value": "https://citizen.internal.<ENV>.cittadini.pagopa.it/arcbe",
-          "type": "default",
-          "enabled": true
-    },
-    {
-          "key": "baseurlBizEvents",
-          "value": "https://api.<ENV>.platform.pagopa.it/bizevents/tx-service/v1",
           "type": "default",
           "enabled": true
     },
@@ -109,20 +97,20 @@ ENV   | Ambiente
 
 Secrets
 =======
-Nome                    | Descrizione
-------------------------|----------------------------------------------------------------------------------------------
-SharedAccessSignature   | Token SAS generato che consente l'accesso alla risorsa specificata per un periodo definito
-                        | di 50 settimane
-------------------------|----------------------------------------------------------------------------------------------
-SubscriptionKeyBizEvents| Subscription key per utilizzare le chiamate verso il servizio di Biz-Events
-------------------------|----------------------------------------------------------------------------------------------
-_CF_                    | Codice fiscale FAKE utilizzato a BE come header da passare al Servizio di Biz-Events
-                        | per recuperare la lista e il dettaglio transazioni legate a quell'utente
-------------------------|----------------------------------------------------------------------------------------------
-CF_User1                | Codice fiscale FAKE utilizzato nei test per simulare un secondo cittadino
-------------------------|----------------------------------------------------------------------------------------------
-SubscriptionKeyGDP      | Subscription key per utilizzare le chiamate verso il servizio di GPD
-------------------------|----------------------------------------------------------------------------------------------
-SubscriptionKeyPull     | Subscription key per utilizzare le chiamate verso il servizio di Pull Payment
-Payment                 |
-------------------------|----------------------------------------------------------------------------------------------
+Nome                            | Descrizione
+--------------------------------|----------------------------------------------------------------------------------------------
+SharedAccessSignature           | Token SAS generato che consente l'accesso alla risorsa specificata per un periodo definito
+                                | di 50 settimane
+--------------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKeyBizEventsNotices | Subscription key per utilizzare le chiamate verso il servizio di Biz-Events
+--------------------------------|----------------------------------------------------------------------------------------------
+_CF_                            | Codice fiscale FAKE utilizzato a BE come header da passare al Servizio di Biz-Events
+                                | per recuperare la lista e il dettaglio transazioni legate a quell'utente
+--------------------------------|----------------------------------------------------------------------------------------------
+CF_User1                        | Codice fiscale FAKE utilizzato nei test per simulare un secondo cittadino
+--------------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKeyGDP              | Subscription key per utilizzare le chiamate verso il servizio di GPD
+--------------------------------|----------------------------------------------------------------------------------------------
+SubscriptionKeyPull             | Subscription key per utilizzare le chiamate verso il servizio di Pull Payment
+Payment                         |
+--------------------------------|----------------------------------------------------------------------------------------------
