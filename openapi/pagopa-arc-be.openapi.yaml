@@ -142,62 +142,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /transactions:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve the paged transaction list from arc"
-      operationId: getTransactionsList
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: page
-          in: query
-          description: "Number of page required"
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: size
-          in: query
-          description: "Number of items for page"
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 10
-        - name: filter
-          in: query
-          description: "The field passed to filter the list of transactions"
-          required: false
-          schema:
-            type: string
-            enum: ["paidByMe", "registeredToMe"]
-          example: paidByMe
-      responses:
-        '200':
-          description: "Obtained transaction list"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionsListDTO'
-        '400':
-          description: "Invalid Request"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: invalid_amount
-                error_description: "Invalid amount format"
-        '401':
-          description: "Wrong or missing function key"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
   /notices:
     get:
       tags:
@@ -515,48 +459,6 @@ components:
         actionUrl:
           type: string
           description: URL of Zendesk endpoint
-    TransactionsListDTO:
-      type: object
-      properties:
-        transactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
-        currentPage:
-          type: integer
-          format: int32
-        itemsForPage:
-          type: integer
-          format: int32
-        totalItems:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-    TransactionDTO:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        payeeName:
-          type: string
-        payeeTaxCode:
-          type: string
-        amount:
-          type: integer
-          format: int64
-        transactionDate:
-          type: string
-          format: zoned-date-time
-          example: "2024-05-31T13:07:25Z"
-        isCart:
-          type: boolean
-        paidByMe:
-          type: boolean
-        registeredToMe:
-          type: boolean
     NoticesListDTO:
       type: object
       properties:

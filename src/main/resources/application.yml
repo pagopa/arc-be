@@ -50,9 +50,6 @@ zendesk-assistance:
 
 rest-client:
   biz-events:
-    transactions:
-      baseUrl: \${BIZ_EVENTS_BASE_URL:}
-      api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
     paid-notice:
       baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
       api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
