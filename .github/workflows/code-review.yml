@@ -1,12 +1,16 @@
 name: ARC - CodeReview
 
 on:
+  push:
+    branches:
+      - main
+      - uat
+      - develop
   pull_request:
     types:
       - opened
       - edited
       - synchronize
-  workflow_dispatch:
 
 jobs:
   build:
