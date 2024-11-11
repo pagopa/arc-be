@@ -3,7 +3,7 @@ plugins {
 	id("org.springframework.boot") version "3.3.4"
 	id("io.spring.dependency-management") version "1.1.4"
 	jacoco
-	id("org.sonarqube") version "5.0.0.4638"
+	id("org.sonarqube") version "5.1.0.4882"
 	id("com.github.ben-manes.versions") version "0.51.0"
 	id("org.openapi.generator") version "7.5.0"
 }
