@@ -6,30 +6,31 @@ repos:
       # Common errors
       - id: end-of-file-fixer
         exclude_types: [sql]
-        exclude: mypivot4-batch
+        exclude: src
       - id: trailing-whitespace
         args: [--markdown-linebreak-ext=md]
         exclude_types: [sql]
-        exclude: mypivot4-batch
+        exclude: src
       - id: check-yaml
-        exclude: mypivot4-batch
+        exclude: src
       - id: check-executables-have-shebangs
-        exclude: mypivot4-batch
+        exclude: src
       # Cross platform
       - id: check-case-conflict
-        exclude: mypivot4-batch
+        exclude: src
       - id: mixed-line-ending
         args: [--fix=lf]
         exclude_types: [sql]
-        exclude: mypivot4-batch
+        exclude: src
       # Security
       - id: detect-aws-credentials
         args: ['--allow-missing-credentials']
-        exclude: mypivot4-batch
+        exclude: src
       - id: detect-private-key
+        exclude: src/test
   ## terraform
   - repo: https://github.com/antonbabenko/pre-commit-terraform
-    rev: v1.96.1
+    rev: v1.96.2
     hooks:
       - id: terraform_fmt
       - id: terraform_docs
