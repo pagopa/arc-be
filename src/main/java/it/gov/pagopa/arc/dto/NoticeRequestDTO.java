@@ -16,4 +16,5 @@ public class NoticeRequestDTO {
     private Boolean registeredToMe;
     private String orderBy;
     private String ordering;
+    
 }
