@@ -1,14 +1,7 @@
 package it.gov.pagopa.arc.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
-@AllArgsConstructor
-@NoArgsConstructor
-@Builder
+@lombok.Getter
+@lombok.Setter
 public class TestDTOSonar {
     private String testString;
     private Integer testInteger;
