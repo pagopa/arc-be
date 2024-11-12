@@ -33,11 +33,13 @@ val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
 val commonsIo = "2.16.1"
+val micrometerVersion = "1.3.5"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
@@ -47,6 +49,7 @@ dependencies {
 	// Spring Security
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
 	implementation("org.springframework.boot:spring-boot-starter-oauth2-client")
+
 	//lombok
 	annotationProcessor("org.projectlombok:lombok")
 	compileOnly("org.projectlombok:lombok")
