@@ -5,6 +5,7 @@ import feign.Request;
 import feign.Response;
 import feign.Util;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
@@ -26,20 +27,21 @@ import java.nio.charset.StandardCharsets;
             String configKey, Level logLevel, Response response, long elapsedTime) throws IOException {
         int status = response.status();
         Request request = response.request();
-        String responseString = "";
-        byte[] bodyData = new byte[0];
-
-        if (response.body() != null){
-            bodyData = Util.toByteArray(response.body().asInputStream());
-            if (bodyData.length > 0) {
-                responseString = new String(bodyData, StandardCharsets.UTF_8);
-            }
-        }
 
         log(configKey,"[FEIGN_CLIENT_REQUEST] ---> %s %s", request.httpMethod(), request.url());
-        log(configKey,"[FEIGN_CLIENT_RESPONSE] <--- Status: %d, response reason: %s, elapsed time (%d ms), response: %s", status, response.reason(), elapsedTime, responseString);
 
-        return response.toBuilder().body(bodyData).build();
+        if(status >= HttpStatus.BAD_REQUEST.value() && response.body() != null){
+            byte[] bodyData = Util.toByteArray(response.body().asInputStream());
+            if (bodyData.length > 0) {
+                String responseString = new String(bodyData, StandardCharsets.UTF_8);
+
+                log(configKey,"[FEIGN_CLIENT_RESPONSE] <--- Status: %d, response reason: %s, elapsed time (%d ms), response: %s", status, response.reason(), elapsedTime, responseString);
+            }
+        }else{
+            log(configKey,"[FEIGN_CLIENT_RESPONSE] <--- Status: %d, response reason: %s, elapsed time (%d ms)", status, response.reason(), elapsedTime);
+        }
+
+        return response;
     }
 
     @Override

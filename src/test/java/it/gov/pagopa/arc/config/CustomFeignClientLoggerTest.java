@@ -13,8 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
-import static org.junit.jupiter.api.Assertions.assertArrayEquals;
-import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.*;
 
 class CustomFeignClientLoggerTest {
     private static final String CONFIG_KEY = "ExampleClass#exampleMethod(String p)";
@@ -68,7 +67,7 @@ class CustomFeignClientLoggerTest {
         assertEquals(2, memoryAppender.getLoggedEvents().size());
         assertEquals(responseBody, responseString);
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms), response: {\"notices\": []}"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms)"));
     }
 
     @Test
@@ -104,12 +103,12 @@ class CustomFeignClientLoggerTest {
         //when
         Response clonedResponse = customFeignClientLogger.logAndRebufferResponse(CONFIG_KEY, feign.Logger.Level.FULL, response, 100);
         //then
-        byte[] bodyData = Util.toByteArray(clonedResponse.body().asInputStream());
 
         assertEquals(2, memoryAppender.getLoggedEvents().size());
-        assertArrayEquals(new byte[0], bodyData);
+
+        assertNull(clonedResponse.body());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms), response: "));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms)"));
     }
 
     @Test
