@@ -6,7 +6,6 @@ import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentOptionDTO;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTOMapper;
-import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentInstallmentDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentOptionDTOFaker;
@@ -21,10 +20,6 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.mock.web.MockHttpServletRequest;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.web.authentication.WebAuthenticationDetails;
 
 import java.time.LocalDate;
 import java.util.ArrayList;
@@ -52,11 +47,6 @@ class PullPaymentServiceImplTest {
 
     @BeforeEach
     void setUp() {
-        UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                IamUserInfoDTOFaker.mockInstance(), null, null);
-        authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-
         pullPaymentService = new PullPaymentServiceImpl(pullPaymentConnectorMock, paymentNoticeDTOMapperMock, paymentNoticesListDTOMapperMock);
     }
 
@@ -86,7 +76,7 @@ class PullPaymentServiceImplTest {
 
         Mockito.when(paymentNoticesListDTOMapperMock.toPaymentNoticesListDTO(paymentNoticesList)).thenReturn(paymentNoticesListExpected);
         //when
-        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUE_DATE, SIZE, PAGE);
+        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUMMY_FISCAL_CODE, DUE_DATE, SIZE, PAGE);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.getPaymentNotices().size());
@@ -125,7 +115,7 @@ class PullPaymentServiceImplTest {
 
         Mockito.when(paymentNoticesListDTOMapperMock.toPaymentNoticesListDTO(paymentNoticesList)).thenReturn(paymentNoticesListExpected);
         //when
-        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUE_DATE, SIZE, PAGE);
+        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUMMY_FISCAL_CODE, DUE_DATE, SIZE, PAGE);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getPaymentNotices().size());
@@ -168,7 +158,7 @@ class PullPaymentServiceImplTest {
 
         Mockito.when(paymentNoticesListDTOMapperMock.toPaymentNoticesListDTO(paymentNoticesList)).thenReturn(paymentNoticesListExpected);
         //when
-        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUE_DATE, SIZE, PAGE);
+        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUMMY_FISCAL_CODE, DUE_DATE, SIZE, PAGE);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(1, result.getPaymentNotices().size());
@@ -199,7 +189,7 @@ class PullPaymentServiceImplTest {
 
         Mockito.when(paymentNoticesListDTOMapperMock.toPaymentNoticesListDTO(paymentNoticesList)).thenReturn(paymentNoticesListExpected);
         //when
-        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUE_DATE, SIZE, PAGE);
+        PaymentNoticesListDTO result = pullPaymentService.retrievePaymentNoticesListFromPullPayment(DUMMY_FISCAL_CODE, DUE_DATE, SIZE, PAGE);
         //then
         Assertions.assertNotNull(result);
         Assertions.assertTrue(result.getPaymentNotices().isEmpty());
