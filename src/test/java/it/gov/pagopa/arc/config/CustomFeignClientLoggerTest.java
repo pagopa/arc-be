@@ -112,6 +112,25 @@ class CustomFeignClientLoggerTest {
     }
 
     @Test
+    void givenEmptyBodyAnd400ErrorWhenLogAndRebufferResponseThenLog() throws IOException {
+        //given
+        Response response = Response.builder()
+                .status(400)
+                .reason("BAD REQUEST")
+                .request(request)
+                .build();
+        //when
+        Response clonedResponse = customFeignClientLogger.logAndRebufferResponse(CONFIG_KEY, feign.Logger.Level.FULL, response, 100);
+        //then
+
+        assertEquals(2, memoryAppender.getLoggedEvents().size());
+
+        assertNull(clonedResponse.body());
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 400, response reason: BAD REQUEST, elapsed time (100 ms)"));
+    }
+
+    @Test
     void givenConfigKeyAndFormatStringWhenLogThenReturnLogInfo() {
         //given
         String formatString = "This is an example string %s";
