@@ -70,13 +70,12 @@ public class ArcExceptionHandler {
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
-        log.info("A {} occurred handling request {}: HttpStatus {} - {}",
+        log.error("A {} occurred handling request {}: HttpStatus {} - {}",
                 ex.getClass(),
                 getRequestDetails(request),
                 httpStatus.value(),
-                message);
-
-        log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+                message,
+                ex);
 
         return ResponseEntity
                 .status(httpStatus)
