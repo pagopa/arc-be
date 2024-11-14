@@ -1,6 +1,7 @@
 package it.gov.pagopa.arc.connector.bizevents.paidnotice;
 
 import feign.Response;
+import it.gov.pagopa.arc.config.FeignLoggingConfig;
 import it.gov.pagopa.arc.connector.bizevents.dto.paidnotice.BizEventsPaidNoticeDetailsDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.core.io.Resource;
@@ -12,7 +13,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 @FeignClient(
         name = "biz-events-paid-notice",
-        url = "${rest-client.biz-events.paid-notice.baseUrl}")
+        url = "${rest-client.biz-events.paid-notice.baseUrl}",configuration = FeignLoggingConfig.class)
 public interface BizEventsPaidNoticeRestClient {
 
     @GetMapping(

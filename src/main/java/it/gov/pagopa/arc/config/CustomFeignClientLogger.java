@@ -36,8 +36,8 @@ import java.nio.charset.StandardCharsets;
             }
         }
 
-        log.info("[FEIGN_CLIENT_REQUEST] ---> {} {}", request.httpMethod(), request.url());
-        log.info("[FEIGN_CLIENT_RESPONSE] <--- Status: {}, response reason: {}, elapsed time ({} ms), response: {}", status, response.reason(), elapsedTime, responseString);
+        log(configKey,"[FEIGN_CLIENT_REQUEST] ---> %s %s", request.httpMethod(), request.url());
+        log(configKey,"[FEIGN_CLIENT_RESPONSE] <--- Status: %d, response reason: %s, elapsed time (%d ms), response: %s", status, response.reason(), elapsedTime, responseString);
 
         return response.toBuilder().body(bodyData).build();
     }
