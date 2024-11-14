@@ -13,6 +13,7 @@ import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 
+import static org.junit.jupiter.api.Assertions.assertArrayEquals;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class CustomFeignClientLoggerTest {
@@ -90,6 +91,25 @@ class CustomFeignClientLoggerTest {
         assertEquals(responseBody, responseString);
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 404, response reason: Not Found, elapsed time (100 ms), response: {\"error\":\"No records found for the requested user\"}"));
+    }
+
+    @Test
+    void givenEmptyBodyWhenLogAndRebufferResponseThenLog() throws IOException {
+        //given
+        Response response = Response.builder()
+                .status(200)
+                .reason("OK")
+                .request(request)
+                .build();
+        //when
+        Response clonedResponse = customFeignClientLogger.logAndRebufferResponse(CONFIG_KEY, feign.Logger.Level.FULL, response, 100);
+        //then
+        byte[] bodyData = Util.toByteArray(clonedResponse.body().asInputStream());
+
+        assertEquals(2, memoryAppender.getLoggedEvents().size());
+        assertArrayEquals(new byte[0], bodyData);
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms), response: "));
     }
 
     @Test
