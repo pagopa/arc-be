@@ -10,6 +10,8 @@ import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Set;
+
+import org.slf4j.MDC;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -45,6 +47,7 @@ public class CustomAuthenticationSuccessHandler implements AuthenticationSuccess
 
     OAuth2AuthenticationToken oauth2Token = (OAuth2AuthenticationToken) authentication;
     IamUserInfoDTO userInfoDTO = IamUserInfoDTO.map2IamUserInfoDTO( oauth2Token.getPrincipal().getAttributes());
+    MDC.put("userId", userInfoDTO.getUserId());
     String body;
     if( isInWhiteList(userInfoDTO.getFiscalCode()) ){
       TokenResponse accessToken = new TokenResponse(

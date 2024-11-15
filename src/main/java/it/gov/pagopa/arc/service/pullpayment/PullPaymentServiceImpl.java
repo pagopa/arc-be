@@ -6,7 +6,6 @@ import it.gov.pagopa.arc.dto.mapper.pullpayment.PaymentNoticesListDTOMapper;
 import it.gov.pagopa.arc.dto.mapper.pullpayment.PullPaymentNoticeDTO2PaymentNoticeDTOMapper;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
-import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -28,9 +27,8 @@ public class PullPaymentServiceImpl implements PullPaymentService{
     }
 
     @Override
-    public PaymentNoticesListDTO retrievePaymentNoticesListFromPullPayment(LocalDate dueDate, Integer size, Integer page) {
-        String retrievedUserFiscalCode = SecurityUtils.getUserFiscalCode();
-        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(retrievedUserFiscalCode, dueDate, size, page);
+    public PaymentNoticesListDTO retrievePaymentNoticesListFromPullPayment(String userFiscalCode, LocalDate dueDate, Integer size, Integer page) {
+        List<PullPaymentNoticeDTO> pullPaymentNoticeDTOList = pullPaymentConnector.getPaymentNotices(userFiscalCode, dueDate, size, page);
         List<PaymentNoticeDTO> paymentNoticeDTOFilteredList;
 
         if(!pullPaymentNoticeDTOList.isEmpty()){

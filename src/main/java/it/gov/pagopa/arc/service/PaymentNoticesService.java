@@ -5,5 +5,5 @@ import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
 import java.time.LocalDate;
 
 public interface PaymentNoticesService {
-    PaymentNoticesListDTO retrievePaymentNotices(LocalDate dueDate, Integer size, Integer page);
+    PaymentNoticesListDTO retrievePaymentNotices(String userId, String userFiscalCode, LocalDate dueDate, Integer size, Integer page);
 }

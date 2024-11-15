@@ -59,6 +59,7 @@ rest-client:
 
 logging:
   level:
+    it.gov.pagopa.arc.connector: \${LOGGING_LEVEL_ARC_CONNECTOR:DEBUG}
     org:
       springframework:
         security: INFO
