@@ -28,16 +28,15 @@ jobs:
 
       - name: 📦 Run Snapshot Docker Build/Push & Trigger
         # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.0
-        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@37569377fa759368a01c1e7f40700b4118d65d0c
+        uses: pagopa/github-actions-template/payments-flow-docker-snapshot@fix-payments-flow-parameters
         with:
           current_branch: ${{ github.ref_name }}
           enable_azure_devops_step: 'true'
-          azure_devops_apps: "[arc-be]"
           azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
           azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
           azure_devops_pat: ${{ secrets.AZUREDEVOPS_PAT }}
           azure_template_parameters: |
             {
-              "APPS": "[one-color]",
+              "APPS": "[arb-be]",
               "POSTMAN_BRANCH": "${{ github.ref_name }}"
             }

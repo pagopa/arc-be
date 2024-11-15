@@ -24,6 +24,15 @@ jobs:
 
       - name: 🚀 release + docker + azdo
         # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.1
-        uses: pagopa/github-actions-template/payments-flow-release@3ae6a4268ccff000194696b21e1124d9e8ddf997
+        uses: pagopa/github-actions-template/payments-flow-release@fix-payments-flow-parameters
         with:
           current_branch: ${{ github.ref_name }}
+          enable_azure_devops_step: 'true'
+          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
+          azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
+          azure_devops_pat: ${{ secrets.AZUREDEVOPS_PAT }}
+          azure_template_parameters: |
+            {
+              "APPS": "[arb-be]",
+              "POSTMAN_BRANCH": "${{ github.ref_name }}"
+            }
