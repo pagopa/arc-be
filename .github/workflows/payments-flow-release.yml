@@ -23,8 +23,8 @@ jobs:
           ref: ${{ github.ref_name }}
 
       - name: 🚀 release + docker + azdo
-        # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.1
-        uses: pagopa/github-actions-template/payments-flow-release@fix-payments-flow-parameters
+        # https://github.com/pagopa/github-actions-template/releases/tag/v1.19.2
+        uses: pagopa/github-actions-template/payments-flow-release@922ed4e43b0e45a5e47eb0296d550996d8c87c64
         with:
           current_branch: ${{ github.ref_name }}
           enable_azure_devops_step: 'true'
