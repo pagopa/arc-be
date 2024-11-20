@@ -23,11 +23,6 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
     }
 
-    @ExceptionHandler(BizEventsTransactionNotFoundException.class)
-    public ResponseEntity<ErrorDTO> handleBizEventsTransactionNotFoundException(RuntimeException ex, HttpServletRequest request){
-        return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.TRANSACTION_NOT_FOUND_ERROR);
-    }
-
     @ExceptionHandler(BizEventsReceiptNotFoundException.class)
     public ResponseEntity<ErrorDTO> handleBizEventsReceiptNotFoundException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.RECEIPT_NOT_FOUND_ERROR);
@@ -75,13 +70,12 @@ public class ArcExceptionHandler {
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
-        log.info("A {} occurred handling request {}: HttpStatus {} - {}",
+        log.error("A {} occurred handling request {}: HttpStatus {} - {}",
                 ex.getClass(),
                 getRequestDetails(request),
                 httpStatus.value(),
-                message);
-
-        log.error("Exception occurred: {} - {}", ex.getClass().getSimpleName(), ex.getMessage(), ex);
+                message,
+                ex);
 
         return ResponseEntity
                 .status(httpStatus)

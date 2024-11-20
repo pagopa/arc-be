@@ -1,5 +1,6 @@
 package it.gov.pagopa.arc.connector.pullpayment;
 
+import it.gov.pagopa.arc.config.FeignLoggingConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -12,7 +13,7 @@ import java.util.List;
 
 @FeignClient(
         name = "pull-payment",
-        url = "${rest-client.pull-payment.baseUrl}")
+        url = "${rest-client.pull-payment.baseUrl}", configuration = FeignLoggingConfig.class)
 public interface PullPaymentRestClient {
     @GetMapping(
             value = "/payment-notices/v1",

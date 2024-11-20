@@ -142,150 +142,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
-  /transactions:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve the paged transaction list from arc"
-      operationId: getTransactionsList
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: page
-          in: query
-          description: "Number of page required"
-          required: false
-          schema:
-            type: integer
-            format: int32
-        - name: size
-          in: query
-          description: "Number of items for page"
-          required: false
-          schema:
-            type: integer
-            format: int32
-            default: 10
-        - name: filter
-          in: query
-          description: "The field passed to filter the list of transactions"
-          required: false
-          schema:
-            type: string
-            enum: ["paidByMe", "registeredToMe"]
-          example: paidByMe
-      responses:
-        '200':
-          description: "Obtained transaction list"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionsListDTO'
-        '400':
-          description: "Invalid Request"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: invalid_amount
-                error_description: "Invalid amount format"
-        '401':
-          description: "Wrong or missing function key"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-  /transactions/{transactionId}:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve transaction details from arc"
-      operationId: getTransactionDetails
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: transactionId
-          in: path
-          description: "A unique id that identifies a transaction"
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "Obtained transaction details"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/TransactionDetailsDTO'
-        '400':
-          description: "Invalid Request"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: invalid_amount
-                error_description: "Invalid amount format"
-        '401':
-          description: "Wrong or missing function key"
-        '404':
-          description: "Transaction details not found"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: "transaction_not_found_error"
-                error_description: "string"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-  /transactions/{transactionId}/receipt:
-    get:
-      tags:
-        - arc transactions
-      summary: "Retrieve transaction receipt from arc"
-      operationId: getTransactionReceipt
-      security:
-        - bearerAuth: [ ]
-      parameters:
-        - name: transactionId
-          in: path
-          description: "A unique id that identifies a transaction"
-          required: true
-          schema:
-            type: string
-      responses:
-        '200':
-          description: "Obtained PDF transaction receipt"
-          content:
-            application/pdf:
-              schema:
-                type: string
-                format: binary
-        '401':
-          description: "Wrong or missing function key"
-        '404':
-          description: "Transaction details not found"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
-              example:
-                error: "receipt_not_found_error"
-                error_description: "string"
-        '500':
-          description: "Internal Server Error"
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ErrorDTO'
   /notices:
     get:
       tags:
@@ -603,48 +459,6 @@ components:
         actionUrl:
           type: string
           description: URL of Zendesk endpoint
-    TransactionsListDTO:
-      type: object
-      properties:
-        transactions:
-          type: array
-          items:
-            $ref: '#/components/schemas/TransactionDTO'
-          x-field-extra-annotation: "@lombok.Builder.Default"
-        currentPage:
-          type: integer
-          format: int32
-        itemsForPage:
-          type: integer
-          format: int32
-        totalItems:
-          type: integer
-          format: int32
-        totalPages:
-          type: integer
-          format: int32
-    TransactionDTO:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        payeeName:
-          type: string
-        payeeTaxCode:
-          type: string
-        amount:
-          type: integer
-          format: int64
-        transactionDate:
-          type: string
-          format: zoned-date-time
-          example: "2024-05-31T13:07:25Z"
-        isCart:
-          type: boolean
-        paidByMe:
-          type: boolean
-        registeredToMe:
-          type: boolean
     NoticesListDTO:
       type: object
       properties:
@@ -683,63 +497,6 @@ components:
           type: boolean
         registeredToMe:
           type: boolean
-    TransactionDetailsDTO:
-      type: object
-      properties:
-        infoTransaction:
-          $ref: "#/components/schemas/InfoTransactionDTO"
-        carts:
-          type: array
-          items:
-            $ref: "#/components/schemas/CartItemDTO"
-          x-field-extra-annotation: "@lombok.Builder.Default"
-    InfoTransactionDTO:
-      type: object
-      properties:
-        transactionId:
-          type: string
-        authCode:
-          type: string
-        rrn:
-          type: string
-        transactionDate:
-          type: string
-          format: zoned-date-time
-          example: "2024-05-31T13:07:25Z"
-        pspName:
-          type: string
-        walletInfo:
-          $ref: "#/components/schemas/WalletInfoDTO"
-        paymentMethod:
-          type: string
-          enum:
-            - BBT
-            - BP
-            - AD
-            - CP
-            - PO
-            - OBEP
-            - JIF
-            - MYBK
-            - PPAL
-            - UNKNOWN
-        payer:
-          $ref: "#/components/schemas/UserDetailDTO"
-        amount:
-          type: integer
-          format: int64
-        fee:
-          type: integer
-          format: int64
-        origin:
-          type: string
-          enum:
-            - INTERNAL
-            - PM
-            - NDP001PROD
-            - NDP002PROD
-            - NDP003PROD
-            - UNKNOWN
     CartItemDTO:
       required:
         - subject
@@ -888,11 +645,11 @@ components:
           description: Company name of the Creditor Body
           type: string
         insertedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         publishDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         validityDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         status:
           $ref: '#/components/schemas/PaymentNoticeStatus'
         lastUpdateDate:
@@ -905,10 +662,10 @@ components:
           items:
             $ref: '#/components/schemas/PaymentOptionDTO'
           x-field-extra-annotation: "@lombok.Builder.Default"
-    LocalDateTime:
-      format: date-time
+    ZonedDateTime:
       type: string
-      example: '2022-03-10T12:15:50'
+      format: zoned-date-time
+      example: "2024-05-31T13:07:25Z"
     PaymentNoticeStatus:
       enum:
         - VALID
@@ -933,7 +690,7 @@ components:
           description: total amount for the payment option
           type: integer
         dueDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         isPartialPayment:
           description: Indicates whether the OP is part of an installment plan
           type: boolean
@@ -980,11 +737,11 @@ components:
           description: Description of the OP (e.g. "SISA - 741T, 942T - Checks without authorization or funding")
           type: string
         dueDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         retentionDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         insertedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
         notificationFee:
           format: int64
           description: corresponds to the SEND notification costs
@@ -992,7 +749,7 @@ components:
         status:
           $ref: '#/components/schemas/PaymentOptionStatus'
         lastUpdatedDate:
-          $ref: '#/components/schemas/LocalDateTime'
+          $ref: '#/components/schemas/ZonedDateTime'
     PaymentOptionStatus:
       enum:
         - PO_UNPAID
@@ -1009,7 +766,6 @@ components:
           type: string
           enum:
             - generic_error
-            - transaction_not_found_error
             - receipt_not_found_error
             - notice_not_found_error
             - invalid_amount

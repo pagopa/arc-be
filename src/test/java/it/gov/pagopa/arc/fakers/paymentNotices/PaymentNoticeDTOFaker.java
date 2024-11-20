@@ -6,7 +6,7 @@ import it.gov.pagopa.arc.model.generated.PaymentNoticeStatus;
 import it.gov.pagopa.arc.model.generated.PaymentOptionDTO;
 
 import java.time.LocalDate;
-import java.time.LocalDateTime;
+import java.time.ZonedDateTime;
 import java.util.List;
 
 public class PaymentNoticeDTOFaker {
@@ -24,9 +24,9 @@ public class PaymentNoticeDTOFaker {
                 .debtorType("F")
                 .paTaxCode("99999000013")
                 .paFullName("EC Demo Pagamenti Pull Test")
-                .insertedDate(LocalDateTime.parse("2024-04-11T06:56:14"))
-                .publishDate(LocalDateTime.parse("2024-04-11T06:56:14"))
-                .validityDate(LocalDateTime.parse("2024-04-11T06:56:14"))
+                .insertedDate(ZonedDateTime.parse("2024-04-11T06:56:14Z"))
+                .publishDate(ZonedDateTime.parse("2024-04-11T06:56:14Z"))
+                .validityDate(ZonedDateTime.parse("2024-04-11T06:56:14Z"))
                 .status(PaymentNoticeStatus.VALID)
                 .lastUpdateDate(LocalDate.parse("2024-04-11"));
 

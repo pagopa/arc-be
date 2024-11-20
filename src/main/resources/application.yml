@@ -3,6 +3,14 @@ spring:
     name: ${artifactId}
     version: ${version}
   jmx.enabled: true
+  cache:
+    type: redis
+  data:
+    redis:
+      host: "\${REDIS_HOST:}"
+      port: "\${REDIS_PORT:}"
+      password: "\${REDIS_PASSWORD:}"
+      ssl.enabled: "\${REDIS_SSL_ENABLED:false}"
   security:
     oauth2:
       client:
@@ -42,9 +50,6 @@ zendesk-assistance:
 
 rest-client:
   biz-events:
-    transactions:
-      baseUrl: \${BIZ_EVENTS_BASE_URL:}
-      api-key: \${BIZ_EVENTS_SERVICE_API_KEY:}
     paid-notice:
       baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
       api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
@@ -54,6 +59,7 @@ rest-client:
 
 logging:
   level:
+    it.gov.pagopa.arc.connector: \${LOGGING_LEVEL_ARC_CONNECTOR:DEBUG}
     org:
       springframework:
         security: INFO

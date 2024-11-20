@@ -12,6 +12,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.Optional;
 import lombok.extern.slf4j.Slf4j;
+import org.slf4j.MDC;
 import org.springframework.http.HttpHeaders;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -42,9 +43,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
       if (StringUtils.hasText(authorization)) {
         String token = authorization.replace("Bearer ", "");
         accessTokenValidationService.validate(token);
-        Optional<IamUserInfoDTO> userInfo = tokenStoreService.getUserInfo(token);
-        if(userInfo.isPresent()){
-          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo.get(), null, null);
+        IamUserInfoDTO userInfo = tokenStoreService.getUserInfo(token);
+        if(userInfo!=null){
+          MDC.put("userId", userInfo.getUserId());
+          UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(userInfo, null, null);
           authentication.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
           // https://docs.spring.io/spring-security/site/docs/5.2.11.RELEASE/reference/html/overall-architecture.html#:~:text=SecurityContextHolder%2C%20SecurityContext%20and%20Authentication%20Objects
           SecurityContextHolder.getContext().setAuthentication(authentication);

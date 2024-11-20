@@ -1,12 +1,16 @@
 name: ARC - CodeReview
 
 on:
+  push:
+    branches:
+      - main
+      - uat
+      - develop
   pull_request:
     types:
       - opened
       - edited
       - synchronize
-  workflow_dispatch:
 
 jobs:
   build:
@@ -42,5 +46,7 @@ jobs:
             -Dsonar.sources=src/main
             -Dsonar.tests=src/test
             -Dsonar.java.binaries=build/classes
+            -Dsonar.java.libraries=build/libs/*
             -Dsonar.coverage.jacoco.xmlReportPaths=build/reports/jacoco/jacocoTestReport.xml
-            -Dsonar.coverage.exclusions=src/java/test/**
+            -Dsonar.exclusions=**/enums/**,**/model/**,**/dto/**,**/*Constant*,**/*Config.java,**/*Configuration.java,**/*Scheduler.java,**/*Application.java,**/src/test/**,**/Dummy*.java
+            

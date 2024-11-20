@@ -17,8 +17,8 @@ public class PaymentNoticesServiceImpl implements PaymentNoticesService{
     }
 
     @Override
-    public PaymentNoticesListDTO retrievePaymentNotices(LocalDate dueDate, Integer size, Integer page) {
-        log.info("[GET_PAYMENT_NOTICES] The current user has requested to retrieve payment notices, with the current parameters: dueDate {}, size {} and page {}", dueDate, size, page);
-        return pullPaymentService.retrievePaymentNoticesListFromPullPayment(dueDate,size,page);
+    public PaymentNoticesListDTO retrievePaymentNotices(String userId, String userFiscalCode, LocalDate dueDate, Integer size, Integer page) {
+        log.info("[GET_PAYMENT_NOTICES] The current user with user id : {}, has requested to retrieve payment notices, with the current parameters: dueDate {}, size {} and page {}", userId, dueDate, size, page);
+        return pullPaymentService.retrievePaymentNoticesListFromPullPayment(userFiscalCode, dueDate,size,page);
     }
 }
