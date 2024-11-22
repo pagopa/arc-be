@@ -64,30 +64,21 @@ jobs:
           echo "CVE_MEDIUM=$(echo $SCAN_RESULTS | grep -o medium | wc -l)" >> $GITHUB_ENV
 
           echo -e $SCAN_RESULTS
-      # - name: Send notification to Slack
-      #   id: slack
-      #   if: always() && github.event_name == 'schedule' && steps.scan.outcome == 'failure'
-      #   uses: slackapi/slack-github-action@e28cf165c92ffef168d23c5c9000cffc8a25e117 #v1.24.0
-      #   with:
-      #     payload: |
-      #       {
-      #         "blocks": [
-      #           {
-      #             "type": "header",
-      #             "text": {
-      #               "type": "plain_text",
-      #               "text": "${{ github.event.repository.name }} - Notification Scan Result Failed on ${{ github.ref_type }} ${{ github.ref_name }}!"
-      #             }
-      #           },
-      #           {
-      #             "type": "section",
-      #             "text": {
-      #               "type": "mrkdwn",
-      #               "text": "GitHub Action scan results:\n`CRITICAL`: ${{ env.CVE_CRITICAL }}\n`HIGH`: ${{ env.CVE_HIGH }}\n`MEDIUM`: ${{ env.CVE_MEDIUM }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|See execution details on GitHub>"
-      #             }
-      #           }
-      #         ]
-      #       }
-      #   env:
-      #     SLACK_WEBHOOK_URL: ${{ secrets.CVE_SCAN_SLACK_WEBHOOK }}
-      #     SLACK_WEBHOOK_TYPE: INCOMING_WEBHOOK
+      - name: Send notification to Slack
+        id: slack
+        if: always() && github.event_name == 'schedule' && steps.scan.outcome == 'failure'
+        uses: slackapi/slack-github-action@485a9d42d3a73031f12ec201c457e2162c45d02d #v2.0.0
+        with:
+           payload: |
+             blocks:
+               - type: "header"
+                 text:
+                   type: "plain_text"
+                   text: "${{ github.event.repository.name }} - Notification Scan Result Failed on ${{ github.ref_type }} ${{ github.ref_name }}!"
+               - type: "section"
+                 text:
+                    type: "mrkdwn"
+                    text: "GitHub Action scan results:\n`CRITICAL`: ${{ env.CVE_CRITICAL }}\n`HIGH`: ${{ env.CVE_HIGH }}\n`MEDIUM`: ${{ env.CVE_MEDIUM }}\n\n<https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}|See execution details on GitHub>"
+        env:
+           SLACK_WEBHOOK_URL: ${{ secrets.CVE_SCAN_SLACK_WEBHOOK }}
+           SLACK_WEBHOOK_TYPE: incoming-webhook
