@@ -91,5 +91,6 @@ class BizEventsCartItem2CartItemDTOMapperTest {
         assertEquals("960000000094659945", result.getRefNumberValue());
         assertEquals("IUV", result.getRefNumberType());
         Mockito.verify(userDetailsMapperMock, Mockito.times(2)).mapUserDetail(any());
+        TestUtils.assertNotNullFields(result, "payee");
     }
 }
