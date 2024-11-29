@@ -6,8 +6,11 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class BizEventsUserDetail2UserDetailDTOMapper {
-
     public UserDetailDTO mapUserDetail(BizEventsUserDetailDTO bizEventsUserDetailDTO){
+        if (bizEventsUserDetailDTO == null) {
+            return null;
+        }
+
         return UserDetailDTO.builder()
                 .name(bizEventsUserDetailDTO.getName())
                 .taxCode(bizEventsUserDetailDTO.getTaxCode())

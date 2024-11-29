@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.fakers.CommonUserDetailDTOFaker;
 import it.gov.pagopa.arc.fakers.bizEvents.BizEventsCartItemDTOFaker;
 import it.gov.pagopa.arc.model.generated.CartItemDTO;
 import it.gov.pagopa.arc.model.generated.UserDetailDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mapstruct.factory.Mappers;
@@ -14,8 +15,7 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;
 
 @ExtendWith(MockitoExtension.class)
@@ -58,6 +58,39 @@ class BizEventsCartItem2CartItemDTOMapperTest {
         assertEquals(debtorResponse, result.getDebtor());
         assertEquals("960000000094659945", result.getRefNumberValue());
         assertEquals("IUV", result.getRefNumberType());
+        TestUtils.assertNotNullFields(result);
         Mockito.verify(userDetailsMapperMock, Mockito.times(2)).mapUserDetail(any());
+    }
+
+    @Test
+    void givenBizEventsCartItemDTOWhenUserDetailDTONullThenReturnCartItemDTO() {
+        //given
+        BizEventsUserDetailDTO payee = CommonUserDetailDTOFaker.mockBizEventsUserDetailDTO(CommonUserDetailDTOFaker.USER_DETAIL_PAYEE);
+
+        BizEventsUserDetailDTO debtor = CommonUserDetailDTOFaker.mockBizEventsUserDetailDTO(CommonUserDetailDTOFaker.USER_DETAIL_DEBTOR);
+
+        UserDetailDTO payeeResponse = null;
+
+        UserDetailDTO debtorResponse = UserDetailDTO.builder()
+                .taxCode("TAX_CODE")
+                .build();
+
+        Mockito.when(userDetailsMapperMock.mapUserDetail(payee)).thenReturn(payeeResponse);
+        Mockito.when(userDetailsMapperMock.mapUserDetail(debtor)).thenReturn(debtorResponse);
+
+        BizEventsCartItemDTO cartItemDTO = BizEventsCartItemDTOFaker.mockInstance(payee,debtor);
+        //when
+        CartItemDTO result = cartItemMapper.mapCart(cartItemDTO);
+        //then
+        assertNotNull(result);
+        assertEquals("pagamento", result.getSubject());
+        assertEquals(545230L, result.getAmount());
+        assertNull(result.getPayee());
+        assertNull(result.getDebtor().getName());
+        assertEquals(debtorResponse.getTaxCode(), result.getDebtor().getTaxCode());
+        assertEquals("960000000094659945", result.getRefNumberValue());
+        assertEquals("IUV", result.getRefNumberType());
+        Mockito.verify(userDetailsMapperMock, Mockito.times(2)).mapUserDetail(any());
+        TestUtils.assertNotNullFields(result, "payee");
     }
 }
