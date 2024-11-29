@@ -8,6 +8,10 @@ import org.springframework.stereotype.Component;
 public class BizEventsWalletInfo2WalletInfoDTOMapper {
 
     public WalletInfoDTO mapWalletInfo(BizEventsWalletInfoDTO bizEventsWalletInfoDTO){
+        if(bizEventsWalletInfoDTO == null){
+            return null;
+        }
+
         return WalletInfoDTO.builder()
                 .accountHolder(bizEventsWalletInfoDTO.getAccountHolder())
                 .brand(bizEventsWalletInfoDTO.getBrand())
