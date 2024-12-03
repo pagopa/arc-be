@@ -23,6 +23,7 @@ public class InfoNoticeDTOFaker {
                 .payer(payer)
                 .amount(565430L)
                 .fee(29L)
+                .totalAmount(565459L)
                 .origin(InfoNoticeDTO.OriginEnum.UNKNOWN);
 
         TestUtils.assertNotNullFields(infoNoticeDTOBuilder);
