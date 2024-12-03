@@ -110,7 +110,7 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
                 .rrn("51561651")
                 .noticeDate("2024-06-27T13:07:25Z")
                 .pspName("Worldline Merchant Services Italia S.p.A.")
-                .amount("58L")
+                .amount("58")
                 .fee("0.29")
                 .origin(Origin.PM)
                 .build();
@@ -130,7 +130,7 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
                 .rrn("51561651")
                 .noticeDate("2024-06-27T13:07:25Z")
                 .pspName("Worldline Merchant Services Italia S.p.A.")
-                .amount("58L")
+                .amount("58")
                 .fee(null)
                 .origin(Origin.PM)
                 .build();

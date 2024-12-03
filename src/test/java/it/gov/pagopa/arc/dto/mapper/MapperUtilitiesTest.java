@@ -85,11 +85,11 @@ class MapperUtilitiesTest {
 
     @ParameterizedTest
     @MethodSource("valueSource")
-    void givenCalculateTotalAmountWhenThen(Long amount, Long fee, Long totalAmount) {
+    void givenCalculateTotalAmountWhenThen(Long amount, Long fee, Long expectedTotalAmount) {
         //when
         Long totalAmountResult = MapperUtilities.calculateTotalAmount(amount, fee);
         //then
-        assertEquals(totalAmount, totalAmountResult);
+        assertEquals(expectedTotalAmount, totalAmountResult);
     }
 
     static Stream<Arguments> valueSource() {
