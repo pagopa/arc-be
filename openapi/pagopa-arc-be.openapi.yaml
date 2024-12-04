@@ -364,6 +364,59 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /payment-notices/{iupd}:
+    get:
+      tags:
+        - arc payment notices
+      summary: "Retrieve payment notices details from arc"
+      operationId: getPaymentNoticesDetails
+      security:
+        - bearerAuth: [ ]
+      parameters:
+        - name: iupd
+          in: path
+          description: "A unique iupd that identifies a payment notice"
+          required: true
+          schema:
+            type: string
+        - name: paTaxCode
+          in: query
+          description: "Fiscal code of EC"
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentNoticeDetailsDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_request
+                error_description: "One or more inputs provided during the request from GPD are invalid"
+        '401':
+          description: "Wrong or missing function key"
+        '404':
+          description: "Payment notice not found"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: payment_notice_not_found_error
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /token/assistance:
     get:
       tags:
@@ -761,6 +814,64 @@ components:
         - PO_PARTIALLY_REPORTED
         - PO_REPORTED
       type: string
+    PaymentNoticeDetailsDTO:
+      type: object
+      properties:
+        iupd:
+          description: Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)
+          type: string
+        paTaxCode:
+          description: Tax code of the Creditor Body
+          type: string
+        paFullName:
+          description: Company name of the Creditor Body
+          type: string
+        status:
+          $ref: '#/components/schemas/PaymentNoticeDetailsStatus'
+        paymentOptions:
+          description: Array structure containing any payment options (there always exists at least 1)
+          type: array
+          items:
+            $ref: '#/components/schemas/PaymentOptionDetailsDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    PaymentNoticeDetailsStatus:
+      enum:
+        - DRAFT
+        - PUBLISHED
+        - VALID
+        - INVALID
+        - EXPIRED
+        - PARTIALLY_PAID
+        - PAID
+        - REPORTED
+      type: string
+    PaymentOptionDetailsDTO:
+      type: object
+      properties:
+        nav:
+          description: Notice Code
+          type: string
+        iuv:
+          description: Unique identifier
+          type: string
+        amount:
+          format: int64
+          description: Payment Option Amount
+          type: integer
+        description:
+          description: Description of the OP (e.g. "SISA - 741T, 942T - Checks without authorization or funding")
+          type: string
+        isPartialPayment:
+          description: Indicates, if set to true, the current PO is a installment
+          type: boolean
+        dueDate:
+          $ref: '#/components/schemas/ZonedDateTime'
+        notificationFee:
+          format: int64
+          description: corresponds to the SEND notification costs
+          type: integer
+        status:
+          $ref: '#/components/schemas/PaymentOptionStatus'
     ErrorDTO:
       type: object
       required:
@@ -772,6 +883,7 @@ components:
             - generic_error
             - receipt_not_found_error
             - notice_not_found_error
+            - payment_notice_not_found_error
             - invalid_amount
             - invalid_date
             - invalid_email
