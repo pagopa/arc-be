@@ -60,11 +60,11 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
         Assertions.assertEquals("EVENT_ID", infoNoticeDTO.getEventId());
         Assertions.assertEquals("250863", infoNoticeDTO.getAuthCode());
         Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
-        Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
         Assertions.assertEquals(ZonedDateTime.parse("2024-06-27T13:07:25Z"), infoNoticeDTO.getNoticeDate());
         Assertions.assertEquals("Worldline Merchant Services Italia S.p.A.", infoNoticeDTO.getPspName());
         assertEquals( 565430L, infoNoticeDTO.getAmount());
         assertEquals( 29L, infoNoticeDTO.getFee());
+        assertEquals(565459L, infoNoticeDTO.getTotalAmount());
         assertEquals(InfoNoticeDTO.OriginEnum.PM, infoNoticeDTO.getOrigin());
 
         TestUtils.assertNotNullFields(infoNoticeDTO);
@@ -79,7 +79,7 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
                 .rrn("51561651")
                 .noticeDate("2024-06-27T13:07:25Z")
                 .pspName("Worldline Merchant Services Italia S.p.A.")
-                .amount("5,654.3")
+                .amount(null)
                 .fee("0.29")
                 .origin(Origin.PM)
                 .build();
@@ -90,14 +90,73 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
         Assertions.assertEquals("EVENT_ID", infoNoticeDTO.getEventId());
         Assertions.assertEquals("250863", infoNoticeDTO.getAuthCode());
         Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
-        Assertions.assertEquals("51561651", infoNoticeDTO.getRrn());
         Assertions.assertEquals(ZonedDateTime.parse("2024-06-27T13:07:25Z"), infoNoticeDTO.getNoticeDate());
         Assertions.assertEquals("Worldline Merchant Services Italia S.p.A.", infoNoticeDTO.getPspName());
-        assertEquals( 565430L, infoNoticeDTO.getAmount());
+        assertNull(infoNoticeDTO.getAmount());
         assertEquals( 29L, infoNoticeDTO.getFee());
+        assertNull(infoNoticeDTO.getTotalAmount());
         assertEquals(InfoNoticeDTO.OriginEnum.PM, infoNoticeDTO.getOrigin());
         assertNull(infoNoticeDTO.getWalletInfo());
 
-        TestUtils.assertNotNullFields(infoNoticeDTO, "walletInfo","paymentMethod","payer");
+        TestUtils.assertNotNullFields(infoNoticeDTO, "walletInfo","paymentMethod","payer", "amount", "totalAmount");
+    }
+
+    @Test
+    void givenAmountAndFeeWhenCalculateTotalAmountThenReturnTotalAmount() {
+        //given
+        BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO = BizEventsInfoPaidNoticeDTO.builder()
+                .eventId("EVENT_ID")
+                .authCode("250863")
+                .rrn("51561651")
+                .noticeDate("2024-06-27T13:07:25Z")
+                .pspName("Worldline Merchant Services Italia S.p.A.")
+                .amount("58")
+                .fee("0.29")
+                .origin(Origin.PM)
+                .build();
+        //when
+        Long result = mapper.calculateTotalAmount(bizEventsInfoPaidNoticeDTO);
+        //then
+        Assertions.assertNotNull(result);
+        assertEquals(5829L,result);
+    }
+
+    @Test
+    void givenAmountAndNullFeeWhenCalculateTotalAmountThenReturnTotalAmount() {
+        //given
+        BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO = BizEventsInfoPaidNoticeDTO.builder()
+                .eventId("EVENT_ID")
+                .authCode("250863")
+                .rrn("51561651")
+                .noticeDate("2024-06-27T13:07:25Z")
+                .pspName("Worldline Merchant Services Italia S.p.A.")
+                .amount("58")
+                .fee(null)
+                .origin(Origin.PM)
+                .build();
+        //when
+        Long result = mapper.calculateTotalAmount(bizEventsInfoPaidNoticeDTO);
+        //then
+        Assertions.assertNotNull(result);
+        assertEquals(5800L,result);
+    }
+
+    @Test
+    void givenNullAmountWhenCalculateTotalAmountThenReturnNull() {
+        //given
+        BizEventsInfoPaidNoticeDTO bizEventsInfoPaidNoticeDTO = BizEventsInfoPaidNoticeDTO.builder()
+                .eventId("EVENT_ID")
+                .authCode("250863")
+                .rrn("51561651")
+                .noticeDate("2024-06-27T13:07:25Z")
+                .pspName("Worldline Merchant Services Italia S.p.A.")
+                .amount(null)
+                .fee("0.29")
+                .origin(Origin.PM)
+                .build();
+        //when
+        Long result = mapper.calculateTotalAmount(bizEventsInfoPaidNoticeDTO);
+        //then
+        Assertions.assertNull(result);
     }
 }
