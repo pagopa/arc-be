@@ -3,6 +3,9 @@ package it.gov.pagopa.arc.connector.gpd;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException;
+import it.gov.pagopa.arc.exception.custom.GPDInvocationException;
+import it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -70,21 +73,21 @@ class GPDConnectorImplTest {
 
     @Test
     void givenNotFoundIUPDWhenGetPaymentNoticeDetailsThenThrowException() {
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        GPDPaymentNoticeDetailsNotFoundException ex = assertThrows(GPDPaymentNoticeDetailsNotFoundException.class,
                 () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_NOT_FOUND_0"));
         assertEquals("An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [DUMMY_ORGANIZATION_FISCAL_CODE] and iupd [IUPD_NOT_FOUND_0] for the current user with userId [USER_ID]", ex.getMessage());
     }
 
     @Test
     void givenWrongIUPDWhenGetPaymentNoticeDetailsThenThrowException() {
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        GPDInvalidRequestException ex = assertThrows(GPDInvalidRequestException.class,
                 () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_BAD_REQUEST_0"));
         assertEquals("One or more inputs provided during the request from GPD are invalid", ex.getMessage());
     }
 
     @Test
     void givenErrorIUPDWhenGetPaymentNoticeDetailsThenThrowException() {
-        RuntimeException ex = assertThrows(RuntimeException.class,
+        GPDInvocationException ex = assertThrows(GPDInvocationException.class,
                 () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_ERROR_0"));
         assertEquals("An error occurred handling request from GPD service", ex.getMessage());
     }
