@@ -2,6 +2,9 @@ package it.gov.pagopa.arc.connector.gpd;
 
 import feign.FeignException;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException;
+import it.gov.pagopa.arc.exception.custom.GPDInvocationException;
+import it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
@@ -25,12 +28,11 @@ public class GPDConnectorImpl implements GPDConnector {
             return gpdRestClient.paymentNoticeDetails(apiKey, organizationFiscalCode, iupd);
         }catch (FeignException e){
             if(e.status() == HttpStatus.NOT_FOUND.value()){
-                // The RuntimeException will be replaced by the custom exception in its specific task
-                throw new RuntimeException("An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [%s] and iupd [%s] for the current user with userId [%s]".formatted(organizationFiscalCode, iupd, userId));
+                throw new GPDPaymentNoticeDetailsNotFoundException("An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [%s] and iupd [%s] for the current user with userId [%s]".formatted(organizationFiscalCode, iupd, userId));
             } else if(e.status() == HttpStatus.BAD_REQUEST.value()) {
-                throw new RuntimeException("One or more inputs provided during the request from GPD are invalid");
+                throw new GPDInvalidRequestException("One or more inputs provided during the request from GPD are invalid");
             }else{
-                throw new RuntimeException("An error occurred handling request from GPD service");
+                throw new GPDInvocationException("An error occurred handling request from GPD service");
             }
         }
 
