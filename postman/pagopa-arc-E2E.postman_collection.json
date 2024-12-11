@@ -1735,7 +1735,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"ACI\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - unica opzione\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"ACI Automobile Club Italia\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull - unica opzione\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"ACI\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - unica opzione\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"ACI Automobile Club Italia\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull - unica opzione\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        }\n    ]\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -1954,7 +1954,7 @@
                   "response": []
                 },
                 {
-                  "name": "Pull payment Notices from ARC",
+                  "name": "Pull payment Notices from ARp",
                   "event": [
                     {
                       "listen": "test",
@@ -2021,6 +2021,84 @@
                       ],
                       "path": [
                         "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice details from ARp - Single Payment Option], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - Single Payment Option] - When you get the payment notice, Arp return a payment notice details\", () => {\r",
+                          "        let jsonResponse = pm.response.json();\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOptions).to.have.length(1);\r",
+                          "        let amount = pm.collectionVariables.get(\"amount\")\r",
+                          "        pm.expect(jsonResponse.paymentOptions[0].amount).to.eq(amount);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=77777777777",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "paTaxCode",
+                          "value": "77777777777"
+                        }
                       ]
                     }
                   },
@@ -2200,7 +2278,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n        {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - opzione totale e piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        }\n    ]\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -2418,7 +2496,7 @@
                   "response": []
                 },
                 {
-                  "name": "Pull payment Notices from ARC",
+                  "name": "Pull payment Notices from ARp",
                   "event": [
                     {
                       "listen": "test",
@@ -2428,7 +2506,7 @@
                           "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
                           "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
-                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "if(pm.response.code != 200) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
                           "}else{\r",
                           "    pm.test(\"[GET payment notice from ARC - Single Payment Option + payment installments], expected httpStatus: 200\", () => {\r",
@@ -2436,7 +2514,6 @@
                           "    })\r",
                           "\r",
                           "    pm.test(\"[GET payment notice from ARC - Single Payment Option + payment installments] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
-                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
                           "        \r",
                           "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
                           "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
@@ -2484,6 +2561,82 @@
                       ],
                       "path": [
                         "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice details from ARp - Single Payment Option + payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - Single Payment Option + payment installments] - When you get the payment notice, Arp return a payment notice details\", () => {\r",
+                          "       let jsonResponse = pm.response.json();\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOptions).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=77777777777",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "paTaxCode",
+                          "value": "77777777777"
+                        }
                       ]
                     }
                   },
@@ -2663,7 +2816,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"opzioni con diverse scadenze\",\n            \"isPartialPayment\": false,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        }\n    ]\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -2880,7 +3033,7 @@
                   "response": []
                 },
                 {
-                  "name": "Pull payment Notices from ARC",
+                  "name": "Pull payment Notices from ARp",
                   "event": [
                     {
                       "listen": "test",
@@ -2890,7 +3043,7 @@
                           "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
                           "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
-                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "if(pm.response.code != 200) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
                           "}else{\r",
                           "    pm.test(\"[GET payment notice from ARC - payment with different dueDate], expected httpStatus: 200\", () => {\r",
@@ -2898,7 +3051,6 @@
                           "    })\r",
                           "\r",
                           "    pm.test(\"[GET payment notice from ARC - payment with different dueDate] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
-                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
                           "        \r",
                           "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
                           "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
@@ -2946,6 +3098,82 @@
                       ],
                       "path": [
                         "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice details from ARp - payment with different dueDate], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - payment with different dueDate] - When you get the payment notice, Arp return a payment notice details\", () => {\r",
+                          "       let jsonResponse = pm.response.json();\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOptions).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=77777777777",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "paTaxCode",
+                          "value": "77777777777"
+                        }
                       ]
                     }
                   },
@@ -3125,7 +3353,7 @@
                     "header": [],
                     "body": {
                       "mode": "raw",
-                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT60X0542811101000000123456\"\n                }\n            ]\n        }\n    ]\n}",
+                      "raw": "{\n    \"iupd\": \"77777777777-{{iupd}}\",\n    \"organizationFiscalCode\": \"77777777777\",\n    \"type\": \"F\",\n    \"companyName\": \"EC Demo Pagamenti Pull Test\",\n    \"fullName\": \"MARCO POLO\",\n    \"fiscalCode\": \"{{CF_MOCK_BE_ARC}}\",\n    \"officeName\": null,\n    \"validityDate\": null,\n    \"switchToExpired\": false,\n    \"pull\":true,\n    \"paymentOption\": [\n         {\n            \"iuv\": \"020{{iuv}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amount}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-10-30T23:59:59\",\n            \"retentionDate\": \"2025-10-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amount}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvFirstInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountFirstInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-11-30T23:59:59\",\n            \"retentionDate\": \"2025-11-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountFirstInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvSecondInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountSecondInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-12-30T23:59:59\",\n            \"retentionDate\": \"2025-12-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountSecondInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        },\n        {\n            \"iuv\": \"020{{iuvThirdInstallment}}\",\n            \"organizationFiscalCode\": \"77777777777\",\n            \"amount\": {{amountThirdInstallment}},\n            \"description\": \"Test Pull - piano rateale\",\n            \"isPartialPayment\": true,\n            \"dueDate\": \"2025-01-30T23:59:59\",\n            \"retentionDate\": \"2025-01-30T23:59:59\",\n            \"paymentDate\": null,\n            \"reportingDate\": null,\n            \"paymentMethod\": \"CP\",\n            \"pspCompany\": null,\n            \"transfer\": [\n                {\n                    \"organizationFiscalCode\": \"77777777777\",\n                    \"companyName\": \"test\",\n                    \"idTransfer\": \"1\",\n                    \"amount\": {{amountThirdInstallment}},\n                    \"remittanceInformation\": \"Test Pull\",\n                    \"category\": \"9/0101108TS/\",\n                    \"iban\": \"IT39X0300203280451585346538\"\n                }\n            ]\n        }\n    ]\n}",
                       "options": {
                         "raw": {
                           "language": "json"
@@ -3342,7 +3570,7 @@
                   "response": []
                 },
                 {
-                  "name": "Pull payment Notices from ARC",
+                  "name": "Pull payment Notices from ARp",
                   "event": [
                     {
                       "listen": "test",
@@ -3352,7 +3580,7 @@
                           "let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
                           "let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
                           "\r",
-                          "if(jsonResponse.paymentNotices.length === 0) {\r",
+                          "if(pm.response.code != 200) {\r",
                           "    retryRequest(postman,pm,setTimeout);\r",
                           "}else{\r",
                           "    pm.test(\"[GET payment notice from ARC - 4 payment installments], expected httpStatus: 200\", () => {\r",
@@ -3360,7 +3588,6 @@
                           "    })\r",
                           "\r",
                           "    pm.test(\"[GET payment notice from ARC - 4 payment installments] - When you get the payment notice, ARC return a payment notice filtered\", () => {\r",
-                          "        pm.expect(jsonResponse.paymentNotices).to.be.an('array').that.is.not.empty;\r",
                           "        \r",
                           "        for (let i = 0; i < jsonResponse.paymentNotices.length; i++) {\r",
                           "            pm.expect(jsonResponse.paymentNotices[i].iupd).not.to.eq(iupd);\r",
@@ -3408,6 +3635,82 @@
                       ],
                       "path": [
                         "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "let debtorPositionCreated = pm.collectionVariables.get(\"debtorPositionCreated\");\r",
+                          "\r",
+                          "if(!debtorPositionCreated){\r",
+                          "     console.info(\"The request\" + \" [\" + pm.info.requestName + \"] \"+ \"was skipped because the debt position was not created\");\r",
+                          "    pm.execution.skipRequest();\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "if(pm.response.code != 200 ){\r",
+                          "    retryRequest(postman,pm,setTimeout);\r",
+                          "}else{\r",
+                          "    pm.test(\"[GET payment notice details from ARp - 4 payment installments], expected httpStatus: 200\", () => {\r",
+                          "        pm.response.to.have.status(200);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - 4 payment installments] - When you get the payment notice, Arp return a payment notice details\", () => {\r",
+                          "       let jsonResponse = pm.response.json();\r",
+                          "        let iupdWithoutOrganization = pm.collectionVariables.get(\"iupd\")\r",
+                          "        let iupd = \"77777777777-\" + iupdWithoutOrganization\r",
+                          "\r",
+                          "        pm.expect(jsonResponse.iupd).to.eq(iupd);\r",
+                          "        pm.expect(jsonResponse.paymentOptions).to.have.length(4);\r",
+                          "    })\r",
+                          "}"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=77777777777",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "paTaxCode",
+                          "value": "77777777777"
+                        }
                       ]
                     }
                   },
@@ -3608,7 +3911,7 @@
                       "    \r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(null)\r",
                       "    pm.expect(jsonResponse.returnTo).to.not.eq(\"\")\r",
-                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://arc.assistenza.pagopa.it/hc/it/requests/new\")\r",
+                      "    pm.expect(jsonResponse.returnTo).to.eq(\"https://pagamenti.assistenza.pagopa.it/hc/it/requests/new\")\r",
                       "\r",
                       "    pm.expect(jsonResponse.actionUrl).to.not.eq(null)\r",
                       "    pm.expect(jsonResponse.actionUrl).to.not.eq(\"\")\r",
