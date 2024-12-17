@@ -10,9 +10,6 @@ import org.mapstruct.NullValueCheckStrategy;
 @Mapper(componentModel = "spring", uses = {PullPaymentOptionStatus2PaymentOptionStatusMapper.class, MapperUtilities.class})
 public interface PullPaymentInstallmentDTO2InstallmentDTOMapper {
 
-    @Mapping(source = "insertedDate", target = "insertedDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "convertToZonedDateTimeAndTruncateSeconds")
-    @Mapping(source = "lastUpdatedDate", target = "lastUpdatedDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "convertToZonedDateTimeAndTruncateSeconds")
     @Mapping(source = "dueDate", target = "dueDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "convertToZonedDateTimeAndTruncateSeconds")
-    @Mapping(source = "retentionDate", target = "retentionDate", nullValueCheckStrategy = NullValueCheckStrategy.ALWAYS, qualifiedByName = "convertToZonedDateTimeAndTruncateSeconds")
     InstallmentDTO toInstallmentDTO(PullPaymentInstallmentDTO pullPaymentInstallmentDTOSource);
 }

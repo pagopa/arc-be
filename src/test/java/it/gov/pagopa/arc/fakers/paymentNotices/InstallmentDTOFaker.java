@@ -19,10 +19,6 @@ public class InstallmentDTOFaker {
                 .amount(120L)
                 .description("Test Pull - unica opzione")
                 .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
-                .retentionDate(ZonedDateTime.parse("2024-11-30T23:59:59Z"))
-                .insertedDate(ZonedDateTime.parse("2024-04-11T06:56:14.845126Z"))
-                .notificationFee(0L)
-                .status(PaymentOptionStatus.UNPAID)
-                .lastUpdatedDate(ZonedDateTime.parse("2024-04-11T06:56:14.845126Z"));
+                .status(PaymentOptionStatus.UNPAID);
     }
 }
