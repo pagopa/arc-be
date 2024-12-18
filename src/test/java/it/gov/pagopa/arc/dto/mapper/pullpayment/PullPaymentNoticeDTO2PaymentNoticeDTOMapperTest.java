@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeStatus;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -42,5 +43,7 @@ class PullPaymentNoticeDTO2PaymentNoticeDTOMapperTest {
         Assertions.assertEquals(paymentNoticeDTO, result);
         Mockito.verify(pullPaymentNoticeStatus2PaymentNoticeStatusMapperMock).toPaymentNoticeStatus(any());
         Mockito.verify(pullPaymentOptionDTO2PaymentOptionDTOMapperMock).toPaymentOptionDTO(any());
+
+        TestUtils.assertNotNullFields(result);
     }
 }

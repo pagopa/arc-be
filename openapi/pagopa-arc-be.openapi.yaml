@@ -670,30 +670,14 @@ components:
     PaymentNoticeDTO:
       required:
         - iupd
-        - debtorTaxCode
-        - debtorFullName
-        - debtorType
         - paTaxCode
         - paFullName
-        - insertedDate
-        - publishDate
-        - validityDate
         - status
-        - lastUpdateDate
         - paymentOptions
       type: object
       properties:
         iupd:
           description: Unique ID of the Debt Position (for positions originating from ACA the IUPD starts with ACA_)
-          type: string
-        debtorTaxCode:
-          description: Tax code of the person to whom the Debt Position is registered
-          type: string
-        debtorFullName:
-          description: Full name of the person to whom the Debt Position is registered
-          type: string
-        debtorType:
-          description: Type of subject to whom the Debt Position is registered (Will be F (Physical) or G(Legal))
           type: string
         paTaxCode:
           description: Tax code of the Creditor Body
@@ -701,18 +685,8 @@ components:
         paFullName:
           description: Company name of the Creditor Body
           type: string
-        insertedDate:
-          $ref: '#/components/schemas/ZonedDateTime'
-        publishDate:
-          $ref: '#/components/schemas/ZonedDateTime'
-        validityDate:
-          $ref: '#/components/schemas/ZonedDateTime'
         status:
           $ref: '#/components/schemas/PaymentNoticeStatus'
-        lastUpdateDate:
-          format: date
-          type: string
-          example: '2022-03-10'
         paymentOptions:
           description: Array structure containing any payment options (there always exists at least 1)
           type: array
@@ -731,7 +705,6 @@ components:
     PaymentOptionDTO:
       required:
         - numberOfInstallments
-        - switchToExpired
         - installments
       type: object
       properties:
@@ -751,9 +724,6 @@ components:
         isPartialPayment:
           description: Indicates whether the OP is part of an installment plan
           type: boolean
-        switchToExpired:
-          description: Indicates, if set to true, in the case of PD created on GPD, that once the expiration date (dueDate ) has passed the PD is automatically set to the expired status
-          type: boolean
         installments:
           description: Array structure containing the installments that make up the payment option (there always exists at least 1)
           type: array
@@ -769,9 +739,7 @@ components:
         - amount
         - description
         - dueDate
-        - insertedDate
         - status
-        - lastUpdatedDate
       type: object
       properties:
         nav:
@@ -795,18 +763,8 @@ components:
           type: string
         dueDate:
           $ref: '#/components/schemas/ZonedDateTime'
-        retentionDate:
-          $ref: '#/components/schemas/ZonedDateTime'
-        insertedDate:
-          $ref: '#/components/schemas/ZonedDateTime'
-        notificationFee:
-          format: int64
-          description: corresponds to the SEND notification costs
-          type: integer
         status:
           $ref: '#/components/schemas/PaymentOptionStatus'
-        lastUpdatedDate:
-          $ref: '#/components/schemas/ZonedDateTime'
     PaymentOptionStatus:
       enum:
         - PO_UNPAID
