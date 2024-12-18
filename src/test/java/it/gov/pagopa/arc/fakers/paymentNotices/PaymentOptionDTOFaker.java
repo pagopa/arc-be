@@ -17,7 +17,6 @@ public class PaymentOptionDTOFaker {
                 .amount(120L)
                 .dueDate(ZonedDateTime.parse("2024-10-30T23:59:59Z"))
                 .isPartialPayment(false)
-                .switchToExpired(false)
                 .installments(List.of(installment));
 
         if(paymentInstallments){

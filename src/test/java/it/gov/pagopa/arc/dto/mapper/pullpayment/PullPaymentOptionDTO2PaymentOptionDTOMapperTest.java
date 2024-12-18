@@ -7,6 +7,7 @@ import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentOptionDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.InstallmentDTOFaker;
 import it.gov.pagopa.arc.model.generated.InstallmentDTO;
 import it.gov.pagopa.arc.model.generated.PaymentOptionDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -38,18 +39,16 @@ class PullPaymentOptionDTO2PaymentOptionDTOMapperTest {
         //when
         PaymentOptionDTO result = mapper.toPaymentOptionDTO(pullPaymentOptionDTO);
         //then
-        Assertions.assertAll(() -> {
-            Assertions.assertNotNull(result);
-            Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
-            Assertions.assertEquals(1, result.getNumberOfInstallments());
-            Assertions.assertEquals(120L, result.getAmount());
-            Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
-            Assertions.assertFalse(result.getIsPartialPayment());
-            Assertions.assertFalse(result.getSwitchToExpired());
-            Assertions.assertEquals(List.of(installmentDTO), result.getInstallments());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
+        Assertions.assertEquals(1, result.getNumberOfInstallments());
+        Assertions.assertEquals(120L, result.getAmount());
+        Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
+        Assertions.assertFalse(result.getIsPartialPayment());
+        Assertions.assertEquals(List.of(installmentDTO), result.getInstallments());
 
-            Mockito.verify(pullPaymentInstallmentDTO2InstallmentDTOMapperMock).toInstallmentDTO(any());
-        });
+        Mockito.verify(pullPaymentInstallmentDTO2InstallmentDTOMapperMock).toInstallmentDTO(any());
+        TestUtils.assertNotNullFields(result);
 
     }
 }

@@ -5,6 +5,7 @@ import it.gov.pagopa.arc.connector.pullpayment.enums.PullPaymentOptionStatus;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentInstallmentDTOFaker;
 import it.gov.pagopa.arc.model.generated.InstallmentDTO;
 import it.gov.pagopa.arc.model.generated.PaymentOptionStatus;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -41,22 +42,18 @@ class PullPaymentInstallmentDTO2InstallmentDTOMapperTest {
         InstallmentDTO result = mapper.toInstallmentDTO(pullPaymentInstallmentDTO);
 
         //then
-        Assertions.assertAll(() -> {
-            Assertions.assertNotNull(result);
-            Assertions.assertEquals("347000000880099993", result.getNav());
-            Assertions.assertEquals("47000000880099993", result.getIuv());
-            Assertions.assertEquals("99999000013", result.getPaTaxCode());
-            Assertions.assertEquals("EC Demo Pagamenti Pull Test", result.getPaFullName());
-            Assertions.assertEquals(120L, result.getAmount());
-            Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
-            Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
-            Assertions.assertEquals(ZonedDateTime.parse("2024-11-30T23:59:59Z"), result.getRetentionDate());
-            Assertions.assertEquals(ZonedDateTime.parse("2024-04-11T06:56:14Z"), result.getInsertedDate());
-            Assertions.assertEquals(0L, result.getNotificationFee());
-            Assertions.assertEquals(unpaid, result.getStatus());
-            Assertions.assertEquals(ZonedDateTime.parse("2024-04-11T06:56:14Z"), result.getLastUpdatedDate());
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals("347000000880099993", result.getNav());
+        Assertions.assertEquals("47000000880099993", result.getIuv());
+        Assertions.assertEquals("99999000013", result.getPaTaxCode());
+        Assertions.assertEquals("EC Demo Pagamenti Pull Test", result.getPaFullName());
+        Assertions.assertEquals(120L, result.getAmount());
+        Assertions.assertEquals("Test Pull - unica opzione", result.getDescription());
+        Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
+        Assertions.assertEquals(unpaid, result.getStatus());
 
-            Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMapperMock).toPaymentOptionStatus(any());
-        });
+        Mockito.verify(pullPaymentOptionStatus2PaymentOptionStatusMapperMock).toPaymentOptionStatus(any());
+        TestUtils.assertNotNullFields(result);
+
     }
 }

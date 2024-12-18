@@ -51,4 +51,19 @@ public interface MapperUtilities {
             throw new BizEventsInvalidDateException("Invalid date format");
         }
     }
+
+    /** To calculate totalAmount (amount + fee) */
+    @Named("calculateTotalAmount")
+    static Long calculateTotalAmount(Long amount, Long fee){
+        if(amount == null){
+            return null;
+        }
+
+        if (fee == null) {
+            fee = 0L;
+        }
+
+        return Long.sum(amount, fee);
+    }
+
 }

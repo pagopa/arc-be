@@ -73,6 +73,10 @@ import org.springframework.web.util.UriComponentsBuilder;
 
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl= bizEventsMock",
+
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
+        "rest-client.gpd.api-key=x_api_key0",
+
         "spring.cache.type=simple"
     })
 @AutoConfigureMockMvc

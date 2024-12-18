@@ -40,7 +40,7 @@ class ArcExceptionHandlerTest {
 
     @SpyBean
     private TestController testControllerSpy;
-    private static final String EVENT_ID = "EVENT_ID";
+
     private MemoryAppender memoryAppender;
 
     @RestController
@@ -51,10 +51,6 @@ class ArcExceptionHandlerTest {
             //Needed for testing notice API
         }
 
-        @GetMapping("/test/{Id}")
-        void testEndpointDetails() {
-            //Needed for testing notice API
-        }
     }
 
     @BeforeEach
@@ -178,9 +174,9 @@ class ArcExceptionHandlerTest {
 
     @Test
     void givenRequestWhenBizEventsServiceReturnNotFoundErrorThenHandleBizEventsPaidNoticeNotFoundExceptionError() throws Exception {
-        doThrow(new BizEventsPaidNoticeNotFoundException("Error")).when(testControllerSpy).testEndpointDetails();
+        doThrow(new BizEventsPaidNoticeNotFoundException("Error")).when(testControllerSpy).testEndpoint();
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/test/{eventId}", EVENT_ID)
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
                         .param(DATA, DATA)
                         .header(HEADER,HEADER)
                         .contentType(MediaType.APPLICATION_JSON)
@@ -189,7 +185,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("notice_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException occurred handling request GET /test/EVENT_ID: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
     }
 
     @Test
@@ -201,6 +197,70 @@ class ArcExceptionHandlerTest {
                 .accept(MediaType.APPLICATION_JSON))
             .andExpect(MockMvcResultMatchers.status().is(500))
             .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"));
+    }
+
+    @Test
+    void givenRequestWhenBizEventsServiceReturnNotFoundErrorThenHandleBizEventsNotFoundExceptionPdfError() throws Exception {
+        doThrow(new BizEventsReceiptNotFoundException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("receipt_not_found_error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+    }
+
+    @Test
+    void givenRequestWhenGPDReturnBadRequestErrorThenHandleGPDInvalidRequestException() throws Exception {
+        doThrow(new GPDInvalidRequestException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException occurred handling request GET /test: HttpStatus 400 - Error"));
+    }
+
+    @Test
+    void givenRequestWhenGPDReturnNotFoundErrorThenHandleGPDPaymentNoticeDetailsNotFoundException() throws Exception {
+        doThrow(new GPDPaymentNoticeDetailsNotFoundException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isNotFound())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("payment_notice_not_found_error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+    }
+
+    @Test
+    void givenRequestWhenGPDReturnErrorThenHandleGPDInvocationException() throws Exception {
+        doThrow(new GPDInvocationException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isInternalServerError())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
     }
 
 }

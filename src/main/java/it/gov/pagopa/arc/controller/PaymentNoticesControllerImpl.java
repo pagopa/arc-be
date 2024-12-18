@@ -1,9 +1,11 @@
 package it.gov.pagopa.arc.controller;
 
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
 import it.gov.pagopa.arc.service.PaymentNoticesService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -24,5 +26,12 @@ public class PaymentNoticesControllerImpl implements ArcPaymentNoticesApi {
         String userId = SecurityUtils.getUserId();
         PaymentNoticesListDTO paymentNoticesListDTO = paymentNoticesService.retrievePaymentNotices(userId, userFiscalCode, dueDate, size, page);
         return new ResponseEntity<>(paymentNoticesListDTO, HttpStatus.OK);
+    }
+
+    @Override
+    public ResponseEntity<PaymentNoticeDetailsDTO> getPaymentNoticesDetails(String iupd, @NotNull String paTaxCode) {
+        String userId = SecurityUtils.getUserId();
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = paymentNoticesService.retrievePaymentNoticeDetails(userId, paTaxCode, iupd);
+        return new ResponseEntity<>(paymentNoticeDetailsDTO, HttpStatus.OK);
     }
 }

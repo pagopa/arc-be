@@ -5,11 +5,12 @@ import it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.*;
 
 import java.time.LocalDateTime;
 import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -80,5 +81,24 @@ class MapperUtilitiesTest {
         BizEventsInvalidDateException exception = assertThrows(BizEventsInvalidDateException.class,
                 () -> MapperUtilities.dateStringToZonedDateTime(wrongDateString));
         Assertions.assertEquals("Invalid date format",exception.getMessage());
+    }
+
+    @ParameterizedTest
+    @MethodSource("valueSource")
+    void givenCalculateTotalAmountWhenThen(Long amount, Long fee, Long expectedTotalAmount) {
+        //when
+        Long totalAmountResult = MapperUtilities.calculateTotalAmount(amount, fee);
+        //then
+        assertEquals(expectedTotalAmount, totalAmountResult);
+    }
+
+    static Stream<Arguments> valueSource() {
+        return Stream.of(
+                Arguments.of(500L, 20L, 520L),
+                Arguments.of(21L, 11L, 32L),
+                Arguments.of(320L, null, 320L),
+                Arguments.of(null, 19L, null),
+                Arguments.of(null, null, null)
+        );
     }
 }

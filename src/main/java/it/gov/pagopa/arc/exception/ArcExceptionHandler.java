@@ -68,6 +68,21 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
     }
 
+    @ExceptionHandler(GPDInvalidRequestException.class)
+    public ResponseEntity<ErrorDTO> handleGPDInvalidRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_REQUEST);
+    }
+
+    @ExceptionHandler(GPDPaymentNoticeDetailsNotFoundException.class)
+    public ResponseEntity<ErrorDTO> handleGPDNotFoundException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.NOT_FOUND, ErrorDTO.ErrorEnum.PAYMENT_NOTICE_NOT_FOUND_ERROR);
+    }
+
+    @ExceptionHandler(GPDInvocationException.class)
+    public ResponseEntity<ErrorDTO> handleGPDInvocationException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
         log.error("A {} occurred handling request {}: HttpStatus {} - {}",
