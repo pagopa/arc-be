@@ -7,6 +7,49 @@
   },
   "item": [
     {
+      "name": "0. Health",
+      "item": [
+        {
+          "name": "Status",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "  pm.test(\"[GET Actuator Health Liveness], expected httpStatus: 200\", () => {\r",
+                  "        pm.response.to.have.status(200);\r",
+                  "    })\r",
+                  "\r",
+                  "    pm.test(\"[GET Actuator Health Liveness] - When Actuator Health Liveness is called, the status is returned\", () => {\r",
+                  "        let jsonResponse = pm.response.json();\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.status).to.eq(\"UP\");\r",
+                  "    })"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseUrlCittadini}}/health/v1",
+              "host": [
+                "{{baseUrlCittadini}}"
+              ],
+              "path": [
+                "health",
+                "v1"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
       "name": "1. Notices",
       "item": [
         {
@@ -3792,6 +3835,149 @@
         {
           "name": "Unhappy Case",
           "item": [
+            {
+              "name": "PaymentNotice details",
+              "item": [
+                {
+                  "name": "[BAD_REQUEST] Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          " pm.test(\"[GET payment notice details from ARp - BAD_REQUEST], expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - BAD_REQUEST] - When you retrieve the payment notices details from GPD and it responds with bad request, ARp returns a invalid request Exception with expected error message and description , expected httpStatus: 400\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"invalid_request\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"One or more inputs provided during the request from GPD are invalid\");\r",
+                          "    })"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=%26",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "paTaxCode",
+                          "value": "&"
+                        },
+                        {
+                          "key": "",
+                          "value": null,
+                          "disabled": true
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "[NOT_FOUND] Payment Notice details from ARp",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          " pm.test(\"[GET payment notice details from ARp - NOT_FOUND], expected httpStatus: 404\", () => {\r",
+                          "    pm.response.to.have.status(404);\r",
+                          "    })\r",
+                          "\r",
+                          "    pm.test(\"[GET payment notice details from ARp - NOT_FOUND] - When you retrieve the payment notices details from GPD and it responds with not found, ARp returns a not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
+                          "    let response = pm.response.json();\r",
+                          "    pm.expect(response.error).to.eq(\"payment_notice_not_found_error\");\r",
+                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [5452] and iupd [77777777777-cue7rlcqil9ln9f7knvubmkthi9plleq] for the current user with userId [123456]\");\r",
+                          "    })"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "GET",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices/77777777777-{{iupd}}?paTaxCode=5452",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices",
+                        "77777777777-{{iupd}}"
+                      ],
+                      "query": [
+                        {
+                          "key": "",
+                          "value": "",
+                          "disabled": true
+                        },
+                        {
+                          "key": "paTaxCode",
+                          "value": "5452"
+                        }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
             {
               "name": "[BAD_REQUEST] Pull payment Notices from ARC",
               "event": [
