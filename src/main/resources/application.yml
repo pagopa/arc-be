@@ -71,3 +71,14 @@ logging:
           web:
             http:
               SessionRepositoryFilter: INFO
+
+management:
+  endpoint:
+    health:
+      probes.enabled: true
+      group:
+        readiness.include: "*"
+        liveness.include: livenessState,diskSpace,redis
+  endpoints:
+    web:
+      exposure.include: health
