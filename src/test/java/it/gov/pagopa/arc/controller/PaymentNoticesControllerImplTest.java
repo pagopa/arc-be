@@ -7,8 +7,10 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
+import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.PaymentNoticesService;
@@ -45,6 +47,8 @@ class PaymentNoticesControllerImplTest {
     private static final LocalDate DUE_DATE = LocalDate.now();
     private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final String USER_ID = "user_id";
+    private static final String IUPD = "IUPD";
+    private static final String PA_TAX_CODE = "DUMMY_ORGANIZATION_FISCAL_CODE";
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -95,4 +99,45 @@ class PaymentNoticesControllerImplTest {
         Assertions.assertEquals(paymentNoticesListDTO,resultResponse);
         Mockito.verify(paymentNoticesServiceMock).retrievePaymentNotices(anyString(), anyString(), any(),anyInt(),anyInt());
     }
+
+    @Test
+    void givenPaTaxCodeAndIUPDWhenGetPaymentNoticeDetailsThenReturnPaymentNoticeDetails() throws Exception {
+        //given
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
+        Mockito.when(paymentNoticesServiceMock.retrievePaymentNoticeDetails(USER_ID, PA_TAX_CODE, IUPD)).thenReturn(paymentNoticeDetailsDTO);
+        //When
+        MvcResult result = mockMvc.perform(
+                        get("/payment-notices/{iupd}", IUPD)
+                                .param("paTaxCode", PA_TAX_CODE)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+                PaymentNoticeDetailsDTO.class);
+        //then
+        Assertions.assertNotNull(resultResponse);
+        Assertions.assertEquals(paymentNoticeDetailsDTO, resultResponse);
+        Assertions.assertEquals(1, resultResponse.getPaymentOptions().size());
+    }
+
+    @Test
+    void givenPaTaxCodeAndIUPDWhenGetPaymentNoticeDetailsThenReturnPaymentNoticeDetailsWithInstallments() throws Exception {
+        //given
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = PaymentNoticeDetailsDTOFaker.mockInstance(2, true);
+        Mockito.when(paymentNoticesServiceMock.retrievePaymentNoticeDetails(USER_ID, PA_TAX_CODE, IUPD)).thenReturn(paymentNoticeDetailsDTO);
+        //When
+        MvcResult result = mockMvc.perform(
+                        get("/payment-notices/{iupd}", IUPD)
+                                .param("paTaxCode", PA_TAX_CODE)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+                PaymentNoticeDetailsDTO.class);
+        //then
+        Assertions.assertNotNull(resultResponse);
+        Assertions.assertEquals(paymentNoticeDetailsDTO, resultResponse);
+        Assertions.assertEquals(2, resultResponse.getPaymentOptions().size());
+    }
+
 }

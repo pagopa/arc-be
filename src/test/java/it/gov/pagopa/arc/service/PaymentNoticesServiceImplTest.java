@@ -1,9 +1,12 @@
 package it.gov.pagopa.arc.service;
 
 import ch.qos.logback.classic.LoggerContext;
+import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
+import it.gov.pagopa.arc.service.gpd.GPDService;
 import it.gov.pagopa.arc.service.pullpayment.PullPaymentService;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
@@ -27,16 +30,20 @@ class PaymentNoticesServiceImplTest {
     private static final LocalDate DUE_DATE = LocalDate.parse("2024-04-11");
     private static final String DUMMY_FISCAL_CODE = "FISCAL-CODE789456";
     private static final String USER_ID = "user_id";
+    private static final String IUPD = "IUPD";
+    private static final String PA_TAX_CODE = "DUMMY_ORGANIZATION_FISCAL_CODE";
 
     @Mock
     private PullPaymentService pullPaymentServiceMock;
+    @Mock
+    private GPDService gpdServiceMock;
 
     private MemoryAppender memoryAppender;
     private PaymentNoticesService paymentNoticesService;
 
     @BeforeEach
     void setUp() {
-        paymentNoticesService = new PaymentNoticesServiceImpl(pullPaymentServiceMock);
+        paymentNoticesService = new PaymentNoticesServiceImpl(pullPaymentServiceMock, gpdServiceMock);
         ch.qos.logback.classic.Logger logger = (ch.qos.logback.classic.Logger) LoggerFactory.getLogger("it.gov.pagopa.arc.service.PaymentNoticesServiceImpl");
         memoryAppender = new MemoryAppender();
         memoryAppender.setContext((LoggerContext) LoggerFactory.getILoggerFactory());
@@ -63,5 +70,19 @@ class PaymentNoticesServiceImplTest {
         Assertions.assertEquals(paymentNoticesList, result.getPaymentNotices());
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_PAYMENT_NOTICES] The current user with user id : user_id, has requested to retrieve payment notices, with the current parameters: dueDate 2024-04-11, size 2 and page 1"));
         Mockito.verify(pullPaymentServiceMock).retrievePaymentNoticesListFromPullPayment(anyString(), any(), anyInt(), anyInt());
+    }
+
+    @Test
+    void givenParametersWhenRetrievePaymentNoticeDetailsThenReturnPaymentNoticeDetails() {
+        //given
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
+        Mockito.when(gpdServiceMock.retrievePaymentNoticeDetailsFromGPD(USER_ID, PA_TAX_CODE, IUPD)).thenReturn(paymentNoticeDetailsDTO);
+        //when
+        PaymentNoticeDetailsDTO result = paymentNoticesService.retrievePaymentNoticeDetails(USER_ID, PA_TAX_CODE, IUPD);
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(paymentNoticeDetailsDTO, result);
+        Assertions.assertEquals(1, result.getPaymentOptions().size());
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_PAYMENT_NOTICE_DETAILS] The current user with user id : user_id, has requested to retrieve payment notice details, with paTaxCode DUMMY_ORGANIZATION_FISCAL_CODE and iupd IUPD"));
     }
 }

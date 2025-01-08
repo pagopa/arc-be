@@ -56,6 +56,9 @@ rest-client:
   pull-payment:
     baseUrl: \${PULL_PAYMENT_BASE_URL:}
     api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
+  gpd:
+    baseUrl: \${GPD_SERVICE_BASE_URL:}
+    api-key: \${GPD_SERVICE_API_KEY:}
 
 logging:
   level:
@@ -68,3 +71,14 @@ logging:
           web:
             http:
               SessionRepositoryFilter: INFO
+
+management:
+  endpoint:
+    health:
+      probes.enabled: true
+      group:
+        readiness.include: "*"
+        liveness.include: livenessState,diskSpace,redis
+  endpoints:
+    web:
+      exposure.include: health
