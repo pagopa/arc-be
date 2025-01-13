@@ -34,6 +34,7 @@ val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
 val commonsIo = "2.16.1"
 val micrometerVersion = "1.3.5"
+val tomcatVersion = "10.1.34"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -71,6 +72,8 @@ dependencies {
 
 	// Forced transient dependecies to solve CVEs
 	implementation ("commons-io:commons-io:$commonsIo")
+	// https://mvnrepository.com/artifact/org.apache.tomcat.embed/tomcat-embed-core
+	implementation("org.apache.tomcat.embed:tomcat-embed-core:$tomcatVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
