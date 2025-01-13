@@ -31,11 +31,11 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.core.io.Resource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -68,7 +68,7 @@ import static org.mockito.Mockito.doThrow;
 class BizEventsPaidNoticeConnectorImplTest {
     @Autowired
     private BizEventsPaidNoticeConnector bizEventsPaidNoticeConnector;
-    @MockBean
+    @MockitoBean
     private BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapperMock;
     private MemoryAppender memoryAppender;
     private ObjectMapper objectMapper;
