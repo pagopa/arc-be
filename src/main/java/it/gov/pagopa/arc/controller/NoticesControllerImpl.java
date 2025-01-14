@@ -10,6 +10,9 @@ import it.gov.pagopa.arc.service.NoticesService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.core.io.Resource;
+import org.springframework.http.ContentDisposition;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -59,7 +62,15 @@ public class NoticesControllerImpl implements ArcNoticesApi {
         String userId = SecurityUtils.getUserId();
 
         Resource receipt = noticesService.retrieveNoticeReceipt(userId, userFiscalCode, eventId);
+        ContentDisposition contentDisposition = ContentDisposition.builder("inline")
+                .filename(receipt.getFilename())
+                .build();
+        HttpHeaders headers =  new HttpHeaders();
+        headers.setContentDisposition(contentDisposition);
 
-        return ResponseEntity.ok().body(receipt);
+        return ResponseEntity.ok()
+                .contentType(MediaType.APPLICATION_PDF)
+                .headers(headers)
+                .body(receipt);
     }
 }
