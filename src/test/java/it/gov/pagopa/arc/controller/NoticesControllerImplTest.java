@@ -186,6 +186,8 @@ class NoticesControllerImplTest {
         MvcResult result = mockMvc.perform(
                         get("/notices/{eventId}/receipt", EVENT_ID)
                 ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline; filename=\"testReceiptPdfFile.pdf\""))
                 .andReturn();
 
         //Then
@@ -196,4 +198,46 @@ class NoticesControllerImplTest {
         Assertions.assertArrayEquals(expectedContent, actualContent);
     }
 
+    @Test
+    void givenEventIdWhenCallGetNoticeReceiptThenReturnNoticeReceiptWithNullFileName() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf") {
+            @Override
+            public String getFilename() {
+                return null;
+            }
+        };
+
+        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+
+        //When
+        mockMvc.perform(
+                        get("/notices/{eventId}/receipt", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline"))
+                .andReturn();
+
+    }
+
+    @Test
+    void givenEventIdWhenCallGetNoticeReceiptThenReturnNoticeReceiptWithEmptyFileName() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf") {
+            @Override
+            public String getFilename() {
+                return "";
+            }
+        };
+
+        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+
+        //When
+        mockMvc.perform(
+                        get("/notices/{eventId}/receipt", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline; filename=\"\""))
+                .andReturn();
+    }
 }
