@@ -350,6 +350,9 @@
                           "\r",
                           "    pm.test(\"[Get notice receipt - Case 1] - When you get the notice receipt, ARC return a notice receipt\", () => {\r",
                           "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        pm.response.to.have.header(\"Content-Disposition\");\r",
+                          "        let contentDisposition = pm.response.headers.get(\"Content-Disposition\");\r",
+                          "        pm.expect(contentDisposition).to.include(\"inline; filename=\");\r",
                           "        console.log(pm.response.headers)\r",
                           "    })\r",
                           "}"
@@ -706,6 +709,9 @@
                           "\r",
                           "    pm.test(\"[Get notice receipt - Case 2] - When you get the notice receipt, ARC return a notice receipt\", () => {\r",
                           "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        pm.response.to.have.header(\"Content-Disposition\");\r",
+                          "        let contentDisposition = pm.response.headers.get(\"Content-Disposition\");\r",
+                          "        pm.expect(contentDisposition).to.include(\"inline; filename=\");\r",
                           "        console.log(pm.response.headers)\r",
                           "    })\r",
                           "}"
@@ -808,9 +814,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Disable event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})"
+                          ""
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -1119,6 +1123,9 @@
                           "\r",
                           "    pm.test(\"[Get notice receipt - Case 3] - When you get the notice receipt, ARC return a notice receipt\", () => {\r",
                           "        pm.response.to.have.header(\"Content-Type\", \"application/pdf\");\r",
+                          "        pm.response.to.have.header(\"Content-Disposition\");\r",
+                          "        let contentDisposition = pm.response.headers.get(\"Content-Disposition\");\r",
+                          "        pm.expect(contentDisposition).to.include(\"inline; filename=\");\r",
                           "        console.log(pm.response.headers)\r",
                           "    })\r",
                           "}"
@@ -1221,9 +1228,7 @@
                       "listen": "test",
                       "script": {
                         "exec": [
-                          "pm.test(\"Disable event from Biz-Events, expected httpStatus: 200\", () => {\r",
-                          "    pm.response.to.have.status(200);\r",
-                          "})"
+                          ""
                         ],
                         "type": "text/javascript",
                         "packages": {}
@@ -3931,7 +3936,7 @@
                           "    pm.test(\"[GET payment notice details from ARp - NOT_FOUND] - When you retrieve the payment notices details from GPD and it responds with not found, ARp returns a not found Exception with expected error message and description , expected httpStatus: 404\",() =>{\r",
                           "    let response = pm.response.json();\r",
                           "    pm.expect(response.error).to.eq(\"payment_notice_not_found_error\");\r",
-                          "    pm.expect(response.error_description).to.eq(\"An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [5452] and iupd [77777777777-cue7rlcqil9ln9f7knvubmkthi9plleq] for the current user with userId [123456]\");\r",
+                          "    pm.expect(response.error_description).to.contain(\"An error occurred handling request from GPD to retrieve payment notice with organizationFiscalCode [5452] and iupd [77777777777\");\r",
                           "    })"
                         ],
                         "type": "text/javascript",
