@@ -285,6 +285,13 @@ paths:
       responses:
         '200':
           description: "Obtained PDF notice receipt"
+          headers:
+            Content-Disposition:
+              description: >
+                Header specifying whether the file should be online viewer only or downloaded. It also contains the file name.
+              schema:
+                type: string
+                example: inline; filename="document.pdf"
           content:
             application/pdf:
               schema:
