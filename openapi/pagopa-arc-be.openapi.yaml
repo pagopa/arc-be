@@ -713,16 +713,20 @@ components:
         paTaxCode:
           type: string
           description: "The fiscal code of EC"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
         paFullName:
           type: string
           description: "The name of EC"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
         amount:
           type: integer
           format: int64
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotNull"
         description:
           type: string
           maxLength: 140
           minLength: 0
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
     PaymentNoticeResponseDTO:
       type: object
       properties:
