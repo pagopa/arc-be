@@ -127,6 +127,8 @@ class GPDConnectorImplTest {
         //then
         assertNotNull(result);
         assertEquals(expected, result);
+        assertEquals(1, result.getPaymentOption().size());
+        assertFalse(result.getPaymentOption().get(0).getIsPartialPayment());
 
     }
 
