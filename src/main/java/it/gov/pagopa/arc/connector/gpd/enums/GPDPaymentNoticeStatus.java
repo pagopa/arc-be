@@ -1,6 +1,6 @@
 package it.gov.pagopa.arc.connector.gpd.enums;
 
-public enum GPDPaymentNoticeDetailsStatus {
+public enum GPDPaymentNoticeStatus {
     DRAFT,
 
     PUBLISHED,
