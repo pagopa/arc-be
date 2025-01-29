@@ -3,10 +3,15 @@ package it.gov.pagopa.arc.connector.gpd;
 import it.gov.pagopa.arc.config.FeignConfig;
 import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticePayloadDTO;
+import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentOptionPayloadDTO;
+import it.gov.pagopa.arc.connector.gpd.dto.GPDTransferPayloadDTO;
+import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeStatus;
 import it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.GPDInvocationException;
 import it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
+import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.autoconfigure.http.HttpMessageConvertersAutoConfiguration;
@@ -14,6 +19,10 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.cloud.openfeign.FeignAutoConfiguration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.TestPropertySource;
+
+import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX;
 import static org.junit.jupiter.api.Assertions.*;
@@ -46,8 +55,6 @@ class GPDConnectorImplTest {
         GPDPaymentNoticeDetailsDTO result = gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_OK_0");
 
         //then
-        System.out.println("EXPECTED" + gpdPaymentNoticeDetailsDTOExpected);
-        System.out.println("RESULT" + result);
         assertNotNull(result);
         assertEquals(gpdPaymentNoticeDetailsDTOExpected, result);
         assertEquals(1, result.getPaymentOption().size());
@@ -82,13 +89,64 @@ class GPDConnectorImplTest {
     void givenWrongIUPDWhenGetPaymentNoticeDetailsThenThrowException() {
         GPDInvalidRequestException ex = assertThrows(GPDInvalidRequestException.class,
                 () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_BAD_REQUEST_0"));
-        assertEquals("One or more inputs provided during the request from GPD are invalid", ex.getMessage());
+        assertEquals("One or more inputs provided during the request to GPD are invalid", ex.getMessage());
     }
 
     @Test
     void givenErrorIUPDWhenGetPaymentNoticeDetailsThenThrowException() {
         GPDInvocationException ex = assertThrows(GPDInvocationException.class,
                 () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_ERROR_0"));
+        assertEquals("An error occurred handling request from GPD service", ex.getMessage());
+    }
+
+    @Test
+    void givenPDDataWhenPostGeneratePaymentNoticeThenReturnGPDPaymentNoticePayloadDTO() {
+        //given
+        GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE_OK");
+
+        GPDPaymentNoticePayloadDTO expected = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE_OK");
+        expected.setFiscalCode("USER_DUMMY_FISCAL_CODE");
+        expected.setFullName("USER_FULL_NAME");
+        expected.setValidityDate(LocalDateTime.parse("2025-01-28T10:23:51.512312545"));
+        expected.setStatus(GPDPaymentNoticeStatus.VALID);
+
+        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = expected.getPaymentOption().get(0);
+        gpdPaymentOptionPayloadDTO.setNav("3".concat(gpdPaymentOptionPayloadDTO.getIuv()));
+        gpdPaymentOptionPayloadDTO.setFee(0L);
+        gpdPaymentOptionPayloadDTO.setNotificationFee(0L);
+        gpdPaymentOptionPayloadDTO.setPaymentOptionMetadata(new ArrayList<>());
+
+        GPDTransferPayloadDTO transfer = gpdPaymentOptionPayloadDTO.getTransfer().get(0);
+        transfer.setTransferMetadata(new ArrayList<>());
+        gpdPaymentOptionPayloadDTO.setTransfer(List.of(transfer));
+        expected.setPaymentOption(List.of(gpdPaymentOptionPayloadDTO));
+
+        //when
+        GPDPaymentNoticePayloadDTO result = gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_OK", dummyPaymentNoticePayload);
+
+        //then
+        assertNotNull(result);
+        assertEquals(expected, result);
+
+    }
+
+    @Test
+    void givenWrongPayloaWhenGetPaymentNoticeDetailsThenThrowException() {
+        GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = new GPDPaymentNoticePayloadDTO();
+        dummyPaymentNoticePayload.setIupd("DUMMY_ORGANIZATION_FISCAL_CODE_BAD_REQUEST-1234567890");
+
+        GPDInvalidRequestException ex = assertThrows(GPDInvalidRequestException.class,
+                () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_BAD_REQUEST", dummyPaymentNoticePayload));
+        assertEquals("One or more inputs provided during the request to generate payment notice to GPD are invalid", ex.getMessage());
+    }
+
+    @Test
+    void givenWrongPayloaWhenGetPaymentNoticeDetailsThenThrowInternalErrorException() {
+        GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = new GPDPaymentNoticePayloadDTO();
+        dummyPaymentNoticePayload.setIupd("DUMMY_ORGANIZATION_FISCAL_CODE_ERROR-1234567890");
+
+        GPDInvocationException ex = assertThrows(GPDInvocationException.class,
+                () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_ERROR", dummyPaymentNoticePayload));
         assertEquals("An error occurred handling request from GPD service", ex.getMessage());
     }
 }
