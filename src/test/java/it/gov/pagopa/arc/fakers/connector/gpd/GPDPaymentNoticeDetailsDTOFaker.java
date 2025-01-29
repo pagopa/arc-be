@@ -3,7 +3,7 @@ package it.gov.pagopa.arc.fakers.connector.gpd;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentOptionDetailsDTO;
 import it.gov.pagopa.arc.connector.gpd.enums.GPDDebtorType;
-import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeDetailsStatus;
+import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeStatus;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -28,7 +28,7 @@ public class GPDPaymentNoticeDetailsDTOFaker {
                 .publishDate(LocalDateTime.parse("2024-10-30T23:59:59"))
                 .validityDate(LocalDateTime.parse("2024-10-30T23:59:59"))
                 .paymentDate(null)
-                .status(GPDPaymentNoticeDetailsStatus.VALID)
+                .status(GPDPaymentNoticeStatus.VALID)
                 .lastUpdatedDate(LocalDateTime.parse("2024-10-30T23:59:59"))
                 .paymentOption(gpdPaymentOptionDetailsDTOList);
     }
