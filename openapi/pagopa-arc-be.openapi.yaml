@@ -323,6 +323,7 @@ paths:
       security:
         - bearerAuth: [ ]
       requestBody:
+        required: true
         content:
           application/json:
             schema:
@@ -713,20 +714,20 @@ components:
         paTaxCode:
           type: string
           description: "The fiscal code of EC"
-          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"paTaxCode is required\")"
         paFullName:
           type: string
           description: "The name of EC"
-          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"paFullName is required\")"
         amount:
           type: integer
           format: int64
-          x-field-extra-annotation: "@jakarta.validation.constraints.NotNull"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotNull(message = \"amount is required\")"
         description:
           type: string
           maxLength: 140
           minLength: 0
-          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"description is required\")"
     PaymentNoticeResponseDTO:
       type: object
       properties:
