@@ -2,10 +2,20 @@ package it.gov.pagopa.arc.service.gpd;
 
 import it.gov.pagopa.arc.connector.gpd.GPDConnector;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticePayloadDTO;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.dto.mapper.gpd.GPDPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.gpd.GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper;
+import it.gov.pagopa.arc.dto.mapper.gpd.PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapper;
+import it.gov.pagopa.arc.fakers.PaymentNoticePayloadDTOFaker;
+import it.gov.pagopa.arc.fakers.PaymentNoticeResponseDTOFaker;
+import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
+import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticePayloadDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeResponseDTO;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -24,12 +34,17 @@ class GPDServiceImplTest {
     private GPDConnector gpdConnectorMock;
     @Mock
     private GPDPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapper gpdPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperMock;
+    @Mock
+    private PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapper paymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperMock;
+    @Mock
+    private GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperMock;
+
 
     GPDService gpdService;
 
     @BeforeEach
     void setUp() {
-        gpdService = new GPDServiceImpl(gpdConnectorMock, gpdPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperMock);
+        gpdService = new GPDServiceImpl(gpdConnectorMock, gpdPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperMock, paymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperMock, gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperMock);
     }
 
     @Test
@@ -64,7 +79,29 @@ class GPDServiceImplTest {
         Assertions.assertEquals(paymentNoticeDetailsDTO, result);
         Assertions.assertEquals(2, result.getPaymentOptions().size());
         Mockito.verifyNoMoreInteractions(gpdConnectorMock, gpdPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperMock);
-        System.out.println(result.getPaymentOptions());
     }
 
+    @Test
+    void givenPaymentNoticePayloadDTOWhenGeneratePaymentNoticeFromGPDThenReturnPaymentNoticeResponseDTO() {
+        //given
+        IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
+        PaymentNoticePayloadDTO paymentNoticePayloadDTO = PaymentNoticePayloadDTOFaker.mockInstance();
+
+        GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("ORGANIZATION_FISCAL_CODE");
+
+        GPDPaymentNoticePayloadDTO gpdPaymentNoticeResponse = GPDPaymentNoticePayloadDTOFaker.mockInstance("ORGANIZATION_FISCAL_CODE");
+        gpdPaymentNoticeResponse.getPaymentOption().get(0).setNav("302040501822520951");
+
+        PaymentNoticeResponseDTO expected = PaymentNoticeResponseDTOFaker.mockInstance();
+
+        Mockito.when(gpdConnectorMock.generatePaymentNotice("ORGANIZATION_FISCAL_CODE", gpdPaymentNoticePayloadDTO)).thenReturn(gpdPaymentNoticeResponse);
+        Mockito.when(paymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperMock.map(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(gpdPaymentNoticePayloadDTO);
+        Mockito.when(gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperMock.map(gpdPaymentNoticeResponse)).thenReturn(expected);
+        //when
+        PaymentNoticeResponseDTO result = gpdService.generatePaymentNoticeFromGPD(iamUserInfoDTO, paymentNoticePayloadDTO);
+        //then
+        Assertions.assertNotNull(result);
+        Assertions.assertEquals(expected, result);
+        Mockito.verifyNoMoreInteractions(gpdConnectorMock, paymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperMock, gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperMock);
+    }
 }
