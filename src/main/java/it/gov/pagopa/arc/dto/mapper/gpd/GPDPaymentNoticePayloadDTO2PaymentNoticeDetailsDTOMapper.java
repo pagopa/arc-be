@@ -58,7 +58,7 @@ public class GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper {
                         .build());
     }
 
-    private PaymentNoticeDetailsStatus gPDPaymentNoticeStatusToPaymentNoticeDetailsStatus(GPDPaymentNoticeStatus gPDPaymentNoticeStatus) {
+    protected PaymentNoticeDetailsStatus gPDPaymentNoticeStatusToPaymentNoticeDetailsStatus(GPDPaymentNoticeStatus gPDPaymentNoticeStatus) {
         if ( gPDPaymentNoticeStatus == null ) {
             return null;
         }
