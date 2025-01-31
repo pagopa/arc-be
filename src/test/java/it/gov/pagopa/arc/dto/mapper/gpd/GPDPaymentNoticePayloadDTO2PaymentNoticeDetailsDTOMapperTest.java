@@ -12,15 +12,11 @@ import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.Arguments;
-import org.junit.jupiter.params.provider.MethodSource;
 
 import java.time.ZoneOffset;
 import java.time.ZonedDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
-import java.util.stream.Stream;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -122,31 +118,15 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapperTest {
         Assertions.assertNull(result);
     }
 
-    @ParameterizedTest
-    @MethodSource("provideEnumMappings")
-    void givenGPDPaymentNoticeStatusWhenMapThenReturnPaymentNoticeDetailsStatus(
-            GPDPaymentNoticeStatus gpdPaymentNoticeStatus,
-            PaymentNoticeDetailsStatus expectedPaymentNoticeDetailsStatus) {
+    @Test
+    void givenGPDPaymentNoticeStatusWhenMapThenReturnPaymentNoticeDetailsStatus() {
+        for (GPDPaymentNoticeStatus status : GPDPaymentNoticeStatus.values()) {
+            PaymentNoticeDetailsStatus result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.gPDPaymentNoticeStatusToPaymentNoticeDetailsStatus(status);
 
-        PaymentNoticeDetailsStatus result =
-                gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper
-                        .gPDPaymentNoticeStatusToPaymentNoticeDetailsStatus(gpdPaymentNoticeStatus);
-
-        Assertions.assertEquals(expectedPaymentNoticeDetailsStatus, result);
-    }
-
-    private static Stream<Arguments> provideEnumMappings() {
-        return Stream.of(
-                Arguments.of(GPDPaymentNoticeStatus.DRAFT, PaymentNoticeDetailsStatus.DRAFT),
-                Arguments.of(GPDPaymentNoticeStatus.PUBLISHED, PaymentNoticeDetailsStatus.PUBLISHED),
-                Arguments.of(GPDPaymentNoticeStatus.VALID, PaymentNoticeDetailsStatus.VALID),
-                Arguments.of(GPDPaymentNoticeStatus.INVALID, PaymentNoticeDetailsStatus.INVALID),
-                Arguments.of(GPDPaymentNoticeStatus.EXPIRED, PaymentNoticeDetailsStatus.EXPIRED),
-                Arguments.of(GPDPaymentNoticeStatus.PARTIALLY_PAID, PaymentNoticeDetailsStatus.PARTIALLY_PAID),
-                Arguments.of(GPDPaymentNoticeStatus.PAID, PaymentNoticeDetailsStatus.PAID),
-                Arguments.of(GPDPaymentNoticeStatus.REPORTED, PaymentNoticeDetailsStatus.REPORTED),
-                Arguments.of(null, null)
-        );
+            Assertions.assertNotNull(result);
+            Assertions.assertEquals(status.name(), result.name());
+        }
+        Assertions.assertNull(gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.gPDPaymentNoticeStatusToPaymentNoticeDetailsStatus(null));
     }
 
 }
