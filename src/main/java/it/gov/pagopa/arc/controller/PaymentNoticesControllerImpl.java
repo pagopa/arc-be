@@ -4,7 +4,6 @@ import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticePayloadDTO;
-import it.gov.pagopa.arc.model.generated.PaymentNoticeResponseDTO;
 import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
 import it.gov.pagopa.arc.service.PaymentNoticesService;
 import it.gov.pagopa.arc.utils.SecurityUtils;
@@ -38,9 +37,9 @@ public class PaymentNoticesControllerImpl implements ArcPaymentNoticesApi {
     }
 
     @Override
-    public ResponseEntity<PaymentNoticeResponseDTO> postGeneratePaymentNotice(PaymentNoticePayloadDTO paymentNoticePayloadDTO) {
+    public ResponseEntity<PaymentNoticeDetailsDTO> postGeneratePaymentNotice(PaymentNoticePayloadDTO paymentNoticePayloadDTO) {
         IamUserInfoDTO iamUserInfoDTO = SecurityUtils.getPrincipal();
-        PaymentNoticeResponseDTO paymentNoticeResponseDTO = paymentNoticesService.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO paymentNoticeResponseDTO = paymentNoticesService.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO);
 
         return new ResponseEntity<>(paymentNoticeResponseDTO, HttpStatus.OK);
     }

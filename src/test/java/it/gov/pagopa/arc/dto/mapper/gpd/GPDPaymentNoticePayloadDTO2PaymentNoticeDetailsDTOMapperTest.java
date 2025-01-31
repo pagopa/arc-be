@@ -3,24 +3,31 @@ package it.gov.pagopa.arc.dto.mapper.gpd;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentNoticePayloadDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDPaymentOptionPayloadDTO;
 import it.gov.pagopa.arc.connector.gpd.dto.GPDTransferPayloadDTO;
+import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeStatus;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
-import it.gov.pagopa.arc.model.generated.PaymentNoticeResponseDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
+import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsStatus;
+import it.gov.pagopa.arc.model.generated.PaymentOptionDetailsDTO;
 import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import java.time.ZoneOffset;
+import java.time.ZonedDateTime;
+import java.time.temporal.ChronoUnit;
 import java.util.ArrayList;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 
-class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
+class GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapperTest {
 
-    private GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper;
+    private GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper;
 
     @BeforeEach
     void setUp() {
-        gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper = new GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper();
+        gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper = new GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper();
     }
 
     @Test
@@ -28,18 +35,28 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
         //given
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE");
         gpdPaymentNoticePayloadDTO.getPaymentOption().get(0).setNav("3".concat(gpdPaymentNoticePayloadDTO.getPaymentOption().get(0).getIuv()));
+        gpdPaymentNoticePayloadDTO.setStatus(GPDPaymentNoticeStatus.VALID);
+        gpdPaymentNoticePayloadDTO.getPaymentOption().get(0).setNotificationFee(0L);
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(gpdPaymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(gpdPaymentNoticePayloadDTO);
         //then
         GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = gpdPaymentNoticePayloadDTO.getPaymentOption().get(0);
         GPDTransferPayloadDTO gpdTransferPayloadDTO = gpdPaymentOptionPayloadDTO.getTransfer().get(0);
 
         Assertions.assertNotNull(result);
-        assertEquals("3".concat(gpdPaymentOptionPayloadDTO.getIuv()),result.getNav());
-        assertEquals(gpdPaymentOptionPayloadDTO.getAmount() ,result.getAmount());
+        assertEquals(gpdPaymentNoticePayloadDTO.getIupd(), result.getIupd());
         assertEquals(gpdTransferPayloadDTO.getOrganizationFiscalCode(),result.getPaTaxCode());
         assertEquals(gpdTransferPayloadDTO.getCompanyName(), result.getPaFullName());
-        assertEquals(gpdPaymentOptionPayloadDTO.getDescription(), result.getDescription());
+        assertEquals(PaymentNoticeDetailsStatus.VALID, result.getStatus());
+
+        PaymentOptionDetailsDTO paymentOptionDetailsDTO = result.getPaymentOptions().get(0);
+        assertEquals(gpdPaymentOptionPayloadDTO.getNav(), paymentOptionDetailsDTO.getNav());
+        assertEquals(gpdPaymentOptionPayloadDTO.getIuv(), paymentOptionDetailsDTO.getIuv());
+        assertEquals(gpdPaymentOptionPayloadDTO.getAmount(), paymentOptionDetailsDTO.getAmount());
+        assertEquals(gpdPaymentOptionPayloadDTO.getDescription(), paymentOptionDetailsDTO.getDescription());
+        assertFalse(gpdPaymentOptionPayloadDTO.getIsPartialPayment());
+        assertEquals(ZonedDateTime.of(gpdPaymentOptionPayloadDTO.getDueDate() , ZoneOffset.UTC).truncatedTo(ChronoUnit.SECONDS), paymentOptionDetailsDTO.getDueDate());
+        assertEquals(0L, paymentOptionDetailsDTO.getNotificationFee());
 
         TestUtils.assertNotNullFields(result);
     }
@@ -47,7 +64,7 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
     @Test
     void givenNullGPDPaymentNoticePayloadDTOWhenMapThenReturnNull() {
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(null);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(null);
         //then
 
         Assertions.assertNull(result);
@@ -59,7 +76,7 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE");
         gpdPaymentNoticePayloadDTO.setPaymentOption(null);
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(gpdPaymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(gpdPaymentNoticePayloadDTO);
         //then
 
         Assertions.assertNull(result);
@@ -71,7 +88,7 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE");
         gpdPaymentNoticePayloadDTO.setPaymentOption(new ArrayList<>());
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(gpdPaymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(gpdPaymentNoticePayloadDTO);
         //then
 
         Assertions.assertNull(result);
@@ -83,7 +100,7 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE");
         gpdPaymentNoticePayloadDTO.getPaymentOption().get(0).setTransfer(null);
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(gpdPaymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(gpdPaymentNoticePayloadDTO);
         //then
 
         Assertions.assertNull(result);
@@ -95,7 +112,7 @@ class GPDPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapperTest {
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE");
         gpdPaymentNoticePayloadDTO.getPaymentOption().get(0).setTransfer(new ArrayList<>());
         //when
-        PaymentNoticeResponseDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeResponseDTOMapper.map(gpdPaymentNoticePayloadDTO);
+        PaymentNoticeDetailsDTO result = gpdPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper.map(gpdPaymentNoticePayloadDTO);
         //then
 
         Assertions.assertNull(result);

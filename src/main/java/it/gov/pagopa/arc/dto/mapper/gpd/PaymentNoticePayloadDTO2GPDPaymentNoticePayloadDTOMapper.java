@@ -46,7 +46,7 @@ public class PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapper {
 
     private List<GPDPaymentOptionPayloadDTO> mapToGPDPaymentOptionPayloadDTO(PaymentNoticePayloadDTO paymentNoticePayloadDTO){
         //generate iuv
-        String iuv = "02".concat(String.valueOf(System.currentTimeMillis()));
+        String iuv = "02" + String.format("%015d", System.currentTimeMillis());
 
         //dueDate
         Instant dueDateInstant = Instant.now().plus(5, ChronoUnit.DAYS).truncatedTo(ChronoUnit.SECONDS);
@@ -67,6 +67,7 @@ public class PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapper {
         return Collections.singletonList(
                 GPDTransferPayloadDTO.builder()
                 .idTransfer("1")
+                .companyName(paymentNoticePayloadDTO.getPaFullName())
                 .amount(paymentNoticePayloadDTO.getAmount())
                 .remittanceInformation(paymentNoticePayloadDTO.getDescription())
                 .category("9/0101108TS/")

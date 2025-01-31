@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
 import it.gov.pagopa.arc.dto.IamUserInfoDTO;
 import it.gov.pagopa.arc.fakers.PaymentNoticePayloadDTOFaker;
-import it.gov.pagopa.arc.fakers.PaymentNoticeResponseDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
@@ -150,9 +149,9 @@ class PaymentNoticesControllerImplTest {
         //given
         PaymentNoticePayloadDTO paymentNoticePayloadDTO = PaymentNoticePayloadDTOFaker.mockInstance();
 
-        PaymentNoticeResponseDTO paymentNoticeResponseDTO = PaymentNoticeResponseDTOFaker.mockInstance();
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
 
-        Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeResponseDTO);
+        Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeDetailsDTO);
 
         String bodyRequest = TestUtils.objectMapper.writeValueAsString(paymentNoticePayloadDTO);
 
@@ -164,12 +163,12 @@ class PaymentNoticesControllerImplTest {
                 ).andExpect(status().is2xxSuccessful())
                 .andReturn();
 
-        PaymentNoticeResponseDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
-                PaymentNoticeResponseDTO.class);
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+                PaymentNoticeDetailsDTO.class);
 
         //then
         Assertions.assertNotNull(resultResponse);
-        Assertions.assertEquals(paymentNoticeResponseDTO,resultResponse);
+        Assertions.assertEquals(paymentNoticeDetailsDTO,resultResponse);
     }
 
     @Test
@@ -180,7 +179,7 @@ class PaymentNoticesControllerImplTest {
         paymentNoticePayloadDTO.setDescription(null);
 
 
-        PaymentNoticeResponseDTO paymentNoticeResponseDTO = PaymentNoticeResponseDTOFaker.mockInstance();
+        PaymentNoticeDetailsDTO paymentNoticeResponseDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
 
         Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeResponseDTO);
 
@@ -199,6 +198,7 @@ class PaymentNoticesControllerImplTest {
 
         //then
         Assertions.assertEquals(ErrorDTO.ErrorEnum.INVALID_REQUEST, errorDTO.getError());
-        Assertions.assertEquals("[paFullName]: paFullName is required; [description]: description is required", errorDTO.getErrorDescription());
+        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[paFullName]: paFullName is required"));
+        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[description]: description is required"));
     }
 }

@@ -47,6 +47,7 @@ class PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperTest {
         Assertions.assertEquals(1, result.getPaymentOption().size());
         GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = result.getPaymentOption().get(0);
         Assertions.assertTrue(gpdPaymentOptionPayloadDTO.getIuv().startsWith("02"));
+        Assertions.assertEquals(17, gpdPaymentOptionPayloadDTO.getIuv().length());
         Assertions.assertEquals(120L, gpdPaymentOptionPayloadDTO.getAmount());
         Assertions.assertEquals("Test description", gpdPaymentOptionPayloadDTO.getDescription());
         Assertions.assertFalse(gpdPaymentOptionPayloadDTO.getIsPartialPayment());
