@@ -23,7 +23,6 @@ import org.mockito.Mockito;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
 import org.springframework.core.io.FileSystemResource;
@@ -32,6 +31,7 @@ import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.WebAuthenticationDetails;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -62,9 +62,9 @@ class NoticesControllerImplTest {
     private ObjectMapper objectMapper;
     @Autowired
     private MockMvc mockMvc;
-    @MockBean
+    @MockitoBean
     private NoticesService noticesServiceMock;
-    @MockBean
+    @MockitoBean
     private NoticeRequestDTOMapper noticeRequestDTOMapper;
 
     @BeforeEach
@@ -186,6 +186,8 @@ class NoticesControllerImplTest {
         MvcResult result = mockMvc.perform(
                         get("/notices/{eventId}/receipt", EVENT_ID)
                 ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline; filename=\"testReceiptPdfFile.pdf\""))
                 .andReturn();
 
         //Then
@@ -196,4 +198,46 @@ class NoticesControllerImplTest {
         Assertions.assertArrayEquals(expectedContent, actualContent);
     }
 
+    @Test
+    void givenEventIdWhenCallGetNoticeReceiptThenReturnNoticeReceiptWithNullFileName() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf") {
+            @Override
+            public String getFilename() {
+                return null;
+            }
+        };
+
+        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+
+        //When
+        mockMvc.perform(
+                        get("/notices/{eventId}/receipt", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline"))
+                .andReturn();
+
+    }
+
+    @Test
+    void givenEventIdWhenCallGetNoticeReceiptThenReturnNoticeReceiptWithEmptyFileName() throws Exception {
+        //Given
+        Resource receipt = new FileSystemResource("src/test/resources/stub/__files/testReceiptPdfFile.pdf") {
+            @Override
+            public String getFilename() {
+                return "";
+            }
+        };
+
+        Mockito.when( noticesServiceMock.retrieveNoticeReceipt(USER_ID, DUMMY_FISCAL_CODE, EVENT_ID)).thenReturn(receipt);
+
+        //When
+        mockMvc.perform(
+                        get("/notices/{eventId}/receipt", EVENT_ID)
+                ).andExpect(status().is2xxSuccessful())
+                .andExpect(header().exists("Content-Disposition"))
+                .andExpect(header().string("Content-Disposition", "inline; filename=\"\""))
+                .andReturn();
+    }
 }

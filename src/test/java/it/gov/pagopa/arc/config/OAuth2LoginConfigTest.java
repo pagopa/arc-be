@@ -1,57 +1,57 @@
 package it.gov.pagopa.arc.config;
 
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-
 import it.gov.pagopa.arc.controller.generated.ArcAuthApi;
 import it.gov.pagopa.arc.controller.generated.ArcZendeskAssistanceApi;
+import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.security.CustomLogoutHandler;
 import it.gov.pagopa.arc.security.CustomLogoutSuccessHandler;
 import it.gov.pagopa.arc.service.AccessTokenValidationService;
 import it.gov.pagopa.arc.service.AuthService;
-import it.gov.pagopa.arc.security.CustomAuthenticationSuccessHandler;
 import it.gov.pagopa.arc.service.TokenStoreService;
 import it.gov.pagopa.arc.service.ZendeskAssistanceTokenService;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
-import org.springframework.boot.test.mock.mockito.MockBean;
 import org.springframework.context.annotation.Import;
 import org.springframework.security.oauth2.client.registration.ClientRegistrationRepository;
 import org.springframework.security.oauth2.client.web.AuthorizationRequestRepository;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 
 @WebMvcTest({ArcAuthApi.class, ArcZendeskAssistanceApi.class})
 @Import(OAuth2LoginConfig.class)
 class OAuth2LoginConfigTest {
 
-    @MockBean
+    @MockitoBean
     private ClientRegistrationRepository clientRegistrationRepositoryMock;
-    @MockBean
+    @MockitoBean
     private CustomAuthenticationSuccessHandler customAuthenticationSuccessHandlerMock;
 
-    @MockBean
+    @MockitoBean
     private CustomLogoutHandler customLogoutHandler;
-    @MockBean
+    @MockitoBean
     JWTConfiguration jwtConfiguration;
-    @MockBean
+    @MockitoBean
     private CustomLogoutSuccessHandler customLogoutSuccessHandler;
-    @MockBean
+    @MockitoBean
     private ZendeskAssistanceTokenService zendeskAssistanceTokenServiceMock;
-    @MockBean
+    @MockitoBean
     private AuthService authService;
     @Autowired
     private MockMvc mockMvc;
     @Autowired
     private WebApplicationContext context;
-    @MockBean
+    @MockitoBean
     private TokenStoreService tokenStoreService;
-    @MockBean
+    @MockitoBean
     AccessTokenValidationService accessTokenValidationService;
 
-    @MockBean
+    @MockitoBean
     AuthorizationRequestRepository authorizationRequestRepository;
 
     @Test
