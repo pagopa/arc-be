@@ -631,6 +631,16 @@ components:
           type: string
         brand:
           type: string
+          enum:
+            - MASTERCARD
+            - VISA
+            - AMEX
+            - MAESTRO
+            - JCB
+            - OTHER
+            - DINERS
+            - DISCOVER
+            - UNIONPAY
         blurredNumber:
           type: string
         maskedEmail:
