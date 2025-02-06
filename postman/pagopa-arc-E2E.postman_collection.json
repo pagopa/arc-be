@@ -3834,6 +3834,160 @@
                   "response": []
                 }
               ]
+            },
+            {
+              "name": "Spontaneous",
+              "item": [
+                {
+                  "name": "Generate PD for Spontaneous",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[Generate payment notice from ARp for Spontanous], expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "\r",
+                          "    let jsonResponse = pm.response.json();\r",
+                          "    \r",
+                          "    pm.expect(jsonResponse.iupd.startsWith(\"ARp\")).to.be.true;\r",
+                          "    pm.expect(jsonResponse.paFullName).to.equal(\"Ente di test\");\r",
+                          "    pm.expect(jsonResponse.paTaxCode).to.equal(\"77777777777\");\r",
+                          "\r",
+                          "    pm.expect(jsonResponse.paymentOptions).to.be.an(\"array\").that.is.not.empty;\r",
+                          "    \r",
+                          "    let paymentOption = jsonResponse.paymentOptions[0];\r",
+                          "\r",
+                          "   pm.expect(paymentOption.nav.startsWith(\"302\")).to.be.true;\r",
+                          "   pm.expect(paymentOption.nav.length).to.equal(18);\r",
+                          "   pm.expect(paymentOption.iuv.startsWith(\"02\")).to.be.true;\r",
+                          "\r",
+                          "\r",
+                          "    let amount = pm.variables.get(\"amount\");\r",
+                          "    pm.expect(paymentOption.amount).to.equal(amount);\r",
+                          "\r",
+                          "    pm.expect(jsonResponse.paymentOptions[0].description).to.equal(\"Test generazione PD\"); \r",
+                          "\r",
+                          "    pm.collectionVariables.set(\"receivedIupd\",jsonResponse.iupd);\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"paTaxCode\": \"77777777777\",\r\n    \"paFullName\":\"Ente di test\",\r\n    \"amount\": {{amount}},\r\n    \"description\": \"Test generazione PD\"\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices"
+                      ]
+                    }
+                  },
+                  "response": []
+                },
+                {
+                  "name": "delete debt position",
+                  "event": [
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"Delete payment notice, expected httpStatus: 200\", () => {\r",
+                          "    pm.response.to.have.status(200);\r",
+                          "})"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "apikey",
+                      "apikey": [
+                        {
+                          "key": "value",
+                          "value": "{{Apim-Subscription-key-GPD}}",
+                          "type": "string"
+                        },
+                        {
+                          "key": "key",
+                          "value": "Ocp-Apim-Subscription-Key",
+                          "type": "string"
+                        },
+                        {
+                          "key": "in",
+                          "value": "header",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "DELETE",
+                    "header": [],
+                    "url": {
+                      "raw": "{{baseUrlGPD}}/organizations/77777777777/debtpositions/{{receivedIupd}}",
+                      "host": [
+                        "{{baseUrlGPD}}"
+                      ],
+                      "path": [
+                        "organizations",
+                        "77777777777",
+                        "debtpositions",
+                        "{{receivedIupd}}"
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
             }
           ]
         },
@@ -3976,6 +4130,82 @@
                           "key": "paTaxCode",
                           "value": "5452"
                         }
+                      ]
+                    }
+                  },
+                  "response": []
+                }
+              ]
+            },
+            {
+              "name": "Spontaneous",
+              "item": [
+                {
+                  "name": "[BAD_REQUEST] Generate PD for Spontaneous",
+                  "event": [
+                    {
+                      "listen": "prerequest",
+                      "script": {
+                        "exec": [
+                          "//Random Amount\r",
+                          "let amount = Math.floor(Math.random()*(1000 - 1)+1);\r",
+                          "pm.collectionVariables.set(\"amount\",amount);"
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    },
+                    {
+                      "listen": "test",
+                      "script": {
+                        "exec": [
+                          "pm.test(\"[BAD_REQUEST Generate payment notice from ARp for Spontanous], expected httpStatus: 400\", () => {\r",
+                          "    pm.response.to.have.status(400);\r",
+                          "\r",
+                          "    let response = pm.response.json();\r",
+                          "        pm.expect(response.error).to.eq(\"invalid_request\");\r",
+                          "        pm.expect(response.error_description).to.include(\"[paFullName]: paFullName is required\");\r",
+                          "        pm.expect(response.error_description).to.include(\"[paTaxCode]: paTaxCode is required\");\r",
+                          "        pm.expect(response.error_description).to.include(\"[description]: description is required\");\r",
+                          "        pm.expect(response.error_description).to.include(\"[amount]: amount is required\");\r",
+                          "\r",
+                          "});\r",
+                          ""
+                        ],
+                        "type": "text/javascript",
+                        "packages": {}
+                      }
+                    }
+                  ],
+                  "request": {
+                    "auth": {
+                      "type": "bearer",
+                      "bearer": [
+                        {
+                          "key": "token",
+                          "value": "{{accessToken}}",
+                          "type": "string"
+                        }
+                      ]
+                    },
+                    "method": "POST",
+                    "header": [],
+                    "body": {
+                      "mode": "raw",
+                      "raw": "{\r\n    \"paTaxCode\": null,\r\n    \"paFullName\":null,\r\n    \"amount\": null,\r\n    \"description\": null\r\n}",
+                      "options": {
+                        "raw": {
+                          "language": "json"
+                        }
+                      }
+                    },
+                    "url": {
+                      "raw": "{{baseurlArc}}/payment-notices",
+                      "host": [
+                        "{{baseurlArc}}"
+                      ],
+                      "path": [
+                        "payment-notices"
                       ]
                     }
                   },
@@ -5038,6 +5268,10 @@
     },
     {
       "key": "debtorPositionCreated",
+      "value": ""
+    },
+    {
+      "key": "receivedIupd",
       "value": ""
     }
   ]

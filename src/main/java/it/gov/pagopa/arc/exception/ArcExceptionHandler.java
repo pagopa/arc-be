@@ -10,8 +10,12 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
@@ -81,6 +85,26 @@ public class ArcExceptionHandler {
     @ExceptionHandler(GPDInvocationException.class)
     public ResponseEntity<ErrorDTO> handleGPDInvocationException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
+
+        String message = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    return String.format("[%s]: %s", fieldName, errorMessage);
+                }).collect(Collectors.joining("; "));
+
+        log.info("A MethodArgumentNotValidException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug("Something went wrong while validating http request", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, message));
     }
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {

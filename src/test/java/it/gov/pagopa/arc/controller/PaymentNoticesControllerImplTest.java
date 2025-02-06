@@ -2,12 +2,12 @@ package it.gov.pagopa.arc.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.controller.generated.ArcPaymentNoticesApi;
+import it.gov.pagopa.arc.dto.IamUserInfoDTO;
+import it.gov.pagopa.arc.fakers.PaymentNoticePayloadDTOFaker;
 import it.gov.pagopa.arc.fakers.auth.IamUserInfoDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.PaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.paymentNotices.PaymentNoticeDTOFaker;
-import it.gov.pagopa.arc.model.generated.PaymentNoticeDTO;
-import it.gov.pagopa.arc.model.generated.PaymentNoticeDetailsDTO;
-import it.gov.pagopa.arc.model.generated.PaymentNoticesListDTO;
+import it.gov.pagopa.arc.model.generated.*;
 import it.gov.pagopa.arc.security.JwtAuthenticationFilter;
 import it.gov.pagopa.arc.service.PaymentNoticesService;
 import it.gov.pagopa.arc.utils.TestUtils;
@@ -21,6 +21,7 @@ import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMock
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.FilterType;
+import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -28,6 +29,7 @@ import org.springframework.security.web.authentication.WebAuthenticationDetails;
 import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import java.time.LocalDate;
 import java.util.List;
@@ -57,10 +59,12 @@ class PaymentNoticesControllerImplTest {
     @MockitoBean
     private PaymentNoticesService paymentNoticesServiceMock;
 
+    private final IamUserInfoDTO iamUserInfoDTO = IamUserInfoDTOFaker.mockInstance();
+
     @BeforeEach
     void setUp() {
         UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
-                IamUserInfoDTOFaker.mockInstance(), null, null);
+                iamUserInfoDTO, null, null);
         authentication.setDetails(new WebAuthenticationDetails(new MockHttpServletRequest()));
         SecurityContextHolder.getContext().setAuthentication(authentication);
     }
@@ -140,4 +144,61 @@ class PaymentNoticesControllerImplTest {
         Assertions.assertEquals(2, resultResponse.getPaymentOptions().size());
     }
 
+    @Test
+    void givenPaymentNoticePayloadWhenPostGeneratePaymentNoticeThenReturnPaymentNoticeResponseDTO() throws Exception {
+        //given
+        PaymentNoticePayloadDTO paymentNoticePayloadDTO = PaymentNoticePayloadDTOFaker.mockInstance();
+
+        PaymentNoticeDetailsDTO paymentNoticeDetailsDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
+
+        Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeDetailsDTO);
+
+        String bodyRequest = TestUtils.objectMapper.writeValueAsString(paymentNoticePayloadDTO);
+
+        //When
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/payment-notices")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(bodyRequest)
+                ).andExpect(status().is2xxSuccessful())
+                .andReturn();
+
+        PaymentNoticeDetailsDTO resultResponse = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+                PaymentNoticeDetailsDTO.class);
+
+        //then
+        Assertions.assertNotNull(resultResponse);
+        Assertions.assertEquals(paymentNoticeDetailsDTO,resultResponse);
+    }
+
+    @Test
+    void givenPaymentNoticePayloadWithNullFieldWhenPostGeneratePaymentNoticeThenReturnPaymentNoticeResponseDTO() throws Exception {
+        //given
+        PaymentNoticePayloadDTO paymentNoticePayloadDTO = PaymentNoticePayloadDTOFaker.mockInstance();
+        paymentNoticePayloadDTO.setPaFullName(null);
+        paymentNoticePayloadDTO.setDescription(null);
+
+
+        PaymentNoticeDetailsDTO paymentNoticeResponseDTO = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
+
+        Mockito.when(paymentNoticesServiceMock.retrieveGeneratedNotice(iamUserInfoDTO, paymentNoticePayloadDTO)).thenReturn(paymentNoticeResponseDTO);
+
+        String bodyRequest = TestUtils.objectMapper.writeValueAsString(paymentNoticePayloadDTO);
+        //When
+        MvcResult result = mockMvc.perform(
+                        MockMvcRequestBuilders.post("/payment-notices")
+                                .contentType(MediaType.APPLICATION_JSON)
+                                .content(bodyRequest)
+                ).andExpect(status().is4xxClientError())
+                .andReturn();
+
+
+        ErrorDTO errorDTO = TestUtils.objectMapper.readValue(result.getResponse().getContentAsString(),
+                ErrorDTO.class);
+
+        //then
+        Assertions.assertEquals(ErrorDTO.ErrorEnum.INVALID_REQUEST, errorDTO.getError());
+        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[paFullName]: paFullName is required"));
+        Assertions.assertTrue(errorDTO.getErrorDescription().contains("[description]: description is required"));
+    }
 }

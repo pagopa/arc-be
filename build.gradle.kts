@@ -34,11 +34,13 @@ val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
 val commonsIo = "2.16.1"
 val micrometerVersion = "1.3.5"
+val springValidationVersion = "3.4.2"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
 	implementation("org.springframework.boot:spring-boot-starter-web")
 	implementation("org.springframework.boot:spring-boot-starter-actuator")
+	implementation("org.springframework.boot:spring-boot-starter-validation:$springValidationVersion")
 	implementation("io.micrometer:micrometer-tracing-bridge-otel:$micrometerVersion")
 	implementation("org.springframework.boot:spring-boot-starter-data-redis")
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
