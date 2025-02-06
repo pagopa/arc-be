@@ -2,21 +2,19 @@ package it.gov.pagopa.arc.dto.mapper;
 
 import it.gov.pagopa.arc.connector.bizevents.dto.BizEventsWalletInfoDTO;
 import it.gov.pagopa.arc.model.generated.WalletInfoDTO;
-import org.springframework.stereotype.Component;
+import org.mapstruct.*;
 
-@Component
-public class BizEventsWalletInfo2WalletInfoDTOMapper {
+@Mapper(componentModel = "spring")
+public interface BizEventsWalletInfo2WalletInfoDTOMapper {
+    @Mapping(target = "brand", source = "brand", qualifiedByName = "mapBrandEnum")
+    WalletInfoDTO mapToWalletInfo(BizEventsWalletInfoDTO bizEventsWalletInfoDTO);
 
-    public WalletInfoDTO mapWalletInfo(BizEventsWalletInfoDTO bizEventsWalletInfoDTO){
-        if(bizEventsWalletInfoDTO == null){
-            return null;
+    @Named("mapBrandEnum")
+    default WalletInfoDTO.BrandEnum mapBrandEnum(String brand) {
+        try {
+            return WalletInfoDTO.BrandEnum.valueOf(brand);
+        } catch (RuntimeException e) {
+            return WalletInfoDTO.BrandEnum.OTHER;
         }
-
-        return WalletInfoDTO.builder()
-                .accountHolder(bizEventsWalletInfoDTO.getAccountHolder())
-                .brand(bizEventsWalletInfoDTO.getBrand())
-                .blurredNumber(bizEventsWalletInfoDTO.getBlurredNumber())
-                .maskedEmail(bizEventsWalletInfoDTO.getMaskedEmail())
-                .build();
     }
 }
