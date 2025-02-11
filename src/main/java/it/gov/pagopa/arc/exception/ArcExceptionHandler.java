@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.exception;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -42,6 +43,11 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_DATE);
     }
 
+    @ExceptionHandler(BizEventsTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handleBizEventsTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
+    }
+
     @ExceptionHandler(PullPaymentInvalidRequestException.class)
     public ResponseEntity<ErrorDTO> handlePullPaymentInvalidRequestException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_REQUEST);
@@ -50,6 +56,10 @@ public class ArcExceptionHandler {
     @ExceptionHandler(PullPaymentInvocationException.class)
     public ResponseEntity<ErrorDTO> handlePullPaymentInvocationException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+    @ExceptionHandler(PullPaymentTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handlePullPaymentTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
     }
 
     @ExceptionHandler(InvalidTokenException.class)
@@ -87,6 +97,11 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
     }
 
+    @ExceptionHandler(GPDTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handleGPDTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
+    }
+
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<ErrorDTO> handleValidationExceptions(
             MethodArgumentNotValidException ex, HttpServletRequest request) {
@@ -106,6 +121,20 @@ public class ArcExceptionHandler {
                 .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
                 .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, message));
     }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDTO> handleConstraintExceptions(ConstraintViolationException ex, HttpServletRequest request) {
+
+        log.info("A ConstraintViolationException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug("Something went wrong while validating http request", ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, ex.getMessage()));
+    }
+
+
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();
