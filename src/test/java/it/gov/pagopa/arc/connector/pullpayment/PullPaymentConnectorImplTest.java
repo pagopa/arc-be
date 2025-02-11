@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException;
+import it.gov.pagopa.arc.exception.custom.PullPaymentTooManyRequestException;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
@@ -99,4 +100,12 @@ class PullPaymentConnectorImplTest {
         Assertions.assertEquals( "An error occurred handling request from pull payment service", pullPaymentInvocationException.getMessage());
     }
 
+    @Test
+    void givenHeaderAndParameterWhenTooManyRequestThenThrowPullPaymentTooManyRequestException() {
+        //When
+        //Then
+        PullPaymentTooManyRequestException pullPaymentInvocationException = Assertions.assertThrows(PullPaymentTooManyRequestException.class,
+                () -> pullPaymentConnector.getPaymentNotices("DUMMY_FISCAL_CODE_TOO_MANY_REQUEST", LOCAL_DATE, 10, 0));
+        Assertions.assertEquals( "Too many request occurred handling request from pull payment service", pullPaymentInvocationException.getMessage());
+    }
 }

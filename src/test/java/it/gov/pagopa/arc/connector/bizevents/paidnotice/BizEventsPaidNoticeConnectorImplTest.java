@@ -18,6 +18,7 @@ import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException;
 import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsTooManyRequestException;
 import it.gov.pagopa.arc.fakers.NoticeRequestDTOFaker;
 import it.gov.pagopa.arc.model.generated.NoticeDTO;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
@@ -243,6 +244,16 @@ class BizEventsPaidNoticeConnectorImplTest {
     }
 
     @Test
+    void givenHeaderAndParameterWhenErrorThenThrowBizEventsTooManyRequestException() {
+        NoticeRequestDTO noticeRequestDTO = NoticeRequestDTOFaker.mockInstance();
+        //When
+        //Then
+        BizEventsTooManyRequestException exception = assertThrows(BizEventsTooManyRequestException.class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeList("DUMMY_FISCAL_CODE_TOO_MANY_REQUEST", noticeRequestDTO));
+        Assertions.assertEquals("Too many request occurred handling request from biz-Events",exception.getMessage());
+    }
+
+    @Test
     void givenEventIdWhenCallBizEventsPaidNoticeConnectorThenReturnPaidNoticeDetails() {
         //When
         BizEventsPaidNoticeDetailsDTO paidNoticeDetails = bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID", "DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS", "EVENT_ID_OK_1");
@@ -299,6 +310,15 @@ class BizEventsPaidNoticeConnectorImplTest {
     }
 
     @Test
+    void givenHeaderAndParameterWhenCallDetailsThenThrowBizEventsTooManyRequestException() {
+        //When
+        //Then
+        BizEventsTooManyRequestException bizEventsTooManyRequestException = assertThrows(BizEventsTooManyRequestException .class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeDetails("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_DETAILS_TOO_MANY_REQUEST", "EVENT_ID_ERROR_1"));
+        Assertions.assertEquals("Too many request occurred handling request from biz-Events", bizEventsTooManyRequestException.getMessage());
+    }
+
+    @Test
     void givenEventIdWhenCallBizEventsPaidNoticeConnectorThenReturnNoticeReceipt() throws IOException {
         //given
         //when
@@ -328,5 +348,14 @@ class BizEventsPaidNoticeConnectorImplTest {
         BizEventsInvocationException bizEventsInvocationException = assertThrows(BizEventsInvocationException.class,
                 () -> bizEventsPaidNoticeConnector.getPaidNoticeReceipt("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_RECEIPT_ERROR", "EVENT_ID_ERROR_2"));
         Assertions.assertEquals("An error occurred handling request from biz-Events", bizEventsInvocationException.getMessage());
+    }
+
+    @Test
+    void givenHeaderAndParameterWhenCallReceiptThenThrowBizEventsTooManyRequestException() {
+        //When
+        //Then
+        BizEventsTooManyRequestException bizEventsTooManyRequestException = assertThrows(BizEventsTooManyRequestException .class,
+                () -> bizEventsPaidNoticeConnector.getPaidNoticeReceipt("USER_ID","DUMMY_FISCAL_CODE_PAID_NOTICE_RECEIPT_TOO_MANY_REQUEST", "EVENT_ID_ERROR_2"));
+        Assertions.assertEquals("Too many request occurred handling request from biz-Events", bizEventsTooManyRequestException.getMessage());
     }
 }

@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.exception;
 import ch.qos.logback.classic.LoggerContext;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.utils.MemoryAppender;
+import jakarta.validation.ConstraintViolationException;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -112,6 +113,22 @@ class ArcExceptionHandlerTest {
     }
 
     @Test
+    void givenRequestWhenBizEventsServiceReturnTooManyRequestThenHandleBizEventsTooManyRequest() throws Exception {
+        doThrow(new BizEventsTooManyRequestException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
+    }
+
+    @Test
     void givenRequestWhenPullPaymentReturnBadRequestErrorThenHandlePullPaymentInvalidRequestException() throws Exception {
         doThrow(new PullPaymentInvalidRequestException("Error")).when(testControllerSpy).testEndpoint();
 
@@ -141,6 +158,22 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
+    }
+
+    @Test
+    void givenRequestWhenPullPaymentServiceReturnTooManyRequestThenHandlePullPaymentTooManyRequestException() throws Exception {
+        doThrow(new PullPaymentTooManyRequestException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
     }
 
      @Test
@@ -261,6 +294,38 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
+    }
+
+    @Test
+    void givenRequestWhenGPDServiceReturnTooManyRequestThenHandleGPDTooManyRequestException() throws Exception {
+        doThrow(new GPDTooManyRequestException("Error")).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isTooManyRequests())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
+    }
+
+    @Test
+    void givenWrongParameterWhenRequestThenHandleConstraintViolationException() throws Exception {
+        doThrow(new ConstraintViolationException("error",null)).when(testControllerSpy).testEndpoint();
+
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("error"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A ConstraintViolationException occurred handling request GET: HttpStatus 400 - /test"));
     }
 
 }

@@ -10,6 +10,7 @@ import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeStatus;
 import it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.GPDInvocationException;
 import it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException;
+import it.gov.pagopa.arc.exception.custom.GPDTooManyRequestException;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
 import org.junit.jupiter.api.Test;
@@ -100,6 +101,13 @@ class GPDConnectorImplTest {
     }
 
     @Test
+    void givenIUPDWhenGetPaymentNoticeDetailsThenThrowTooManyRequestException() {
+        GPDTooManyRequestException ex = assertThrows(GPDTooManyRequestException.class,
+                () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_TOO_MANY_REQUEST_0"));
+        assertEquals("Too many request occurred handling request from GPD", ex.getMessage());
+    }
+
+    @Test
     void givenPDDataWhenPostGeneratePaymentNoticeThenReturnGPDPaymentNoticePayloadDTO() {
         //given
         GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE_OK");
@@ -150,5 +158,15 @@ class GPDConnectorImplTest {
         GPDInvocationException ex = assertThrows(GPDInvocationException.class,
                 () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_ERROR", dummyPaymentNoticePayload));
         assertEquals("An error occurred handling request from GPD service", ex.getMessage());
+    }
+
+    @Test
+    void givenPayloaWhenGetPaymentNoticeDetailsThenThrowTooManyRequestException() {
+        GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = new GPDPaymentNoticePayloadDTO();
+        dummyPaymentNoticePayload.setIupd("DUMMY_ORGANIZATION_FISCAL_CODE_TOO_MANY_REQUEST-1234567890");
+
+        GPDTooManyRequestException ex = assertThrows(GPDTooManyRequestException.class,
+                () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_TOO_MANY_REQUEST", dummyPaymentNoticePayload));
+        assertEquals("Too many request occurred handling request from GPD", ex.getMessage());
     }
 }
