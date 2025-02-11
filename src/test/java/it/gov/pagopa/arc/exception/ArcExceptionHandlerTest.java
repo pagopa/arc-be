@@ -22,6 +22,9 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.time.LocalDate;
 
 import static org.mockito.Mockito.doThrow;
 
@@ -326,6 +329,22 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("error"));
 
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A ConstraintViolationException occurred handling request GET: HttpStatus 400 - /test"));
+    }
+
+    @Test
+    void givenWrongFormatWhenRequestThenHandleMethodArgumentTypeMismatchException() throws Exception {
+
+        doThrow(new MethodArgumentTypeMismatchException("error", LocalDate.class, "dueDate", null, null )).when(testControllerSpy).testEndpoint();
+        mockMvc.perform(MockMvcRequestBuilders.get("/test")
+                        .param(DATA, DATA)
+                        .header(HEADER,HEADER)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .accept(MediaType.APPLICATION_JSON))
+                .andExpect(MockMvcResultMatchers.status().isBadRequest())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
+                .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Method parameter 'dueDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'"));
+
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A MethodArgumentTypeMismatchException occurred handling request GET: HttpStatus 400 - /test"));
     }
 
 }

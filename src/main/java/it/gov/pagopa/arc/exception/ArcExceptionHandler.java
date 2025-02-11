@@ -15,6 +15,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.stream.Collectors;
 
@@ -22,6 +23,8 @@ import java.util.stream.Collectors;
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ArcExceptionHandler {
+
+    private static final String VALIDATION_ERROR_DEBUG_MESSAGE = "Something went wrong while validating http request";
 
     @ExceptionHandler(BizEventsInvocationException.class)
     public ResponseEntity<ErrorDTO> handleBizEventsInvocationException(RuntimeException ex, HttpServletRequest request){
@@ -114,7 +117,7 @@ public class ArcExceptionHandler {
                 }).collect(Collectors.joining("; "));
 
         log.info("A MethodArgumentNotValidException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
-        log.debug("Something went wrong while validating http request", ex);
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -126,7 +129,7 @@ public class ArcExceptionHandler {
     public ResponseEntity<ErrorDTO> handleConstraintExceptions(ConstraintViolationException ex, HttpServletRequest request) {
 
         log.info("A ConstraintViolationException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
-        log.debug("Something went wrong while validating http request", ex);
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
 
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
@@ -134,6 +137,17 @@ public class ArcExceptionHandler {
                 .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, ex.getMessage()));
     }
 
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorDTO> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+
+        log.info("A MethodArgumentTypeMismatchException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, ex.getMessage()));
+    }
 
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
