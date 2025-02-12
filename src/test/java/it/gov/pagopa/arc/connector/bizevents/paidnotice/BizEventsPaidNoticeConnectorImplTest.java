@@ -64,7 +64,9 @@ import static org.mockito.Mockito.doThrow;
         })
 @TestPropertySource(properties = {
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock"
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock",
+        "rest-client.pull-payment.baseUrl=pullPaymentMock",
+        "rest-client.gpd.baseUrl=gpdMock"
 })
 class BizEventsPaidNoticeConnectorImplTest {
     @Autowired
