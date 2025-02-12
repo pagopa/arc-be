@@ -3,6 +3,9 @@ spring:
     name: ${artifactId}
     version: ${version}
   jmx.enabled: true
+  threads:
+    virtual:
+      enabled: "\${VIRTUAL_THREADS_ENABLED:true}"
   cache:
     type: redis
   data:
@@ -51,14 +54,14 @@ zendesk-assistance:
 rest-client:
   biz-events:
     paid-notice:
-      baseUrl: \${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}
-      api-key: \${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}
+      baseUrl: "\${BIZ_EVENTS_PAID_NOTICE_BASE_URL:}"
+      api-key: "\${BIZ_EVENTS_PAID_NOTICE_SERVICE_API_KEY:}"
   pull-payment:
-    baseUrl: \${PULL_PAYMENT_BASE_URL:}
-    api-key: \${PULL_PAYMENT_SERVICE_API_KEY:}
+    baseUrl: "\${PULL_PAYMENT_BASE_URL:}"
+    api-key: "\${PULL_PAYMENT_SERVICE_API_KEY:}"
   gpd:
-    baseUrl: \${GPD_SERVICE_BASE_URL:}
-    api-key: \${GPD_SERVICE_API_KEY:}
+    baseUrl: "\${GPD_SERVICE_BASE_URL:}"
+    api-key: "\${GPD_SERVICE_API_KEY:}"
 
 logging:
   level:
