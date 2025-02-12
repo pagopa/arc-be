@@ -29,7 +29,6 @@ val springdocOpenApiVersion = "2.7.0"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
 val wiremockVersion = "3.10.0"
-val wiremockSpringBootVersion = "2.1.3"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
@@ -82,7 +81,6 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
-	testImplementation ("com.maciejwalkowiak.spring:wiremock-spring-boot:$wiremockSpringBootVersion")
 }
 
 val mockitoAgent = configurations.create("mockitoAgent")
