@@ -27,13 +27,13 @@ public class GPDPaymentNoticePayloadDTO2PaymentNoticeDetailsDTOMapper {
             return null;
         }
 
-        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = paymentOptions.get(0);
+        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = paymentOptions.getFirst();
         List<GPDTransferPayloadDTO> transfers = gpdPaymentOptionPayloadDTO.getTransfer();
         if (transfers == null || transfers.isEmpty()) {
             return null;
         }
 
-        GPDTransferPayloadDTO gpdTransferPayloadDTO = transfers.get(0);
+        GPDTransferPayloadDTO gpdTransferPayloadDTO = transfers.getFirst();
 
         return PaymentNoticeDetailsDTO.builder()
                 .iupd(gpdPaymentNoticePayloadDTO.getIupd())

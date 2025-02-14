@@ -35,7 +35,7 @@ class PullPaymentNoticeDTO2PaymentNoticeDTOMapperTest {
         PaymentNoticeDTO paymentNoticeDTO = PaymentNoticeDTOFaker.mockInstance(true);
 
         Mockito.when(pullPaymentNoticeStatus2PaymentNoticeStatusMapperMock.toPaymentNoticeStatus(pullPaymentNoticeDTO.getStatus())).thenReturn(PaymentNoticeStatus.VALID);
-        Mockito.when(pullPaymentOptionDTO2PaymentOptionDTOMapperMock.toPaymentOptionDTO(pullPaymentNoticeDTO.getPaymentOptions().get(0))).thenReturn(paymentNoticeDTO.getPaymentOptions().get(0));
+        Mockito.when(pullPaymentOptionDTO2PaymentOptionDTOMapperMock.toPaymentOptionDTO(pullPaymentNoticeDTO.getPaymentOptions().getFirst())).thenReturn(paymentNoticeDTO.getPaymentOptions().getFirst());
         //when
         PaymentNoticeDTO result = mapper.toPaymentNoticeDTO(pullPaymentNoticeDTO);
         //then

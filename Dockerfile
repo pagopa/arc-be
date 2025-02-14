@@ -1,18 +1,18 @@
 #
 # Build
 #
-FROM amazoncorretto:17-alpine3.19@sha256:ac45489ce3ac30e9758d3354a60c63a2e962d102e62dd1a1ef816ad6aad58fdf AS buildtime
+FROM amazoncorretto:21-alpine3.19@sha256:61eafdeb119539fbbeb328da83f4f196c00a9db13dc3789fffd4551caa3eb678 AS buildtime
 
 WORKDIR /build
 COPY . .
 
-RUN chmod +x ./gradlew
-RUN ./gradlew bootJar
+RUN chmod +x ./gradlew \
+&& ./gradlew bootJar
 
 #
 # Docker RUNTIME
 #
-FROM amazoncorretto:17-alpine3.19@sha256:ac45489ce3ac30e9758d3354a60c63a2e962d102e62dd1a1ef816ad6aad58fdf AS runtime
+FROM amazoncorretto:21-alpine3.19@sha256:61eafdeb119539fbbeb328da83f4f196c00a9db13dc3789fffd4551caa3eb678 AS runtime
 
 VOLUME /tmp
 WORKDIR /app

@@ -64,7 +64,9 @@ import static org.mockito.Mockito.doThrow;
         })
 @TestPropertySource(properties = {
         "rest-client.biz-events.paid-notice.api-key=x_api_key0",
-        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock"
+        WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock",
+        "rest-client.pull-payment.baseUrl=pullPaymentMock",
+        "rest-client.gpd.baseUrl=gpdMock"
 })
 class BizEventsPaidNoticeConnectorImplTest {
     @Autowired
@@ -132,14 +134,14 @@ class BizEventsPaidNoticeConnectorImplTest {
 
         List<NoticeDTO> notices = result.getNoticesListDTO().getNotices();
         assertEquals(1, notices.size());
-        assertEquals("1", notices.get(0).getEventId());
-        assertEquals("Comune di Milano", notices.get(0).getPayeeName());
-        assertEquals("MI_XXX", notices.get(0).getPayeeTaxCode());
-        assertEquals(18000L, notices.get(0).getAmount());
-        assertEquals(ZonedDateTime.parse("2024-03-27T13:07:25Z") , notices.get(0).getNoticeDate());
-        assertFalse(notices.get(0).getIsCart());
-        assertTrue(notices.get(0).getPaidByMe());
-        assertTrue(notices.get(0).getRegisteredToMe());
+        assertEquals("1", notices.getFirst().getEventId());
+        assertEquals("Comune di Milano", notices.getFirst().getPayeeName());
+        assertEquals("MI_XXX", notices.getFirst().getPayeeTaxCode());
+        assertEquals(18000L, notices.getFirst().getAmount());
+        assertEquals(ZonedDateTime.parse("2024-03-27T13:07:25Z") , notices.getFirst().getNoticeDate());
+        assertFalse(notices.getFirst().getIsCart());
+        assertTrue(notices.getFirst().getPaidByMe());
+        assertTrue(notices.getFirst().getRegisteredToMe());
         assertEquals("continuation-token", result.getContinuationToken());
 
     }
@@ -153,8 +155,8 @@ class BizEventsPaidNoticeConnectorImplTest {
 
         //then
         Assertions.assertEquals(0, noticesListResponseDTO.getNoticesListDTO().getNotices().size());
-        System.out.println(memoryAppender.getLoggedEvents().get(0).getFormattedMessage());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
+        System.out.println(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage());
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage()
                 .contains(("A class feign.FeignException$NotFound occurred while handling request getPaidNoticeList from biz-Events: HttpStatus 404"))
         );
         assertNull(noticesListResponseDTO.getContinuationToken());
@@ -278,17 +280,17 @@ class BizEventsPaidNoticeConnectorImplTest {
         Assertions.assertEquals("0.53", paidNoticeDetails.getInfoNotice().getFee());
         Assertions.assertEquals(Origin.UNKNOWN, paidNoticeDetails.getInfoNotice().getOrigin());
 
-        Assertions.assertEquals("pagamento", paidNoticeDetails.getCarts().get(0).getSubject());
-        Assertions.assertEquals("634.37", paidNoticeDetails.getCarts().get(0).getAmount());
+        Assertions.assertEquals("pagamento", paidNoticeDetails.getCarts().getFirst().getSubject());
+        Assertions.assertEquals("634.37", paidNoticeDetails.getCarts().getFirst().getAmount());
 
-        Assertions.assertEquals("ACI Automobile Club Italia", paidNoticeDetails.getCarts().get(0).getPayee().getName());
-        Assertions.assertEquals("00493410583", paidNoticeDetails.getCarts().get(0).getPayee().getTaxCode());
+        Assertions.assertEquals("ACI Automobile Club Italia", paidNoticeDetails.getCarts().getFirst().getPayee().getName());
+        Assertions.assertEquals("00493410583", paidNoticeDetails.getCarts().getFirst().getPayee().getTaxCode());
 
-        Assertions.assertEquals("ERNESTO PAYER", paidNoticeDetails.getCarts().get(0).getDebtor().getName());
-        Assertions.assertEquals("TAX_CODE", paidNoticeDetails.getCarts().get(0).getDebtor().getTaxCode());
+        Assertions.assertEquals("ERNESTO PAYER", paidNoticeDetails.getCarts().getFirst().getDebtor().getName());
+        Assertions.assertEquals("TAX_CODE", paidNoticeDetails.getCarts().getFirst().getDebtor().getTaxCode());
 
-        Assertions.assertEquals("960000000094659945", paidNoticeDetails.getCarts().get(0).getRefNumberValue());
-        Assertions.assertEquals("IUV", paidNoticeDetails.getCarts().get(0).getRefNumberType());
+        Assertions.assertEquals("960000000094659945", paidNoticeDetails.getCarts().getFirst().getRefNumberValue());
+        Assertions.assertEquals("IUV", paidNoticeDetails.getCarts().getFirst().getRefNumberType());
     }
 
     @Test

@@ -88,7 +88,7 @@ class BizEventsServiceImplTest {
         //then
         Assertions.assertNotNull(result);
         assertEquals(1, result.getNoticesListDTO().getNotices().size());
-        assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices().get(0), result.getNoticesListDTO().getNotices().get(0));
+        assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices().getFirst(), result.getNoticesListDTO().getNotices().getFirst());
         assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
 
     }

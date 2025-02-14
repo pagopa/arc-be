@@ -66,7 +66,7 @@ class CustomFeignClientLoggerTest {
 
         assertEquals(2, memoryAppender.getLoggedEvents().size());
         assertEquals(responseBody, responseString);
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms)"));
     }
 
@@ -88,7 +88,7 @@ class CustomFeignClientLoggerTest {
 
         assertEquals(2, memoryAppender.getLoggedEvents().size());
         assertEquals(responseBody, responseString);
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 404, response reason: Not Found, elapsed time (100 ms), response: {\"error\":\"No records found for the requested user\"}"));
     }
 
@@ -107,7 +107,7 @@ class CustomFeignClientLoggerTest {
         assertEquals(2, memoryAppender.getLoggedEvents().size());
 
         assertNull(clonedResponse.body());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 200, response reason: OK, elapsed time (100 ms)"));
     }
 
@@ -126,7 +126,7 @@ class CustomFeignClientLoggerTest {
         assertEquals(2, memoryAppender.getLoggedEvents().size());
 
         assertNull(clonedResponse.body());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_REQUEST] ---> GET https://api.example.com/test"));
         Assertions.assertTrue(memoryAppender.getLoggedEvents().get(1).getFormattedMessage().contains("[ExampleClass#exampleMethod] [FEIGN_CLIENT_RESPONSE] <--- Status: 400, response reason: BAD REQUEST, elapsed time (100 ms)"));
     }
 
@@ -138,6 +138,6 @@ class CustomFeignClientLoggerTest {
         customFeignClientLogger.log(CONFIG_KEY, formatString, "Arg1");
         //then
         assertEquals(1, memoryAppender.getLoggedEvents().size());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[ExampleClass#exampleMethod] This is an example string Arg1"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[ExampleClass#exampleMethod] This is an example string Arg1"));
     }
 }

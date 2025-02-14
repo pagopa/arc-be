@@ -45,7 +45,7 @@ class PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperTest {
         Assertions.assertEquals("ORGANIZATION_NAME", result.getCompanyName());
 
         Assertions.assertEquals(1, result.getPaymentOption().size());
-        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = result.getPaymentOption().get(0);
+        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = result.getPaymentOption().getFirst();
         Assertions.assertTrue(gpdPaymentOptionPayloadDTO.getIuv().startsWith("02"));
         Assertions.assertEquals(17, gpdPaymentOptionPayloadDTO.getIuv().length());
         Assertions.assertEquals(120L, gpdPaymentOptionPayloadDTO.getAmount());
@@ -53,7 +53,7 @@ class PaymentNoticePayloadDTO2GPDPaymentNoticePayloadDTOMapperTest {
         Assertions.assertFalse(gpdPaymentOptionPayloadDTO.getIsPartialPayment());
         Assertions.assertTrue(gpdPaymentOptionPayloadDTO.getDueDate().isAfter(LocalDateTime.now().plusDays(4)));
 
-        GPDTransferPayloadDTO gpdTransferPayloadDTO = gpdPaymentOptionPayloadDTO.getTransfer().get(0);
+        GPDTransferPayloadDTO gpdTransferPayloadDTO = gpdPaymentOptionPayloadDTO.getTransfer().getFirst();
         Assertions.assertNotNull(gpdPaymentOptionPayloadDTO.getTransfer());
         Assertions.assertEquals(1, gpdPaymentOptionPayloadDTO.getTransfer().size());
         Assertions.assertEquals("1", gpdTransferPayloadDTO.getIdTransfer());

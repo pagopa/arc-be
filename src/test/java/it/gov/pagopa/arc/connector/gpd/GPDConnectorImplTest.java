@@ -40,7 +40,9 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(properties = {
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
-        "rest-client.gpd.api-key=x_api_key0"
+        "rest-client.gpd.api-key=x_api_key0",
+        "rest-client.pull-payment.baseUrl=pullPaymentMock",
+        "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock"
 })
 class GPDConnectorImplTest {
 
@@ -59,7 +61,7 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(gpdPaymentNoticeDetailsDTOExpected, result);
         assertEquals(1, result.getPaymentOption().size());
-        assertFalse(result.getPaymentOption().get(0).getIsPartialPayment());
+        assertFalse(result.getPaymentOption().getFirst().getIsPartialPayment());
 
     }
 
@@ -75,8 +77,8 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(gpdPaymentNoticeDetailsDTOExpected, result);
         assertEquals(2, result.getPaymentOption().size());
-        assertTrue(result.getPaymentOption().get(0).getIsPartialPayment());
-        assertTrue(result.getPaymentOption().get(1).getIsPartialPayment());
+        assertTrue(result.getPaymentOption().getFirst().getIsPartialPayment());
+        assertTrue(result.getPaymentOption().getLast().getIsPartialPayment());
     }
 
     @Test
@@ -118,13 +120,13 @@ class GPDConnectorImplTest {
         expected.setValidityDate(LocalDateTime.parse("2025-01-28T10:23:51.512312545"));
         expected.setStatus(GPDPaymentNoticeStatus.VALID);
 
-        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = expected.getPaymentOption().get(0);
+        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = expected.getPaymentOption().getFirst();
         gpdPaymentOptionPayloadDTO.setNav("3".concat(gpdPaymentOptionPayloadDTO.getIuv()));
         gpdPaymentOptionPayloadDTO.setFee(0L);
         gpdPaymentOptionPayloadDTO.setNotificationFee(0L);
         gpdPaymentOptionPayloadDTO.setPaymentOptionMetadata(new ArrayList<>());
 
-        GPDTransferPayloadDTO transfer = gpdPaymentOptionPayloadDTO.getTransfer().get(0);
+        GPDTransferPayloadDTO transfer = gpdPaymentOptionPayloadDTO.getTransfer().getFirst();
         transfer.setTransferMetadata(new ArrayList<>());
         gpdPaymentOptionPayloadDTO.setTransfer(List.of(transfer));
         expected.setPaymentOption(List.of(gpdPaymentOptionPayloadDTO));
@@ -136,7 +138,7 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(expected, result);
         assertEquals(1, result.getPaymentOption().size());
-        assertFalse(result.getPaymentOption().get(0).getIsPartialPayment());
+        assertFalse(result.getPaymentOption().getFirst().getIsPartialPayment());
 
     }
 
