@@ -37,7 +37,7 @@ public class PullPaymentServiceImpl implements PullPaymentService{
                             .stream()
                             .filter(paymentNotice ->
                                     paymentNotice.getPaymentOptions().size() == 1 &&
-                                            paymentNotice.getPaymentOptions().get(0).getNumberOfInstallments().equals(1)
+                                            paymentNotice.getPaymentOptions().getFirst().getNumberOfInstallments().equals(1)
                             )
                             .map(paymentNoticeDTOMapper::toPaymentNoticeDTO)
                             .toList();

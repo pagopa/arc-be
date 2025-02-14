@@ -80,7 +80,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
     }
 
     @Test
@@ -96,7 +96,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_amount"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException occurred handling request GET /test: HttpStatus 400 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvalidAmountException occurred handling request GET /test: HttpStatus 400 - Error"));
     }
 
     @Test
@@ -112,7 +112,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_date"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException occurred handling request GET /test: HttpStatus 400 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsInvalidDateException occurred handling request GET /test: HttpStatus 400 - Error"));
     }
 
     @Test
@@ -128,7 +128,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
     }
 
     @Test
@@ -144,7 +144,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException occurred handling request GET /test: HttpStatus 400 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException occurred handling request GET /test: HttpStatus 400 - Error"));
     }
 
     @Test
@@ -160,7 +160,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
     }
 
     @Test
@@ -176,7 +176,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.PullPaymentTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
     }
 
      @Test
@@ -190,7 +190,7 @@ class ArcExceptionHandlerTest {
             .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("auth_user_unauthorized"))
             .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.InvalidTokenException occurred handling request GET /test: HttpStatus 401 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.InvalidTokenException occurred handling request GET /test: HttpStatus 401 - Error"));
     }
 
     @Test
@@ -205,7 +205,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_email"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException occurred handling request GET /test: HttpStatus 400 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.ZendeskAssistanceInvalidUserEmailException occurred handling request GET /test: HttpStatus 400 - Error"));
     }
 
     @Test
@@ -221,7 +221,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("notice_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
     }
 
     @Test
@@ -248,7 +248,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("receipt_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
     }
 
     @Test
@@ -264,7 +264,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException occurred handling request GET /test: HttpStatus 400 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException occurred handling request GET /test: HttpStatus 400 - Error"));
     }
 
     @Test
@@ -280,7 +280,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("payment_notice_not_found_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException occurred handling request GET /test: HttpStatus 404 - Error"));
     }
 
     @Test
@@ -296,7 +296,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("generic_error"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDInvocationException occurred handling request GET /test: HttpStatus 500 - Error"));
     }
 
     @Test
@@ -312,7 +312,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("too_many_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A class it.gov.pagopa.arc.exception.custom.GPDTooManyRequestException occurred handling request GET /test: HttpStatus 429 - Error"));
     }
 
     @Test
@@ -328,7 +328,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("error"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A ConstraintViolationException occurred handling request GET: HttpStatus 400 - /test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A ConstraintViolationException occurred handling request GET: HttpStatus 400 - /test"));
     }
 
     @Test
@@ -344,7 +344,7 @@ class ArcExceptionHandlerTest {
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error").value("invalid_request"))
                 .andExpect(MockMvcResultMatchers.jsonPath("$.error_description").value("Method parameter 'dueDate': Failed to convert value of type 'java.lang.String' to required type 'java.time.LocalDate'"));
 
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("A MethodArgumentTypeMismatchException occurred handling request GET: HttpStatus 400 - /test"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("A MethodArgumentTypeMismatchException occurred handling request GET: HttpStatus 400 - /test"));
     }
 
 }

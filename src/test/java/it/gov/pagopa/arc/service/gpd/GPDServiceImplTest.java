@@ -88,7 +88,7 @@ class GPDServiceImplTest {
         GPDPaymentNoticePayloadDTO gpdPaymentNoticePayloadDTO = GPDPaymentNoticePayloadDTOFaker.mockInstance("ORGANIZATION_FISCAL_CODE");
 
         GPDPaymentNoticePayloadDTO gpdPaymentNoticeResponse = GPDPaymentNoticePayloadDTOFaker.mockInstance("ORGANIZATION_FISCAL_CODE");
-        gpdPaymentNoticeResponse.getPaymentOption().get(0).setNav("302040501822520951");
+        gpdPaymentNoticeResponse.getPaymentOption().getFirst().setNav("302040501822520951");
 
         PaymentNoticeDetailsDTO expected = PaymentNoticeDetailsDTOFaker.mockInstance(1, false);
 
