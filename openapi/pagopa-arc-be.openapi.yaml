@@ -473,6 +473,29 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
+  /organizations:
+    get:
+      tags:
+        - arc payment notice spontaneous
+      summary: "Retrieve organizations list"
+      operationId: getOrganizations
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: "Obtained organizations list"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsListDTO'
+        '401':
+          description: "Wrong or missing function key"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
   /token/assistance:
     get:
       tags:
@@ -921,6 +944,31 @@ components:
           type: integer
         status:
           $ref: '#/components/schemas/PaymentOptionStatus'
+    OrganizationsListDTO:
+      type: object
+      properties:
+        organizations:
+          description: Array structure containing the organizations
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    OrganizationDTO:
+      type: object
+      required:
+        - id
+        - paFullName
+        - paTaxCode
+        - ipaCode
+      properties:
+        id:
+          type: string
+        paFullName:
+          type: string
+        paTaxCode:
+          type: string
+        ipaCode:
+          type: string
     ErrorDTO:
       type: object
       required:
