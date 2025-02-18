@@ -63,6 +63,9 @@ rest-client:
     baseUrl: \${GPD_SERVICE_BASE_URL:}
     api-key: \${GPD_SERVICE_API_KEY:}
 
+spontaneous-mock-paths:
+  organizationList: "mock/organizationsMock.json"
+
 logging:
   level:
     it.gov.pagopa.arc.connector: \${LOGGING_LEVEL_ARC_CONNECTOR:DEBUG}
