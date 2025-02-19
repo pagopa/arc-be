@@ -3,7 +3,9 @@ package it.gov.pagopa.arc.service;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import it.gov.pagopa.arc.model.generated.OrganizationDTO;
 import it.gov.pagopa.arc.model.generated.OrganizationsListDTO;
+import it.gov.pagopa.arc.utils.TestUtils;
 import org.junit.jupiter.api.Assertions;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.junit.jupiter.MockitoExtension;
@@ -19,10 +21,14 @@ class PaymentNoticeSpontaneousServiceImplTest {
 
     PaymentNoticeSpontaneousService spontaneousService;
 
+    @BeforeEach
+    void setUp() {
+        objectMapper = TestUtils.objectMapper;
+    }
+
     @Test
     void givenRequestWhenRetrieveOrganizationsThenReturnOrganizationsList() {
         //given
-        objectMapper = new ObjectMapper();
         spontaneousService = new PaymentNoticeSpontaneousServiceImpl("mock/organizationsMock.json",objectMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
@@ -62,10 +68,9 @@ class PaymentNoticeSpontaneousServiceImplTest {
     }
 
     @Test
-    void givenMockedPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
+    void givenWrongPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
         //given
-        objectMapper = new ObjectMapper();
-        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("wrong/path",objectMapper);
+        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("stub/__files/testReceiptPdfFile.pdf",objectMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
         //then
@@ -77,7 +82,6 @@ class PaymentNoticeSpontaneousServiceImplTest {
     @Test
     void givenNullPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
         //given
-        objectMapper = new ObjectMapper();
         spontaneousService = new PaymentNoticeSpontaneousServiceImpl(null,objectMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
