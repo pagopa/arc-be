@@ -77,7 +77,8 @@ import org.springframework.web.util.UriComponentsBuilder;
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
         "rest-client.gpd.api-key=x_api_key0",
 
-        "spring.cache.type=simple"
+        "spring.cache.type=simple",
+        "spontaneous-mock-paths.organizationList=mock/organizationsMock.json"
     })
 @AutoConfigureMockMvc
 class IdpIntegrationTest {
