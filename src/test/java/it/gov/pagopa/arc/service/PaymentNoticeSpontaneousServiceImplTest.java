@@ -68,9 +68,9 @@ class PaymentNoticeSpontaneousServiceImplTest {
     }
 
     @Test
-    void givenWrongPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
+    void givenMockedPathWhenRetrieveOrganizationsThenReturnExpectedResult() {
         //given
-        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("stub/__files/testReceiptPdfFile.pdf",objectMapper);
+        spontaneousService = new PaymentNoticeSpontaneousServiceImpl("wrong/path",objectMapper);
         //when
         OrganizationsListDTO result = spontaneousService.retrieveOrganizations(USER_ID);
         //then
