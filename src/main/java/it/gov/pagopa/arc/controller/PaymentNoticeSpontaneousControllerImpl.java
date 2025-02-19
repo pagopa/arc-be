@@ -8,10 +8,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-public class ArcPaymentNoticeSpontaneousApiImpl implements ArcPaymentNoticeSpontaneousApi {
+public class PaymentNoticeSpontaneousControllerImpl implements ArcPaymentNoticeSpontaneousApi {
     private final PaymentNoticeSpontaneousService paymentNoticeSpontaneousService;
 
-    public ArcPaymentNoticeSpontaneousApiImpl(PaymentNoticeSpontaneousService paymentNoticeSpontaneousService) {
+    public PaymentNoticeSpontaneousControllerImpl(PaymentNoticeSpontaneousService paymentNoticeSpontaneousService) {
         this.paymentNoticeSpontaneousService = paymentNoticeSpontaneousService;
     }
 

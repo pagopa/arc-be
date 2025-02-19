@@ -30,11 +30,11 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @WebMvcTest(value = {
-        ArcPaymentNoticeSpontaneousApiImpl.class
+        PaymentNoticeSpontaneousControllerImpl.class
 },excludeFilters = @ComponentScan.Filter(type = FilterType.ASSIGNABLE_TYPE,
         classes = JwtAuthenticationFilter.class))
 @AutoConfigureMockMvc(addFilters = false)
-class ArcPaymentNoticeSpontaneousApiImplTest {
+class PaymentNoticeSpontaneousControllerImplTest {
 
     @Autowired
     private ObjectMapper objectMapper;
