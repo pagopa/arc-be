@@ -4301,7 +4301,113 @@
       ]
     },
     {
-      "name": "3. zendesk assistance",
+      "name": "3. Spontaneous",
+      "item": [
+        {
+          "name": "setup Copy",
+          "item": [
+            {
+              "name": "getAccessToken",
+              "event": [
+                {
+                  "listen": "test",
+                  "script": {
+                    "exec": [
+                      "let jsonResponse = pm.response.json();\r",
+                      "pm.environment.set(\"accessToken\", jsonResponse.accessToken);\r",
+                      ""
+                    ],
+                    "type": "text/javascript",
+                    "packages": {}
+                  }
+                }
+              ],
+              "request": {
+                "method": "GET",
+                "header": [],
+                "url": {
+                  "raw": "{{baseurlArcInternal}}/auth/testuser",
+                  "host": [
+                    "{{baseurlArcInternal}}"
+                  ],
+                  "path": [
+                    "auth",
+                    "testuser"
+                  ]
+                }
+              },
+              "response": []
+            }
+          ]
+        },
+        {
+          "name": "Organizations list",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "let jsonResponse = pm.response.json();\r",
+                  "\r",
+                  "if(jsonResponse.organizations.length === 0){\r",
+                  "    retryRequest(postman,pm,setTimeout);\r",
+                  "}else{\r",
+                  "    pm.test(\"[Get organizations list], expected httpStatus: 200\", () => {\r",
+                  "        pm.response.to.have.status(200);\r",
+                  "    })\r",
+                  "\r",
+                  "    pm.test(\"[Get organizations list] - When you get organizations list , ARC return a organizations list\", () => {\r",
+                  "        pm.expect(jsonResponse.organizations).to.be.an('array').that.is.not.empty;\r",
+                  "        pm.expect(jsonResponse.organizations.length).to.eq(6);\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[0].paFullName).to.eq(\"Comune di Milano\");\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[1].paFullName).to.eq(\"INPS - Istituto Nazionale della Previdenza Sociale\");\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[2].paFullName).to.eq(\"Ministero dell'Interno\");\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[3].paFullName).to.eq(\"Comune di Roma\");\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[4].paFullName).to.eq(\"Agenzia delle Entrate\");\r",
+                  "\r",
+                  "        pm.expect(jsonResponse.organizations[5].paFullName).to.eq(\"Ente di Test\")\r",
+                  "    })\r",
+                  "}"
+                ],
+                "type": "text/javascript",
+                "packages": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "{{accessToken}}",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{baseurlArc}}/organizations",
+              "host": [
+                "{{baseurlArc}}"
+              ],
+              "path": [
+                "organizations"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "4. zendesk assistance",
       "item": [
         {
           "name": "setup",
@@ -4477,7 +4583,7 @@
       ]
     },
     {
-      "name": "4. auth",
+      "name": "5. auth",
       "item": [
         {
           "name": "setup",
