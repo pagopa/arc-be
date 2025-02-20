@@ -10,6 +10,7 @@ import it.gov.pagopa.arc.connector.gpd.enums.GPDPaymentNoticeStatus;
 import it.gov.pagopa.arc.exception.custom.GPDInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.GPDInvocationException;
 import it.gov.pagopa.arc.exception.custom.GPDPaymentNoticeDetailsNotFoundException;
+import it.gov.pagopa.arc.exception.custom.GPDTooManyRequestException;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticeDetailsDTOFaker;
 import it.gov.pagopa.arc.fakers.connector.gpd.GPDPaymentNoticePayloadDTOFaker;
 import org.junit.jupiter.api.Test;
@@ -39,7 +40,9 @@ import static org.junit.jupiter.api.Assertions.*;
         })
 @TestPropertySource(properties = {
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
-        "rest-client.gpd.api-key=x_api_key0"
+        "rest-client.gpd.api-key=x_api_key0",
+        "rest-client.pull-payment.baseUrl=pullPaymentMock",
+        "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock"
 })
 class GPDConnectorImplTest {
 
@@ -58,7 +61,7 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(gpdPaymentNoticeDetailsDTOExpected, result);
         assertEquals(1, result.getPaymentOption().size());
-        assertFalse(result.getPaymentOption().get(0).getIsPartialPayment());
+        assertFalse(result.getPaymentOption().getFirst().getIsPartialPayment());
 
     }
 
@@ -74,8 +77,8 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(gpdPaymentNoticeDetailsDTOExpected, result);
         assertEquals(2, result.getPaymentOption().size());
-        assertTrue(result.getPaymentOption().get(0).getIsPartialPayment());
-        assertTrue(result.getPaymentOption().get(1).getIsPartialPayment());
+        assertTrue(result.getPaymentOption().getFirst().getIsPartialPayment());
+        assertTrue(result.getPaymentOption().getLast().getIsPartialPayment());
     }
 
     @Test
@@ -100,6 +103,13 @@ class GPDConnectorImplTest {
     }
 
     @Test
+    void givenIUPDWhenGetPaymentNoticeDetailsThenThrowTooManyRequestException() {
+        GPDTooManyRequestException ex = assertThrows(GPDTooManyRequestException.class,
+                () -> gpdConnector.getPaymentNoticeDetails("USER_ID", "DUMMY_ORGANIZATION_FISCAL_CODE", "IUPD_TOO_MANY_REQUEST_0"));
+        assertEquals("Too many request occurred handling request from GPD", ex.getMessage());
+    }
+
+    @Test
     void givenPDDataWhenPostGeneratePaymentNoticeThenReturnGPDPaymentNoticePayloadDTO() {
         //given
         GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = GPDPaymentNoticePayloadDTOFaker.mockInstance("DUMMY_ORGANIZATION_FISCAL_CODE_OK");
@@ -110,13 +120,13 @@ class GPDConnectorImplTest {
         expected.setValidityDate(LocalDateTime.parse("2025-01-28T10:23:51.512312545"));
         expected.setStatus(GPDPaymentNoticeStatus.VALID);
 
-        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = expected.getPaymentOption().get(0);
+        GPDPaymentOptionPayloadDTO gpdPaymentOptionPayloadDTO = expected.getPaymentOption().getFirst();
         gpdPaymentOptionPayloadDTO.setNav("3".concat(gpdPaymentOptionPayloadDTO.getIuv()));
         gpdPaymentOptionPayloadDTO.setFee(0L);
         gpdPaymentOptionPayloadDTO.setNotificationFee(0L);
         gpdPaymentOptionPayloadDTO.setPaymentOptionMetadata(new ArrayList<>());
 
-        GPDTransferPayloadDTO transfer = gpdPaymentOptionPayloadDTO.getTransfer().get(0);
+        GPDTransferPayloadDTO transfer = gpdPaymentOptionPayloadDTO.getTransfer().getFirst();
         transfer.setTransferMetadata(new ArrayList<>());
         gpdPaymentOptionPayloadDTO.setTransfer(List.of(transfer));
         expected.setPaymentOption(List.of(gpdPaymentOptionPayloadDTO));
@@ -128,7 +138,7 @@ class GPDConnectorImplTest {
         assertNotNull(result);
         assertEquals(expected, result);
         assertEquals(1, result.getPaymentOption().size());
-        assertFalse(result.getPaymentOption().get(0).getIsPartialPayment());
+        assertFalse(result.getPaymentOption().getFirst().getIsPartialPayment());
 
     }
 
@@ -150,5 +160,15 @@ class GPDConnectorImplTest {
         GPDInvocationException ex = assertThrows(GPDInvocationException.class,
                 () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_ERROR", dummyPaymentNoticePayload));
         assertEquals("An error occurred handling request from GPD service", ex.getMessage());
+    }
+
+    @Test
+    void givenPayloaWhenGetPaymentNoticeDetailsThenThrowTooManyRequestException() {
+        GPDPaymentNoticePayloadDTO dummyPaymentNoticePayload = new GPDPaymentNoticePayloadDTO();
+        dummyPaymentNoticePayload.setIupd("DUMMY_ORGANIZATION_FISCAL_CODE_TOO_MANY_REQUEST-1234567890");
+
+        GPDTooManyRequestException ex = assertThrows(GPDTooManyRequestException.class,
+                () -> gpdConnector.generatePaymentNotice("DUMMY_ORGANIZATION_FISCAL_CODE_TOO_MANY_REQUEST", dummyPaymentNoticePayload));
+        assertEquals("Too many request occurred handling request from GPD", ex.getMessage());
     }
 }

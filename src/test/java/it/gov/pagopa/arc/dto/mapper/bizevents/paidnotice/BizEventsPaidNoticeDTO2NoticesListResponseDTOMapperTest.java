@@ -67,9 +67,9 @@ class BizEventsPaidNoticeDTO2NoticesListResponseDTOMapperTest {
         //when
         NoticesListDTO result = mapper.toNoticeListDTO(bizEventsPaidNoticeListDTO);
         //then
-        commonAssert(bizEventsPaidNoticeDTO, result.getNotices().get(0));
+        commonAssert(bizEventsPaidNoticeDTO, result.getNotices().getFirst());
         commonAssert(bizEventsPaidNoticeDTO2, result.getNotices().get(1));
-        assertEquals(MapperUtilities.euroToCents(bizEventsPaidNoticeDTO.getAmount()), result.getNotices().get(0).getAmount());
+        assertEquals(MapperUtilities.euroToCents(bizEventsPaidNoticeDTO.getAmount()), result.getNotices().getFirst().getAmount());
         assertEquals(MapperUtilities.euroToCents(bizEventsPaidNoticeDTO2.getAmount()), result.getNotices().get(1).getAmount());
 
     }

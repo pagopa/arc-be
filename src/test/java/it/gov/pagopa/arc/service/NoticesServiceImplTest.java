@@ -70,7 +70,7 @@ class NoticesServiceImplTest {
         Assertions.assertNotNull(result);
         Assertions.assertEquals(noticesListResponseDTO.getNoticesListDTO().getNotices(), result.getNoticesListDTO().getNotices());
         Assertions.assertEquals(CONTINUATION_TOKEN, result.getContinuationToken());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage().contains("[GET_NOTICES_LIST] The current user with id : user_id, has requested to retrieve his list of paid notices, with the current parameters: size 2, paidByMe true, registeredToMe true, orderBy TRANSACTION_DATE and ordering DESC"));
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage().contains("[GET_NOTICES_LIST] The current user with id : user_id, has requested to retrieve his list of paid notices, with the current parameters: size 2, paidByMe true, registeredToMe true, orderBy TRANSACTION_DATE and ordering DESC"));
     }
 
     @Test

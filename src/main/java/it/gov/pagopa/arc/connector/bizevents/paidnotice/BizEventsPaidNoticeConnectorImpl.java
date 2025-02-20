@@ -11,6 +11,7 @@ import it.gov.pagopa.arc.dto.mapper.bizevents.paidnotice.BizEventsPaidNoticeDTO2
 import it.gov.pagopa.arc.exception.custom.BizEventsInvocationException;
 import it.gov.pagopa.arc.exception.custom.BizEventsPaidNoticeNotFoundException;
 import it.gov.pagopa.arc.exception.custom.BizEventsReceiptNotFoundException;
+import it.gov.pagopa.arc.exception.custom.BizEventsTooManyRequestException;
 import it.gov.pagopa.arc.model.generated.NoticesListDTO;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,7 @@ import java.util.Collections;
 public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConnector {
 
     private static final String ERROR_MESSAGE_INVOCATION_EXCEPTION = "An error occurred handling request from biz-Events";
+    private static final String ERROR_MESSAGE_TOO_MANY_REQUEST_EXCEPTION = "Too many request occurred handling request from biz-Events";
     private final String apikey;
     private final BizEventsPaidNoticeRestClient bizEventsPaidNoticeRestClient;
     private final BizEventsPaidNoticeDTO2NoticesListResponseDTOMapper bizEventsPaidNoticeDTO2NoticesListResponseDTOMapper;
@@ -56,13 +58,15 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
             }
             return extractBizEventsPaidNoticeListDTOAndHeaderFromFeignResponse(response);
         } catch (FeignException e) {
-            if (e.status() == HttpStatus.NOT_FOUND.value()){
-              log.info("A {} occurred while handling request getPaidNoticeList from biz-Events: HttpStatus {} - {}",
+            if (e.status() == HttpStatus.NOT_FOUND.value()) {
+                log.info("A {} occurred while handling request getPaidNoticeList from biz-Events: HttpStatus {} - {}",
                         e.getClass(),
                         e.status(),
                         e.getMessage());
 
-                return  handleNotFound();
+                return handleNotFound();
+            } else if (e.status() == HttpStatus.TOO_MANY_REQUESTS.value()) {
+                throw new BizEventsTooManyRequestException(ERROR_MESSAGE_TOO_MANY_REQUEST_EXCEPTION);
             }else {
                 throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
             }
@@ -78,8 +82,11 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
         }catch (FeignException e){
             if(e.status() == HttpStatus.NOT_FOUND.value()){
                 throw new BizEventsPaidNoticeNotFoundException("An error occurred handling request from biz-Events to retrieve paid notice with event id [%s] for the current user with userId [%s]".formatted(eventId, userId));
+            } else if (e.status() == HttpStatus.TOO_MANY_REQUESTS.value()) {
+                throw new BizEventsTooManyRequestException(ERROR_MESSAGE_TOO_MANY_REQUEST_EXCEPTION);
+            }else {
+                throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
             }
-            throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
     }
 
@@ -90,8 +97,11 @@ public class BizEventsPaidNoticeConnectorImpl implements BizEventsPaidNoticeConn
         }catch (FeignException e){
             if (e.status() == HttpStatus.NOT_FOUND.value()){
                 throw  new BizEventsReceiptNotFoundException("An error occurred handling request from biz-Events to retrieve notice receipt with event id [%s] for the current user with userId [%s]".formatted(eventId, userId));
+            } else if (e.status() == HttpStatus.TOO_MANY_REQUESTS.value()) {
+                throw new BizEventsTooManyRequestException(ERROR_MESSAGE_TOO_MANY_REQUEST_EXCEPTION);
+            }else {
+                throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
             }
-            throw new BizEventsInvocationException(ERROR_MESSAGE_INVOCATION_EXCEPTION);
         }
     }
 

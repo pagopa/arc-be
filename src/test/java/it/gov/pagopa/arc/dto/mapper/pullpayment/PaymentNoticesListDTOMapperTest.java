@@ -26,7 +26,7 @@ class PaymentNoticesListDTOMapperTest {
         //then
         Assertions.assertNotNull(result);
         Assertions.assertEquals(2, result.getPaymentNotices().size());
-        Assertions.assertEquals(paymentNoticeDTO1, result.getPaymentNotices().get(0));
+        Assertions.assertEquals(paymentNoticeDTO1, result.getPaymentNotices().getFirst());
         Assertions.assertEquals(paymentNoticeDTO2, result.getPaymentNotices().get(1));
     }
 

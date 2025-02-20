@@ -12,7 +12,7 @@ group = "it.gov.pagopa"
 version = "0.0.1"
 
 java {
-	sourceCompatibility = JavaVersion.VERSION_17
+	toolchain.languageVersion.set(JavaLanguageVersion.of(21))
 }
 
 configurations {
@@ -25,16 +25,17 @@ repositories {
 	mavenCentral()
 }
 
-val springdocOpenApiVersion = "2.5.0"
+val springdocOpenApiVersion = "2.7.0"
 val janinoVersion = "3.1.12"
 val openApiToolsVersion = "0.2.6"
-val wiremockVersion = "3.5.4"
+val wiremockVersion = "3.10.0"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
 val commonsIo = "2.16.1"
 val micrometerVersion = "1.3.5"
 val springValidationVersion = "3.4.2"
+val feignVersion = "4.2.0"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -46,7 +47,7 @@ dependencies {
 	implementation("org.springdoc:springdoc-openapi-starter-webmvc-ui:$springdocOpenApiVersion")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-	implementation ("org.springframework.cloud:spring-cloud-starter-openfeign")
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign:$feignVersion")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
 	// Spring Security
 	// https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
@@ -80,6 +81,16 @@ dependencies {
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
+}
+
+val mockitoAgent = configurations.create("mockitoAgent")
+dependencies {
+	mockitoAgent("org.mockito:mockito-core") { isTransitive = false }
+}
+tasks {
+	test {
+		jvmArgs("-javaagent:${mockitoAgent.asPath}")
+	}
 }
 
 tasks.withType<Test> {

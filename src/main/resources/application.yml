@@ -3,6 +3,9 @@ spring:
     name: ${artifactId}
     version: ${version}
   jmx.enabled: true
+  threads:
+    virtual:
+      enabled: "\${VIRTUAL_THREADS_ENABLED:true}"
   cache:
     type: redis
   data:
@@ -59,6 +62,9 @@ rest-client:
   gpd:
     baseUrl: \${GPD_SERVICE_BASE_URL:}
     api-key: \${GPD_SERVICE_API_KEY:}
+
+spontaneous-mock-paths:
+  organizationList: "mock/organizationsMock.json"
 
 logging:
   level:
