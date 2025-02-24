@@ -19,7 +19,7 @@ WORKDIR /app
 
 COPY --from=buildtime /build/build/libs/*.jar /app/app.jar
 # The agent is enabled at runtime via JAVA_TOOL_OPTIONS.
-ADD https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.5.4/applicationinsights-agent-3.5.4.jar /app/applicationinsights-agent.jar
+ADD https://github.com/microsoft/ApplicationInsights-Java/releases/download/3.7.0/applicationinsights-agent-3.7.0.jar /app/applicationinsights-agent.jar
 
 RUN chown -R nobody:nobody /app
 
