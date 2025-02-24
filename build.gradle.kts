@@ -37,6 +37,7 @@ val micrometerVersion = "1.3.5"
 val springValidationVersion = "3.4.2"
 val feignVersion = "4.2.0"
 val jsonSmartVersion = "2.5.2"
+val nettyHandlerVersion = "4.1.118.Final"
 
 dependencies {
 	implementation("org.springframework.boot:spring-boot-starter")
@@ -76,6 +77,7 @@ dependencies {
 	// Forced transient dependecies to solve CVEs
 	implementation ("commons-io:commons-io:$commonsIoVersion")
 	implementation("net.minidev:json-smart:$jsonSmartVersion")
+	implementation("io.netty:netty-handler:$nettyHandlerVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
