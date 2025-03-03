@@ -1,6 +1,6 @@
 plugins {
 	java
-	id("org.springframework.boot") version "3.4.1"
+	id("org.springframework.boot") version "3.4.3"
 	id("io.spring.dependency-management") version "1.1.4"
 	jacoco
 	id("org.sonarqube") version "5.1.0.4882"
@@ -32,7 +32,7 @@ val wiremockVersion = "3.10.0"
 val javaJwtVersion = "4.4.0"
 val jwksRsaVersion = "0.22.1"
 val mapstructVersion = "1.5.5.Final"
-val commonsIo = "2.16.1"
+val commonsIoVersion = "2.16.1"
 val micrometerVersion = "1.3.5"
 val springValidationVersion = "3.4.2"
 val feignVersion = "4.2.0"
@@ -73,7 +73,7 @@ dependencies {
 	implementation("com.auth0:jwks-rsa:$jwksRsaVersion")
 
 	// Forced transient dependecies to solve CVEs
-	implementation ("commons-io:commons-io:$commonsIo")
+	implementation ("commons-io:commons-io:$commonsIoVersion")
 
 	//	Testing
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
