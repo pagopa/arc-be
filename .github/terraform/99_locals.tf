@@ -6,7 +6,8 @@ locals {
   }
 
   repo_secrets = var.env_short == "p" ? {
-    SONAR_TOKEN = data.azurerm_key_vault_secret.sonar_token[0].value
+    SONAR_TOKEN       = data.azurerm_key_vault_secret.sonar_token[0].value
+    SLACK_WEBHOOK_URL = data.azurerm_key_vault_secret.slack_webhook[0].value
   } : {}
 
   map_repo = {
