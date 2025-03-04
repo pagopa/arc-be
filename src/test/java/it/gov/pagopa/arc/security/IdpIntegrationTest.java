@@ -77,7 +77,8 @@ import org.springframework.web.util.UriComponentsBuilder;
         WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.gpd.baseUrl=gpdMock",
         "rest-client.gpd.api-key=x_api_key0",
 
-        "spring.cache.type=simple"
+        "spring.cache.type=simple",
+        "spontaneous-mock-paths.organizationList=mock/organizationsMock.json"
     })
 @AutoConfigureMockMvc
 class IdpIntegrationTest {
@@ -118,11 +119,11 @@ class IdpIntegrationTest {
 
         MultiValueMap<String,String> queryParams = extractQueryParams(result);
 
-        Assertions.assertNotNull(queryParams.get("nonce").get(0));
-        Assertions.assertNotNull(queryParams.get("state").get(0));
-        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.client-id"),queryParams.get("client_id").get(0));
-        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.scope"),queryParams.get("scope").get(0));
-        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.redirect-uri"),queryParams.get("redirect_uri").get(0));
+        Assertions.assertNotNull(queryParams.get("nonce").getFirst());
+        Assertions.assertNotNull(queryParams.get("state").getFirst());
+        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.client-id"),queryParams.get("client_id").getFirst());
+        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.scope"),queryParams.get("scope").getFirst());
+        Assertions.assertEquals(environment.getProperty("spring.security.oauth2.client.registration.oneidentity.redirect-uri"),queryParams.get("redirect_uri").getFirst());
 
     }
 
@@ -141,7 +142,7 @@ class IdpIntegrationTest {
 
         MvcResult firstTimeToken = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code")
-                .param("state", decodeState(queryParams.get("state").get(0)) ))
+                .param("state", decodeState(queryParams.get("state").getFirst()) ))
             .andExpect(status().is2xxSuccessful())
             .andReturn();
 
@@ -194,7 +195,7 @@ class IdpIntegrationTest {
 
         MvcResult firstTimeToken = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code")
-                .param("state", decodeState(queryParams.get("state").get(0)) ))
+                .param("state", decodeState(queryParams.get("state").getFirst()) ))
             .andExpect(status().is2xxSuccessful())
             .andReturn();
 
@@ -203,7 +204,7 @@ class IdpIntegrationTest {
         // Expected error cause state has already been used
         MvcResult secondTimeToken = mockMvc.perform(get("/token/oneidentity")
                 .param("code","code")
-                .param("state", decodeState(queryParams.get("state").get(0)) ))
+                .param("state", decodeState(queryParams.get("state").getFirst()) ))
             .andReturn();
 
         Assertions.assertNotNull(token);
@@ -247,7 +248,7 @@ class IdpIntegrationTest {
 
         MvcResult firstTimeToken = mockMvc.perform(get(TOKEN_URL)
                 .param("code","code")
-                .param("state", decodeState(queryParams.get("state").get(0)) ))
+                .param("state", decodeState(queryParams.get("state").getFirst()) ))
             .andExpect(status().is2xxSuccessful())
             .andReturn();
 
@@ -283,7 +284,7 @@ class IdpIntegrationTest {
 
         mockMvc.perform(get(TOKEN_URL)
                 .param("code","code")
-                .param("state", decodeState(queryParams.get("state").get(0)) ))
+                .param("state", decodeState(queryParams.get("state").getFirst()) ))
             .andExpect(status().is2xxSuccessful())
             .andReturn();
 
@@ -336,7 +337,7 @@ class IdpIntegrationTest {
             .withClaim("fiscalNumber","TINIT-PLOMRC01P30L736Y")
             .withClaim("email","ilmilione@virgilio.it")
             .withClaim("aud","clientid")
-            .withClaim("nonce",m.get("nonce").get(0))
+            .withClaim("nonce",m.get("nonce").getFirst())
             .withIssuer(wireMockServer.baseUrl()+"/idp")
             .withJWTId(UUID.randomUUID().toString())
             .withIssuedAt(Instant.now())

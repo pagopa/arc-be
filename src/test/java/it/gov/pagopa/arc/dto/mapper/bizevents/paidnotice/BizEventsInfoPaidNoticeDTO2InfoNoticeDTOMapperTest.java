@@ -52,7 +52,7 @@ class BizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperTest {
         WalletInfoDTO walletInfoDTO = CommonWalletInfoDTOFaker.mockWalletInfoDTO(false);
         UserDetailDTO userDetailDTO = CommonUserDetailDTOFaker.mockUserDetailDTO(CommonUserDetailDTOFaker.USER_DETAIL_PAYER);
 
-        Mockito.when(bizEventsWalletInfo2WalletInfoDTOMapperMock.mapWalletInfo(bizEventsWalletInfo)).thenReturn(walletInfoDTO);
+        Mockito.when(bizEventsWalletInfo2WalletInfoDTOMapperMock.mapToWalletInfo(bizEventsWalletInfo)).thenReturn(walletInfoDTO);
         Mockito.when(bizEventsUserDetail2UserDetailDTOMapperMock.mapUserDetail(payer)).thenReturn(userDetailDTO);
         //when
         InfoNoticeDTO infoNoticeDTO = mapper.toInfoNoticeDTO(bizEventsInfoPaidNoticeDTO);

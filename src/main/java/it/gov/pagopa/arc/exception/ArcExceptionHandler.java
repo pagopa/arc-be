@@ -3,6 +3,7 @@ package it.gov.pagopa.arc.exception;
 import it.gov.pagopa.arc.exception.custom.*;
 import it.gov.pagopa.arc.model.generated.ErrorDTO;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.ConstraintViolationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
@@ -10,13 +11,20 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+
+import java.util.stream.Collectors;
 
 @RestControllerAdvice
 @Slf4j
 @Order(Ordered.HIGHEST_PRECEDENCE)
 public class ArcExceptionHandler {
+
+    private static final String VALIDATION_ERROR_DEBUG_MESSAGE = "Something went wrong while validating http request";
 
     @ExceptionHandler(BizEventsInvocationException.class)
     public ResponseEntity<ErrorDTO> handleBizEventsInvocationException(RuntimeException ex, HttpServletRequest request){
@@ -38,6 +46,11 @@ public class ArcExceptionHandler {
         return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_DATE);
     }
 
+    @ExceptionHandler(BizEventsTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handleBizEventsTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
+    }
+
     @ExceptionHandler(PullPaymentInvalidRequestException.class)
     public ResponseEntity<ErrorDTO> handlePullPaymentInvalidRequestException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.BAD_REQUEST, ErrorDTO.ErrorEnum.INVALID_REQUEST);
@@ -46,6 +59,10 @@ public class ArcExceptionHandler {
     @ExceptionHandler(PullPaymentInvocationException.class)
     public ResponseEntity<ErrorDTO> handlePullPaymentInvocationException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
+    }
+    @ExceptionHandler(PullPaymentTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handlePullPaymentTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
     }
 
     @ExceptionHandler(InvalidTokenException.class)
@@ -82,6 +99,56 @@ public class ArcExceptionHandler {
     public ResponseEntity<ErrorDTO> handleGPDInvocationException(RuntimeException ex, HttpServletRequest request){
         return handleArcErrorException(ex, request, HttpStatus.INTERNAL_SERVER_ERROR, ErrorDTO.ErrorEnum.GENERIC_ERROR);
     }
+
+    @ExceptionHandler(GPDTooManyRequestException.class)
+    public ResponseEntity<ErrorDTO> handleGPDTooManyRequestException(RuntimeException ex, HttpServletRequest request){
+        return handleArcErrorException(ex, request, HttpStatus.TOO_MANY_REQUESTS, ErrorDTO.ErrorEnum.TOO_MANY_REQUEST);
+    }
+
+    @ExceptionHandler(MethodArgumentNotValidException.class)
+    public ResponseEntity<ErrorDTO> handleValidationExceptions(
+            MethodArgumentNotValidException ex, HttpServletRequest request) {
+
+        String message = ex.getBindingResult().getAllErrors().stream()
+                .map(error -> {
+                    String fieldName = ((FieldError) error).getField();
+                    String errorMessage = error.getDefaultMessage();
+                    return String.format("[%s]: %s", fieldName, errorMessage);
+                }).collect(Collectors.joining("; "));
+
+        log.info("A MethodArgumentNotValidException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, message));
+    }
+
+    @ExceptionHandler(ConstraintViolationException.class)
+    public ResponseEntity<ErrorDTO> handleConstraintExceptions(ConstraintViolationException ex, HttpServletRequest request) {
+
+        log.info("A ConstraintViolationException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, ex.getMessage()));
+    }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ResponseEntity<ErrorDTO> handleMethodArgumentTypeMismatchException(MethodArgumentTypeMismatchException ex, HttpServletRequest request) {
+
+        log.info("A MethodArgumentTypeMismatchException occurred handling request {}: HttpStatus 400 - {}", request.getMethod(), request.getRequestURI());
+        log.debug(VALIDATION_ERROR_DEBUG_MESSAGE, ex);
+
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .header(HttpHeaders.CONTENT_TYPE, MediaType.APPLICATION_JSON_VALUE)
+                .body(new ErrorDTO(ErrorDTO.ErrorEnum.INVALID_REQUEST, ex.getMessage()));
+    }
+
 
     private static ResponseEntity<ErrorDTO> handleArcErrorException(RuntimeException ex, HttpServletRequest request, HttpStatus httpStatus, ErrorDTO.ErrorEnum errorEnum) {
         String message = ex.getMessage();

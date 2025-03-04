@@ -34,7 +34,7 @@ class GPDPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperTest {
         List<PaymentOptionDetailsDTO> paymentOptionDetailsDTOList = PaymentOptionDetailsDTOFaker.mockInstance(1, false);
         GPDPaymentNoticeDetailsDTO gpdPaymentNoticeDetailsDTO = GPDPaymentNoticeDetailsDTOFaker.mockInstance(1, false);
 
-        Mockito.when(gpdPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperMock.toPaymentOptionDetailsDTO(gpdPaymentNoticeDetailsDTO.getPaymentOption().get(0))).thenReturn(paymentOptionDetailsDTOList.get(0));
+        Mockito.when(gpdPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperMock.toPaymentOptionDetailsDTO(gpdPaymentNoticeDetailsDTO.getPaymentOption().getFirst())).thenReturn(paymentOptionDetailsDTOList.getFirst());
         //when
         PaymentNoticeDetailsDTO result = mapper.toPaymentNoticeDetailsDTO(gpdPaymentNoticeDetailsDTO);
 
@@ -55,7 +55,7 @@ class GPDPaymentNoticeDetailsDTO2PaymentNoticeDetailsDTOMapperTest {
         List<PaymentOptionDetailsDTO> paymentOptionDetailsDTOList = PaymentOptionDetailsDTOFaker.mockInstance(2, true);
         GPDPaymentNoticeDetailsDTO gpdPaymentNoticeDetailsDTO = GPDPaymentNoticeDetailsDTOFaker.mockInstance(2, true);
 
-        Mockito.when(gpdPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperMock.toPaymentOptionDetailsDTO(gpdPaymentNoticeDetailsDTO.getPaymentOption().get(0))).thenReturn(paymentOptionDetailsDTOList.get(0));
+        Mockito.when(gpdPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperMock.toPaymentOptionDetailsDTO(gpdPaymentNoticeDetailsDTO.getPaymentOption().getFirst())).thenReturn(paymentOptionDetailsDTOList.getFirst());
         Mockito.when(gpdPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperMock.toPaymentOptionDetailsDTO(gpdPaymentNoticeDetailsDTO.getPaymentOption().get(1))).thenReturn(paymentOptionDetailsDTOList.get(1));
         //when
         PaymentNoticeDetailsDTO result = mapper.toPaymentNoticeDetailsDTO(gpdPaymentNoticeDetailsDTO);

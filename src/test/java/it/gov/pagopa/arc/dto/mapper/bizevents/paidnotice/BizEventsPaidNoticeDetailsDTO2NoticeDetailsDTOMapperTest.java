@@ -42,7 +42,7 @@ class BizEventsPaidNoticeDetailsDTO2NoticeDetailsDTOMapperTest {
         NoticeDetailsDTO noticeDetailsDTO = NoticeDetailsDTOFaker.mockInstance();
 
         Mockito.when(bizEventsInfoPaidNoticeDTO2InfoNoticeDTOMapperMock.toInfoNoticeDTO(bizEventsPaidNoticeDetailsDTO.getInfoNotice())).thenReturn(noticeDetailsDTO.getInfoNotice());
-        Mockito.when(bizEventsCartItem2CartItemDTOMapperMock.mapCart( bizEventsPaidNoticeDetailsDTO.getCarts().get(0))).thenReturn(noticeDetailsDTO.getCarts().get(0));
+        Mockito.when(bizEventsCartItem2CartItemDTOMapperMock.mapCart( bizEventsPaidNoticeDetailsDTO.getCarts().getFirst())).thenReturn(noticeDetailsDTO.getCarts().getFirst());
         Mockito.when(bizEventsCartItem2CartItemDTOMapperMock.mapCart( bizEventsPaidNoticeDetailsDTO.getCarts().get(1))).thenReturn(noticeDetailsDTO.getCarts().get(1));
         //when
         NoticeDetailsDTO result = mapper.toNoticeDetailsDTO(bizEventsPaidNoticeDetailsDTO);

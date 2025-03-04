@@ -6,6 +6,7 @@ import it.gov.pagopa.arc.config.WireMockConfig;
 import it.gov.pagopa.arc.connector.pullpayment.dto.PullPaymentNoticeDTO;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvalidRequestException;
 import it.gov.pagopa.arc.exception.custom.PullPaymentInvocationException;
+import it.gov.pagopa.arc.exception.custom.PullPaymentTooManyRequestException;
 import it.gov.pagopa.arc.fakers.connector.pullPayment.PullPaymentNoticeDTOFaker;
 import it.gov.pagopa.arc.utils.MemoryAppender;
 import org.junit.jupiter.api.Assertions;
@@ -37,7 +38,10 @@ import static it.gov.pagopa.arc.config.WireMockConfig.WIREMOCK_TEST_PROP2BASEPAT
 @TestPropertySource(
         properties = {
                 "rest-client.pull-payment.api-key=x_api_key0",
-                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock"
+                WIREMOCK_TEST_PROP2BASEPATH_MAP_PREFIX + "rest-client.pull-payment.baseUrl=pullPaymentMock",
+                "rest-client.pull-payment.api-key=x_api_key0",
+                "rest-client.biz-events.paid-notice.baseUrl=bizEventsPaidNoticeMock",
+                "rest-client.gpd.baseUrl=gpdMock"
         })
 class PullPaymentConnectorImplTest {
     private static final LocalDate LOCAL_DATE = LocalDate.parse("2024-04-11");
@@ -64,7 +68,7 @@ class PullPaymentConnectorImplTest {
         List<PullPaymentNoticeDTO> result = pullPaymentConnector.getPaymentNotices("DUMMY_FISCAL_CODE", LocalDate.now(), 10, 0);
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(pullPaymentNoticeDTO,result.get(0));
+        Assertions.assertEquals(pullPaymentNoticeDTO,result.getFirst());
 
     }
 
@@ -76,7 +80,7 @@ class PullPaymentConnectorImplTest {
 
         //then
         Assertions.assertEquals(0,result.size());
-        Assertions.assertTrue(memoryAppender.getLoggedEvents().get(0).getFormattedMessage()
+        Assertions.assertTrue(memoryAppender.getLoggedEvents().getFirst().getFormattedMessage()
                 .contains(("A class feign.FeignException$NotFound occurred handling request getPaymentNotices from pull-payment: HttpStatus 404 - [404 Not Found]"))
         );
     }
@@ -99,4 +103,12 @@ class PullPaymentConnectorImplTest {
         Assertions.assertEquals( "An error occurred handling request from pull payment service", pullPaymentInvocationException.getMessage());
     }
 
+    @Test
+    void givenHeaderAndParameterWhenTooManyRequestThenThrowPullPaymentTooManyRequestException() {
+        //When
+        //Then
+        PullPaymentTooManyRequestException pullPaymentInvocationException = Assertions.assertThrows(PullPaymentTooManyRequestException.class,
+                () -> pullPaymentConnector.getPaymentNotices("DUMMY_FISCAL_CODE_TOO_MANY_REQUEST", LOCAL_DATE, 10, 0));
+        Assertions.assertEquals( "Too many request occurred handling request from pull payment service", pullPaymentInvocationException.getMessage());
+    }
 }

@@ -216,6 +216,8 @@ paths:
                 error_description: "Invalid amount format"
         '401':
           description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
         '500':
           description: "Internal Server Error"
           content:
@@ -261,6 +263,8 @@ paths:
               example:
                 error: "notice_not_found_error"
                 error_description: "string"
+        '429':
+          description: "Too many Requests"
         '500':
           description: "Internal Server Error"
           content:
@@ -308,6 +312,8 @@ paths:
               example:
                 error: "receipt_not_found_error"
                 error_description: "string"
+        '429':
+          description: "Too many Requests"
         '500':
           description: "Internal Server Error"
           content:
@@ -315,6 +321,45 @@ paths:
               schema:
                 $ref: '#/components/schemas/ErrorDTO'
   /payment-notices:
+    post:
+      tags:
+        - arc payment notices
+      summary: "Generate payment notice from arc"
+      operationId: postGeneratePaymentNotice
+      security:
+        - bearerAuth: [ ]
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PaymentNoticePayloadDTO'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PaymentNoticeDetailsDTO'
+        '400':
+          description: "Invalid Request"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+              example:
+                error: invalid_request
+                error_description: "One or more inputs provided during the request are invalid"
+        '401':
+          description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
     get:
       tags:
         - arc payment notices
@@ -365,6 +410,8 @@ paths:
                 error_description: "One or more inputs provided during the request from pull payment are invalid"
         '401':
           description: "Wrong or missing function key"
+        '429':
+          description: "Too many Requests"
         '500':
           description: "Internal Server Error"
           content:
@@ -418,6 +465,31 @@ paths:
                 $ref: '#/components/schemas/ErrorDTO'
               example:
                 error: payment_notice_not_found_error
+        '429':
+          description: "Too many Requests"
+        '500':
+          description: "Internal Server Error"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorDTO'
+  /organizations:
+    get:
+      tags:
+        - arc payment notice spontaneous
+      summary: "Retrieve organizations list"
+      operationId: getOrganizations
+      security:
+        - bearerAuth: [ ]
+      responses:
+        '200':
+          description: "Obtained organizations list"
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationsListDTO'
+        '401':
+          description: "Wrong or missing function key"
         '500':
           description: "Internal Server Error"
           content:
@@ -594,6 +666,16 @@ components:
           type: string
         brand:
           type: string
+          enum:
+            - MASTERCARD
+            - VISA
+            - AMEX
+            - MAESTRO
+            - JCB
+            - OTHER
+            - DINERS
+            - DISCOVER
+            - UNIONPAY
         blurredNumber:
           type: string
         maskedEmail:
@@ -666,6 +748,31 @@ components:
             - NDP002PROD
             - NDP003PROD
             - UNKNOWN
+    PaymentNoticePayloadDTO:
+      required:
+        - paTaxCode
+        - paFullName
+        - amount
+        - description
+      type: object
+      properties:
+        paTaxCode:
+          type: string
+          description: "The fiscal code of EC"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"paTaxCode is required\")"
+        paFullName:
+          type: string
+          description: "The name of EC"
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"paFullName is required\")"
+        amount:
+          type: integer
+          format: int64
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotNull(message = \"amount is required\")"
+        description:
+          type: string
+          maxLength: 140
+          minLength: 0
+          x-field-extra-annotation: "@jakarta.validation.constraints.NotBlank(message = \"description is required\")"
     PaymentNoticesListDTO:
       type: object
       properties:
@@ -837,6 +944,31 @@ components:
           type: integer
         status:
           $ref: '#/components/schemas/PaymentOptionStatus'
+    OrganizationsListDTO:
+      type: object
+      properties:
+        organizations:
+          description: Array structure containing the organizations
+          type: array
+          items:
+            $ref: '#/components/schemas/OrganizationDTO'
+          x-field-extra-annotation: "@lombok.Builder.Default"
+    OrganizationDTO:
+      type: object
+      required:
+        - id
+        - paFullName
+        - paTaxCode
+        - ipaCode
+      properties:
+        id:
+          type: string
+        paFullName:
+          type: string
+        paTaxCode:
+          type: string
+        ipaCode:
+          type: string
     ErrorDTO:
       type: object
       required:
@@ -854,6 +986,7 @@ components:
             - invalid_email
             - invalid_request
             - auth_user_unauthorized
+            - too_many_request
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"

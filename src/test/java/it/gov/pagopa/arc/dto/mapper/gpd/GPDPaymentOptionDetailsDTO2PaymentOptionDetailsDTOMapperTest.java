@@ -32,16 +32,16 @@ class GPDPaymentOptionDetailsDTO2PaymentOptionDetailsDTOMapperTest {
         Mockito.when(gpdPaymentOptionDetailsStatus2PaymentOptionStatusMapperMock.toPaymentOptionStatus(GPDPaymentOptionDetailsStatus.PO_UNPAID)).thenReturn(PaymentOptionStatus.UNPAID);
 
         //when
-        PaymentOptionDetailsDTO result = mapper.toPaymentOptionDetailsDTO(gpdPaymentOptionDetailsDTO.get(0));
+        PaymentOptionDetailsDTO result = mapper.toPaymentOptionDetailsDTO(gpdPaymentOptionDetailsDTO.getFirst());
         //then
         Assertions.assertNotNull(result);
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getNav() , result.getNav());
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getIuv() , result.getIuv());
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getAmount(), result.getAmount());
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getDescription(), result.getDescription());
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getIsPartialPayment(), result.getIsPartialPayment());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getNav() , result.getNav());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getIuv() , result.getIuv());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getAmount(), result.getAmount());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getDescription(), result.getDescription());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getIsPartialPayment(), result.getIsPartialPayment());
         Assertions.assertEquals(ZonedDateTime.parse("2024-10-30T23:59:59Z"), result.getDueDate());
-        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.get(0).getNotificationFee(), result.getNotificationFee());
+        Assertions.assertEquals(gpdPaymentOptionDetailsDTO.getFirst().getNotificationFee(), result.getNotificationFee());
         Assertions.assertEquals(PaymentOptionStatus.UNPAID, result.getStatus());
 
         TestUtils.assertNotNullFields(result);
