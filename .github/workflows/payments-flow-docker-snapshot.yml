@@ -32,7 +32,7 @@ jobs:
         with:
           current_branch: ${{ github.ref_name }}
           enable_azure_devops_step: 'true'
-          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
+          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
           azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
           azure_devops_pat: ${{ secrets.AZUREDEVOPS_PAT }}
           azure_template_parameters: |
