@@ -30,7 +30,7 @@ jobs:
     steps:
       - name: 🚀 release + docker
         # https://github.com/pagopa/github-actions-template/releases/tag/v2.2.0
-        uses: pagopa/github-actions-template/azure-devops-trigger-pipeline@525266fb788f4da438e5919fcf660fe8637271ed
+        uses: pagopa/github-actions-template/payments-flow-release@525266fb788f4da438e5919fcf660fe8637271ed
         with:
           current_branch: ${{ github.ref_name }}
 
