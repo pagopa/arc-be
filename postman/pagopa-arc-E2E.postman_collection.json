@@ -35,12 +35,12 @@
             "method": "GET",
             "header": [],
             "url": {
-              "raw": "{{baseUrlCittadini}}/health/v1",
+              "raw": "{{baseUrlCittadini}}/arc-health/v1",
               "host": [
                 "{{baseUrlCittadini}}"
               ],
               "path": [
-                "health",
+                "arc-health",
                 "v1"
               ]
             }
