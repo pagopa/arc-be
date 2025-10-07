@@ -38,6 +38,7 @@ val jwksRsaVersion = "0.23.0"
 val mapStructVersion = "1.6.3"
 val micrometerVersion = "1.5.4"
 val commonsLang3Version = "3.19.0"
+val commonsFileUploadVersion = "1.6.0"
 
 val springCloudDepsVersion = "2025.0.0"
 
@@ -61,7 +62,10 @@ dependencies {
     implementation("org.apache.commons:commons-lang3:${commonsLang3Version}")
 	implementation("org.codehaus.janino:janino:$janinoVersion")
 	implementation("com.fasterxml.jackson.datatype:jackson-datatype-jsr310")
-	implementation("org.springframework.cloud:spring-cloud-starter-openfeign")
+	implementation("org.springframework.cloud:spring-cloud-starter-openfeign") {
+        exclude(group = "commons-fileupload", module = "commons-fileupload")
+    }
+    implementation("commons-fileupload:commons-fileupload:$commonsFileUploadVersion")
 	implementation("org.openapitools:jackson-databind-nullable:$openApiToolsVersion")
     implementation("org.mapstruct:mapstruct:${mapStructVersion}")
     // validation token jwt
