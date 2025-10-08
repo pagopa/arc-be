@@ -75,7 +75,7 @@ jobs:
         uses: pagopa/github-actions-template/azure-devops-trigger-pipeline@525266fb788f4da438e5919fcf660fe8637271ed
         with:
           enable_azure_devops_step: 'true'
-          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
+          azure_devops_project_url: 'https://dev.azure.com/pagopaspa/arc-projects'
           azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
           azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |

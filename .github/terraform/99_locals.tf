@@ -17,7 +17,7 @@ locals {
   }
 
   branches                  = ["develop", "uat"]
-  bypass_branch_rules_teams = ["p4pa-admins", "payments-cloud-admin"]
+  bypass_branch_rules_teams = ["arc-admins", "payments-cloud-admin"]
 
   # this is use to lookup the id for each team
   team_name_to_id = {
