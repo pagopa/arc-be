@@ -44,13 +44,13 @@ jobs:
         with:
           enable_azure_devops_step: 'true'
           azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
-          azure_devops_pipeline_name: 'arc-cittadini-deploy-aks.deploy'
+          azure_devops_pipeline_name: 'arpu-cittadini-deploy-aks.deploy'
           azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |
             {
-              "APPS_TOP": "[arc-be]",
+              "APPS_TOP": "[arpu-be]",
               "APPS_MID": "[]",
               "APPS_EXT": "[]",
               "POSTMAN_BRANCH": "${{ github.ref_name }}",
-              "TRIGGER_MESSAGE": "arc-be"
+              "TRIGGER_MESSAGE": "arpu-be"
             }
