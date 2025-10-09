@@ -75,7 +75,7 @@ jobs:
         with:
           enable_azure_devops_step: 'true'
           azure_devops_project_url: 'https://dev.azure.com/pagopaspa/p4pa-projects'
-          azure_devops_pipeline_name: 'arpu-cittadini-deploy-aks.deploy'
+          azure_devops_pipeline_name: 'p4pa-arpu-deploy-aks.deploy'
           azure_devops_pat: ${{ secrets.AZURE_DEVOPS_TOKEN }}
           azure_template_parameters: |
             {
