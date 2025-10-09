@@ -1,4 +1,6 @@
 name: 📦 Flow Snapshot Docker
+permissions:
+  contents: read
 
 on:
   push:
