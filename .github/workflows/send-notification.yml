@@ -19,6 +19,8 @@ on:
 jobs:
   Notify:
     name: Notify Slack
+    permissions:
+      contents: read
     runs-on: ubuntu-latest
     steps:
       - name: Send notification to Slack
