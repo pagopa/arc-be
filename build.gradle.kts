@@ -79,17 +79,20 @@ dependencies {
     implementation("com.auth0:jwks-rsa:${jwksRsaVersion}")
 
 	compileOnly("org.projectlombok:lombok")
-    annotationProcessor("org.projectlombok:lombok")
+	annotationProcessor("org.projectlombok:lombok")
 	annotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
-
+	testAnnotationProcessor("org.mapstruct:mapstruct-processor:$mapStructVersion")
 
 	//	Testing
+	testCompileOnly("org.projectlombok:lombok")
+	testAnnotationProcessor("org.projectlombok:lombok")
 	testImplementation("org.springframework.boot:spring-boot-starter-test")
 	testImplementation("org.junit.jupiter:junit-jupiter-api")
 	testImplementation("org.junit.jupiter:junit-jupiter-engine")
 	testImplementation("org.mockito:mockito-core")
 	testImplementation ("org.wiremock:wiremock-standalone:$wiremockVersion")
 	testImplementation("uk.co.jemos.podam:podam:${podamVersion}")
+	testImplementation("org.projectlombok:lombok")
 }
 
 val mockitoAgent = configurations.create("mockitoAgent")
@@ -137,7 +140,8 @@ tasks.register("dependenciesBuild") {
 
 	dependsOn(
 		"openApiGenerate",
-		"openApiGenerateP4PAAUTH"
+		"openApiGenerateP4PAAUTH",
+		"openApiGenerateP4PACITIZEN"
 	)
 }
 
@@ -171,7 +175,8 @@ openApiGenerate {
 	))
 	typeMappings.set(mapOf(
         "DateTime" to "java.time.LocalDateTime",
-        "zoned-date-time" to "java.time.ZonedDateTime"
+        "zoned-date-time" to "java.time.ZonedDateTime",
+		"OrganizationsWithSpontaneousDTO" to "it.gov.pagopa.pu.citizen.dto.generated.OrganizationsWithSpontaneousDTO"
 	))
 }
 
@@ -190,6 +195,35 @@ tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("ope
 	outputDir.set("$projectDir/build/generated")
 	apiPackage.set("it.gov.pagopa.pu.auth.controller.generated")
 	modelPackage.set("it.gov.pagopa.pu.auth.dto.generated")
+	configOptions.set(mapOf(
+		"swaggerAnnotations" to "false",
+		"openApiNullable" to "false",
+		"dateLibrary" to "java8",
+		"serializableModel" to "true",
+		"useSpringBoot3" to "true",
+		"useJakartaEe" to "true",
+		"useOneOfInterfaces" to "true",
+		"useBeanValidation" to "true",
+		"serializationLibrary" to "jackson",
+		"generateSupportingFiles" to "true",
+		"generateConstructorWithAllArgs" to "true",
+		"generatedConstructorWithRequiredArgs" to "true",
+		"enumPropertyNaming" to "original",
+		"additionalModelTypeAnnotations" to "@lombok.experimental.SuperBuilder(toBuilder = true)"
+	))
+	library.set("resttemplate")
+}
+
+
+tasks.register<org.openapitools.generator.gradle.plugin.tasks.GenerateTask>("openApiGenerateP4PACITIZEN") {
+	group = "openapi"
+	description = "openapi"
+
+	generatorName.set("java")
+	remoteInputSpec.set("https://raw.githubusercontent.com/pagopa/p4pa-citizen/refs/heads/$targetEnv/openapi/generated.openapi.json")
+	outputDir.set("$projectDir/build/generated")
+	apiPackage.set("it.gov.pagopa.pu.citizen.controller.generated")
+	modelPackage.set("it.gov.pagopa.pu.citizen.dto.generated")
 	configOptions.set(mapOf(
 		"swaggerAnnotations" to "false",
 		"openApiNullable" to "false",
