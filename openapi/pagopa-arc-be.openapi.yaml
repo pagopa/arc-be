@@ -636,6 +636,46 @@ paths:
           description: Not Found
         '500':
           description: Internal Server Error
+  /brokers/{brokerId}/spontaneous/organizations/{organizationId}/debt-position-type-orgs/{debtPositionTypeOrgId}:
+    get:
+      tags:
+        - DebtPositionTypeOrg
+      summary: "Retrieves the detail of debtPositionTypeOrg with flagSpontaneous and flagActive set to true"
+      operationId: getDebtPositionTypeOrgsWithSpontaneousDetail
+      parameters:
+        - name: brokerId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: organizationId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+        - name: debtPositionTypeOrgId
+          in: path
+          required: true
+          schema:
+            type: integer
+            format: int64
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: "DebtPositionTypeOrgsWithSpontaneousDetailsDTO"
+        '401':
+          description: Unauthorized - Missing or invalid token
+        '403':
+          description: Forbidden - Access denied
+        '404':
+          description: Not Found
+        '500':
+          description: Internal Server Error
 components:
   securitySchemes:
     BearerAuth:
@@ -1082,6 +1122,7 @@ components:
             - auth_user_unauthorized
             - too_many_request
             - bad_request
+            - not_found
         error_description:
           type: string
           x-field-extra-annotation: "@com.fasterxml.jackson.annotation.JsonProperty(\"error_description\")"
