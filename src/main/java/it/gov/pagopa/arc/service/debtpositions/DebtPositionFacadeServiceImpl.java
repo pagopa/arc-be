@@ -38,4 +38,9 @@ public class DebtPositionFacadeServiceImpl implements DebtPositionFacadeService 
 
         return debtPositionDetail;
     }
+
+    @Override
+    public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud, IamUserInfoDTO loggedUser) {
+        return debtPositionService.getPaymentNotice(AuthorizationService.getDebtorFiscalCode(fiscalCode,loggedUser), brokerId, organizationId,installmentId, iuv, iud);
+    }
 }

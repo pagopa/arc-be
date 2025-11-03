@@ -53,4 +53,24 @@ public class DebtPositionControllerImpl implements DebtPositionApi {
     log.info("getDebtPositionDetail was requested with brokerId {} and debtPositionId {}", brokerId,debtPositionId);
     return ResponseEntity.ok(debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, xFiscalCode));
   }
+
+  @Override
+  public ResponseEntity<Resource> getPaymentNotice(Long brokerId, Long organizationId, String fiscalCode, Long installmentId, String iuv, String iud) {
+      log.info("getPaymentNotice was requested with brokerId {} and organizationId {}", brokerId, organizationId);
+
+      FileResourceDTO paymentNoticeFileResource = debtPositionFacadeService.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud,SecurityUtils.getPrincipal());
+      if (paymentNoticeFileResource != null && paymentNoticeFileResource.getResource()!=null){
+          HttpHeaders headers = new HttpHeaders();
+          headers.setContentDisposition(ContentDisposition.attachment()
+                  .filename(paymentNoticeFileResource.getFileName())
+                  .build());
+
+          return ResponseEntity.ok()
+                  .headers(headers)
+                  .contentType(MediaType.APPLICATION_PDF)
+                  .body(paymentNoticeFileResource.getResource());
+      } else {
+          return new ResponseEntity<>(HttpStatus.NO_CONTENT);
+      }
+  }
 }

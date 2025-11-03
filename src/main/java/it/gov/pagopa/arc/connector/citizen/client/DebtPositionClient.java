@@ -44,4 +44,13 @@ public class DebtPositionClient {
         }
 
   }
+
+  public FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud, String accessToken) {
+    ResponseEntity<Resource> resourceResponseEntity = apisHolder.getDebtPositionApi(accessToken)
+        .getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud);
+    return FileResourceDTO.builder()
+        .resource(resourceResponseEntity.getBody())
+        .fileName(resourceResponseEntity.getHeaders().getContentDisposition().getFilename())
+        .build();
+    }
 }
