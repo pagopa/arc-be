@@ -97,4 +97,24 @@ class DebtPositionFacadeServiceImplTest {
         assertThrows(ResourceNotFoundException.class, () -> debtPositionFacadeService.getDebtPositionDetail(brokerId, debtPositionId, fiscalCode));
 
     }
+
+    @Test
+    void whenGetPaymentNoticeThenOk() {
+        //given
+        String fiscalCode = "fiscalCode";
+        Long brokerId = 1L;
+        Long organizationId = 2L;
+        Long installmentId = 3L;
+        String iuv = "iuv";
+        String iud = "iud";
+        IamUserInfoDTO loggedUser = podamFactory.manufacturePojo(IamUserInfoDTO.class);
+        FileResourceDTO expectedResult = podamFactory.manufacturePojo(FileResourceDTO.class);
+
+        Mockito.when(debtPositionServiceMock.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud)).thenReturn(expectedResult);
+
+        FileResourceDTO result = debtPositionFacadeService.getPaymentNotice(fiscalCode,brokerId,organizationId,installmentId,iuv,iud, loggedUser);
+
+        assertNotNull(result);
+        assertEquals(expectedResult, result);
+    }
 }

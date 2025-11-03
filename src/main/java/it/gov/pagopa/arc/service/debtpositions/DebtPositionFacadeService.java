@@ -10,4 +10,5 @@ public interface DebtPositionFacadeService {
   FileResourceDTO getUnpaidPaymentNoticeZip(Long brokerId, Long debtPositionId, String fiscalCode, IamUserInfoDTO loggedUser);
   DebtPositionResponseDTO createSpontaneousDebtPosition(Long brokerId, DebtPositionRequestDTO body);
   DebtPositionDTO getDebtPositionDetail(Long brokerId, Long debtPositionId, String fiscalCode);
+  FileResourceDTO getPaymentNotice(String fiscalCode, Long brokerId, Long organizationId, Long installmentId, String iuv, String iud, IamUserInfoDTO loggedUser);
 }

@@ -121,4 +121,30 @@ class DebtPositionClientTest {
         //then
         assertNull(result);
     }
+
+    @Test
+    void whenGetPaymentNoticeThenOk(){
+      String accessToken = "accessToken";
+      String fiscalCode = "fiscalCode";
+      Long brokerId = 1L;
+      Long organizationId = 2L;
+      Long installmentId = 3L;
+      String iuv = "iuv";
+      String iud = "iud";
+      ByteArrayResource expectedResource = new ByteArrayResource("PDF-DATA".getBytes());
+      String expectedFileName = "filename";
+      HttpHeaders headers = new HttpHeaders();
+      headers.setContentDisposition(
+          ContentDisposition.attachment().filename(expectedFileName).build());
+      ResponseEntity<Resource> responseEntity = new ResponseEntity<>(expectedResource, headers, HttpStatus.OK);
+
+      Mockito.when(citizenApisHolderMock.getDebtPositionApi(accessToken)).thenReturn(debtPositionApiMock);
+      Mockito.when(debtPositionApiMock.getPaymentNoticeWithHttpInfo(fiscalCode, brokerId, organizationId, installmentId, iuv, iud)).thenReturn(responseEntity);
+
+      FileResourceDTO response = debtPositionClient.getPaymentNotice(fiscalCode, brokerId, organizationId, installmentId, iuv, iud, accessToken);
+
+      Assertions.assertNotNull(response);
+      Assertions.assertEquals(expectedResource,response.getResource());
+      Assertions.assertEquals(expectedFileName,response.getFileName());
+    }
 }
