@@ -46,10 +46,11 @@ class DebtPositionTypeOrgControllerTest {
     void givenOrganizationIdWhenGetDebtPositionTypeOrgsWithSpontaneousThenOk() {
         //given
         Long organizationId = 1L;
+        Long brokerId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
-        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId)).thenReturn(expectedResult);
         //when
-        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getDebtPositionTypeOrgsWithSpontaneous(organizationId);
+        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId);
         //then
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
@@ -76,11 +77,12 @@ class DebtPositionTypeOrgControllerTest {
     @Test
     void givenOrganizationIdWhenGetPublicDebtPositionTypeOrgsWithSpontaneousThenOk() {
         //given
+        Long brokerId = 1L;
         Long organizationId = 1L;
         List<DebtPositionTypeOrgsWithSpontaneousDTO> expectedResult = podamFactory.manufacturePojo(List.class, DebtPositionTypeOrgsWithSpontaneousDTO.class);
-        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(organizationId)).thenReturn(expectedResult);
+        Mockito.when(debtPositionTypeOrgFacadeServiceMock.getDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId)).thenReturn(expectedResult);
         //when
-        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getPublicDebtPositionTypeOrgsWithSpontaneous(organizationId);
+        ResponseEntity<List<DebtPositionTypeOrgsWithSpontaneousDTO>> result = debtPositionTypeOrgController.getPublicDebtPositionTypeOrgsWithSpontaneous(brokerId, organizationId);
         //then
         assertNotNull(result);
         assertEquals(HttpStatus.OK, result.getStatusCode());
