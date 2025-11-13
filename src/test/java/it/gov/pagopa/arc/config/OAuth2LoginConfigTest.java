@@ -80,7 +80,7 @@ class OAuth2LoginConfigTest {
     void givenPublicURLWhenCallEndpointThenOk() throws Exception {
         Long brokerId = 1L;
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/public/brokers/{brokerId}/organizations/spontaneous",brokerId))
+        mockMvc.perform(MockMvcRequestBuilders.get("/public/brokers/{brokerId}/spontaneous/organizations",brokerId))
                 .andExpect(status().is2xxSuccessful());
     }
 
