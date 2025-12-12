@@ -199,7 +199,8 @@ openApiGenerate {
         "BrokerInfoDTO" to "it.gov.pagopa.pu.citizen.dto.generated.BrokerInfoDTO",
 		"PagedDebtorDebtPositionDTO" to "it.gov.pagopa.pu.citizen.dto.generated.PagedDebtorDebtPositionDTO",
 		"DebtorUnpaidDebtPositionOverviewDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionOverviewDTO",
-		"InstallmentDebtorExtendedDTO" to "it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO"
+		"InstallmentDebtorExtendedDTO" to "it.gov.pagopa.pu.citizen.dto.generated.InstallmentDebtorExtendedDTO",
+		"DebtorUnpaidDebtPositionInstallmentsDTO" to "it.gov.pagopa.pu.citizen.dto.generated.DebtorUnpaidDebtPositionInstallmentsDTO"
 
 	))
 }
